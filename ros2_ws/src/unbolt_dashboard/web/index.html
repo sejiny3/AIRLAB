@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UNBOLT 대시보드</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --panel: #ffffff; --line: #e3e5ea; --text: #1d2230; --muted: #6b7180;
+    --accent: #d64a85; --accent-soft: #fbe7f0; --ok: #1f9d55; --ok-soft: #e3f5ea;
+    --bad: #d63c3c; --bad-soft: #fbe5e5; --run: #2f6fdb; --run-soft: #e4ecfb;
+    --map-free: #ffffff; --map-occ: #2a2f3a; --map-unk: #d9dce2; --shadow: 0 1px 2px rgba(20, 25, 40, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151c; --panel: #1a1e27; --line: #2a303c; --text: #e7e9ee; --muted: #9097a6;
+      --accent: #ee6fa4; --accent-soft: #3a2230; --ok: #45c07a; --ok-soft: #173325;
+      --bad: #f06a6a; --bad-soft: #3a1d1d; --run: #6a9bf0; --run-soft: #1c2a44;
+      --map-free: #232834; --map-occ: #c9ced8; --map-unk: #161a22; --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151c; --panel: #1a1e27; --line: #2a303c; --text: #e7e9ee; --muted: #9097a6;
+    --accent: #ee6fa4; --accent-soft: #3a2230; --ok: #45c07a; --ok-soft: #173325;
+    --bad: #f06a6a; --bad-soft: #3a1d1d; --run: #6a9bf0; --run-soft: #1c2a44;
+    --map-free: #232834; --map-occ: #c9ced8; --map-unk: #161a22; --shadow: none;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+  header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 20px;
+           border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+  header h1 { font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -.01em; }
+  header h1 span { color: var(--accent); }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+          font-size: 12px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); white-space: nowrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .pill.ok .dot { background: var(--ok); } .pill.bad .dot { background: var(--bad); } .pill.run .dot { background: var(--run); }
+  .spacer { flex: 1; }
+  main { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr); gap: 16px; padding: 16px 20px; max-width: 1500px; margin: 0 auto; }
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+  .card h2 { font-size: 13px; font-weight: 600; margin: 0; padding: 12px 16px; border-bottom: 1px solid var(--line);
+             display: flex; align-items: center; gap: 8px; }
+  .card h2 small { font-weight: 400; color: var(--muted); }
+  .card .body { padding: 14px 16px; }
+  #mapWrap { position: relative; padding: 10px; }
+  canvas#map { width: 100%; display: block; border-radius: 8px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; padding: 0 16px 12px; color: var(--muted); font-size: 12px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  #cam { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; background: var(--map-unk); border-radius: 0 0 12px 12px; }
+  .camwrap { position: relative; }
+  .camwrap .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+  form#cmd { display: flex; gap: 8px; }
+  #cmdInput { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line);
+              background: var(--bg); color: var(--text); font: inherit; }
+  #cmdInput:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  button { font: inherit; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--text);
+           padding: 9px 14px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.danger { color: var(--bad); border-color: var(--bad); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: var(--bg); }
+  .row { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .row .hint { color: var(--muted); font-size: 12px; flex: 1; }
+  #timeline { list-style: none; margin: 0; padding: 6px 0; max-height: 470px; overflow-y: auto; }
+  #timeline li { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; padding: 8px 16px; align-items: start; }
+  #timeline li + li { border-top: 1px dashed var(--line); }
+  .ic { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
+  .ic.run { background: var(--run-soft); color: var(--run); } .ic.ok { background: var(--ok-soft); color: var(--ok); }
+  .ic.bad { background: var(--bad-soft); color: var(--bad); } .ic.say { background: var(--accent-soft); color: var(--accent); }
+  .ic.cmd { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+  .ttl { font-weight: 600; } .sub { color: var(--muted); font-size: 12px; word-break: break-word; }
+  .say .txt { background: var(--accent-soft); border-radius: 8px; padding: 7px 10px; }
+  .dur { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .spin { animation: spin 1s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #timeline li.empty-tl { display: block; color: var(--muted); padding: 18px 16px; text-align: center; }
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .stat { background: var(--bg); border-radius: 8px; padding: 9px 11px; min-width: 0; }
+  .stat .k { color: var(--muted); font-size: 11px; } .stat .v { font-weight: 600; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar { height: 6px; border-radius: 3px; background: var(--line); margin-top: 6px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+  .world { margin-top: 12px; font-size: 13px; }
+  .world div { display: flex; justify-content: space-between; padding: 4px 0; border-top: 1px dashed var(--line); }
+  .world div span:last-child { font-weight: 600; }
+  @media (max-width: 900px) {
+    main { grid-template-columns: 1fr; padding: 12px 16px; }
+    header { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>UNBOLT</span> 대시보드</h1>
+  <span class="pill" id="connPill"><span class="dot"></span><span id="connText">연결 중…</span></span>
+  <span class="pill" id="taskPill"><span class="dot"></span><span id="taskText">플래너 대기</span></span>
+  <span class="spacer"></span>
+  <span class="pill" id="modelPill">LLM -</span>
+  <span class="pill">시뮬레이션 <b id="simTime" style="margin-left:4px">-</b></span>
+</header>
+
+<main>
+  <div class="col">
+    <section class="card">
+      <h2>지도 <small>SLAM 지도 위 위치 (AMCL + 오도메트리)</small></h2>
+      <div id="mapWrap"><canvas id="map"></canvas></div>
+      <div class="legend">
+        <span><i style="background:var(--accent)"></i>로봇</span>
+        <span><i style="background:#e0453a"></i>빨간 상자 (시뮬레이터 실제 위치)</span>
+        <span><i style="background:var(--run)"></i>Nav2 경로</span>
+        <span><i style="background:#f0a500"></i>LiDAR</span>
+        <span><i style="background:transparent;border:2px solid var(--muted)"></i>테이블 · 놓을 자리</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>헤드 카메라 <small>ArUco 마커 검출</small></h2>
+      <div class="camwrap"><img id="cam" alt=""><div class="empty" id="camEmpty">카메라 영상을 기다리는 중</div></div>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="card">
+      <h2>명령</h2>
+      <div class="body">
+        <form id="cmd" autocomplete="off">
+          <input id="cmdInput" placeholder="예: 빨간 상자를 작업대로 옮겨줘" maxlength="300">
+          <button class="primary" id="sendBtn" type="submit">보내기</button>
+        </form>
+        <div class="chips">
+          <button class="chip" type="button">빨간 상자를 작업대로 옮겨줘</button>
+          <button class="chip" type="button">빨간 상자를 원래 자리에 다시 갖다 놔</button>
+          <button class="chip" type="button">원래 위치로 돌아가</button>
+          <button class="chip" type="button">지금 뭘 들고 있어?</button>
+        </div>
+        <div class="row">
+          <span class="hint" id="cmdHint">명령은 한 번에 하나씩 실행됩니다.</span>
+          <button class="danger" id="cancelBtn" type="button" disabled>작업 취소</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>작업 진행 <small id="tlSummary"></small></h2>
+      <ul id="timeline"><li class="empty-tl">아직 실행한 작업이 없습니다.</li></ul>
+    </section>
+
+    <section class="card">
+      <h2>로봇 상태</h2>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><div class="k">위치 (작업 기준)</div><div class="v" id="sLoc">-</div></div>
+          <div class="stat"><div class="k">들고 있는 물체</div><div class="v" id="sHold">-</div></div>
+          <div class="stat"><div class="k">지도 위치 (x, y, θ)</div><div class="v" id="sPose">-</div></div>
+          <div class="stat"><div class="k">속도</div><div class="v" id="sVel">-</div></div>
+          <div class="stat"><div class="k">왼손 그리퍼</div><div class="v" id="sGripL">-</div><div class="bar"><div id="bGripL"></div></div></div>
+          <div class="stat"><div class="k">오른손 그리퍼</div><div class="v" id="sGripR">-</div><div class="bar"><div id="bGripR"></div></div></div>
+        </div>
+        <div class="world" id="world"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+'use strict';
+const KO = { supply_table: '공급 테이블', work_table: '작업대', home: '원위치', gripper: '그리퍼', red_box: '빨간 상자' };
+const TOOL_KO = { get_world_state: '상태 확인', navigate_to: '이동', pick_object: '집기', place_object: '놓기', set_arm_posture: '팔 자세' };
+const ko = s => KO[s] || s || '-';
+const $ = id => document.getElementById(id);
+
+/* ---------- minimal rosbridge v2 client (subscribe / advertise / publish) ---------- */
+class Ros {
+  constructor(url) { this.url = url; this.subs = []; this.pubs = {}; this.onstate = () => {}; this.connect(); }
+  connect() {
+    this.ws = new WebSocket(this.url);
+    this.ws.onopen = () => {
+      // Advertise up front: a publish sent right after its advertise can be dropped
+      // before rosbridge's publisher has matched the subscriber.
+      for (const [topic, type] of Object.entries(this.pubs)) this.send({ op: 'advertise', topic, type });
+      for (const s of this.subs) this.send({ op: 'subscribe', id: s.id, topic: s.topic, type: s.type, throttle_rate: s.throttle, queue_length: s.queue });
+      this.onstate(true);
+    };
+    this.ws.onclose = () => { this.onstate(false); setTimeout(() => this.connect(), 2000); };
+    this.ws.onerror = () => this.ws.close();
+    this.ws.onmessage = ev => {
+      const m = JSON.parse(ev.data);
+      if (m.op !== 'publish') return;
+      for (const s of this.subs) if (s.topic === m.topic) { try { s.cb(m.msg); } catch (e) { console.error(m.topic, e); } }
+    };
+  }
+  send(o) { if (this.ws.readyState === 1) this.ws.send(JSON.stringify(o)); }
+  // queue = 1 keeps only the newest message (sensor streams); event streams need a real queue,
+  // or rosbridge drops all but the last of a burst.
+  subscribe(topic, type, cb, throttle = 0, queue = 1) {
+    const s = { id: 'sub_' + topic + '_' + this.subs.length, topic, type, cb, throttle, queue };
+    this.subs.push(s);
+    this.send({ op: 'subscribe', id: s.id, topic, type, throttle_rate: throttle, queue_length: queue });
+  }
+  advertise(topic, type) { this.pubs[topic] = type; this.send({ op: 'advertise', topic, type }); }
+  publish(topic, type, msg) {
+    if (!(topic in this.pubs)) this.advertise(topic, type);
+    this.send({ op: 'publish', topic, msg });
+  }
+}
+
+/* ---------- state ---------- */
+const st = { pose: null, box: null, plan: [], scan: null, busy: false, world: null, cfg: null, mapImg: null };
+const quatYaw = q => Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+
+/* ---------- map ---------- */
+const canvas = $('map'), ctx = canvas.getContext('2d');
+function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+let mapBitmap = null;  // themed copy of the occupancy image
+function themeMap() {
+  if (!st.mapImg) return;
+  const { width: w, height: h } = st.mapImg;
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); g.drawImage(st.mapImg, 0, 0);
+  const d = g.getImageData(0, 0, w, h);
+  const hex = s => [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16));
+  const free = hex(css('--map-free')), occ = hex(css('--map-occ')), unk = hex(css('--map-unk'));
+  for (let i = 0; i < d.data.length; i += 4) {
+    const v = d.data[i], col = v < 100 ? occ : v > 230 ? free : unk;
+    d.data[i] = col[0]; d.data[i + 1] = col[1]; d.data[i + 2] = col[2]; d.data[i + 3] = 255;
+  }
+  g.putImageData(d, 0, 0); mapBitmap = c;
+}
+function drawMap() {
+  const cfg = st.cfg; if (!cfg || !mapBitmap) return;
+  const m = cfg.map, dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth, scale = cssW / m.width;
+  canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(m.height * scale * dpr);
+  canvas.style.height = (m.height * scale) + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(mapBitmap, 0, 0, m.width * scale, m.height * scale);
+  const P = (x, y) => [((x - m.origin[0]) / m.resolution) * scale, (m.height - (y - m.origin[1]) / m.resolution) * scale];
+  const px = metres => metres / m.resolution * scale;
+
+  // tables and their labels
+  ctx.font = '600 12px system-ui, "Malgun Gothic", sans-serif';
+  for (const [name, t] of Object.entries(cfg.tables)) {
+    const [x0, y0] = P(t.center[0] - t.half[0], t.center[1] + t.half[1]);
+    ctx.strokeStyle = css('--muted'); ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+    ctx.strokeRect(x0, y0, px(2 * t.half[0]), px(2 * t.half[1])); ctx.setLineDash([]);
+    ctx.fillStyle = css('--text'); const [lx, ly] = P(t.center[0] - t.half[0], t.center[1] + t.half[1]);
+    ctx.fillText(ko(name), lx + 3, ly - 6);
+  }
+  // staging poses
+  for (const [name, l] of Object.entries(cfg.locations)) {
+    const [x, y] = P(l.staging[0], l.staging[1]);
+    ctx.fillStyle = css('--muted'); ctx.beginPath(); ctx.arc(x, y, 3, 0, 2 * Math.PI); ctx.fill();
+    if (name === 'home') ctx.fillText(ko(name), x + 6, y + 4);
+  }
+  // Nav2 plan
+  if (st.plan.length > 1) {
+    ctx.strokeStyle = css('--run'); ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.beginPath();
+    st.plan.forEach((p, i) => { const [x, y] = P(p[0], p[1]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+    ctx.stroke();
+  }
+  // LiDAR points (scan frame = lidar_link, 0.22 m ahead of the base)
+  if (st.scan && st.pose) {
+    const { x, y, yaw } = st.pose, lx = x + 0.22 * Math.cos(yaw), ly = y + 0.22 * Math.sin(yaw);
+    ctx.fillStyle = '#f0a500';
+    st.scan.ranges.forEach((r, i) => {
+      if (r === null || !isFinite(r)) return;
+      const a = yaw + st.scan.angle_min + i * st.scan.angle_increment;
+      const [sx, sy] = P(lx + r * Math.cos(a), ly + r * Math.sin(a));
+      ctx.fillRect(sx - 1.2, sy - 1.2, 2.4, 2.4);
+    });
+  }
+  // red box (simulator ground truth)
+  if (st.box) {
+    const [x, y] = P(st.box.x, st.box.y), s = Math.max(px(0.05), 7);
+    ctx.fillStyle = '#e0453a'; ctx.fillRect(x - s / 2, y - s / 2, s, s);
+  }
+  // robot: footprint (0.60 x 0.54 m) + heading
+  if (st.pose) {
+    const { x, y, yaw } = st.pose, [cx, cy] = P(x, y);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-yaw);
+    ctx.fillStyle = css('--accent'); ctx.globalAlpha = .9;
+    ctx.beginPath(); ctx.roundRect(-px(0.30), -px(0.27), px(0.60), px(0.54), 4); ctx.fill();
+    ctx.globalAlpha = 1; ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.moveTo(px(0.26), 0); ctx.lineTo(px(0.02), -px(0.13)); ctx.lineTo(px(0.02), px(0.13)); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+}
+window.addEventListener('resize', drawMap);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { themeMap(); drawMap(); });
+
+/* ---------- timeline ---------- */
+const tl = $('timeline');
+let currentCall = null, runStart = 0, stepCount = 0, okCount = 0;
+function addItem(kind, title, sub = '', dur = '') {
+  if (tl.firstElementChild && tl.firstElementChild.classList.contains('empty-tl')) tl.innerHTML = '';
+  const li = document.createElement('li');
+  const icon = { run: '<span class="spin">◌</span>', ok: '✓', bad: '!', say: 'C', cmd: '›' }[kind];
+  li.innerHTML = `<span class="ic ${kind}">${icon}</span><div class="${kind === 'say' ? 'say' : ''}"><div class="${kind === 'say' ? 'txt' : 'ttl'}"></div><div class="sub"></div></div><span class="dur"></span>`;
+  li.querySelector(kind === 'say' ? '.txt' : '.ttl').textContent = title;
+  li.querySelector('.sub').textContent = sub;
+  li.querySelector('.dur').textContent = dur;
+  tl.appendChild(li); tl.scrollTop = tl.scrollHeight;
+  return li;
+}
+function setItem(li, kind, sub, dur) {
+  const ic = li.querySelector('.ic'); ic.className = 'ic ' + kind; ic.innerHTML = kind === 'ok' ? '✓' : '!';
+  li.querySelector('.sub').textContent = sub; li.querySelector('.dur').textContent = dur;
+}
+function describeCall(e) {
+  const a = e.input || {};
+  const arg = a.location ? ko(a.location) : a.object ? ko(a.object) : a.posture || '';
+  return (TOOL_KO[e.name] || e.name) + (arg ? ' · ' + arg : '');
+}
+function setTask(state, text) {
+  const pill = $('taskPill'); pill.className = 'pill ' + (state || ''); $('taskText').textContent = text;
+}
+function setBusy(b) {
+  st.busy = b; $('cancelBtn').disabled = !b; $('sendBtn').disabled = b;
+  $('cmdHint').textContent = b ? '작업 실행 중입니다. 끝나면 다음 명령을 보낼 수 있어요.' : '명령은 한 번에 하나씩 실행됩니다.';
+}
+function onStatus(msg) {
+  const e = JSON.parse(msg.data);
+  switch (e.type) {
+    case 'ready': case 'world':
+      st.world = e.world; renderWorld();
+      if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
+      if (e.busy) setBusy(true);
+      else {
+        setBusy(false);
+        if (!st.finished) setTask('', '플래너 대기');  // keep the last task's 완료/실패 label until the next command
+      }
+      break;
+    case 'command':
+      runStart = Date.now(); stepCount = okCount = 0; st.finished = false; setBusy(true); setTask('run', '계획 중');
+      addItem('cmd', e.text, '명령');
+      break;
+    case 'thinking': setTask('run', 'Claude 계획 중'); break;
+    case 'thought': addItem('say', e.text); break;
+    case 'tool_call':
+      stepCount++; setTask('run', describeCall(e) + ' 실행 중');
+      currentCall = addItem('run', describeCall(e), '실행 중…');
+      break;
+    case 'tool_result': {
+      if (e.ok) okCount++;
+      const r = e.result || {};
+      const sub = r.message || r.error || (e.name === 'get_world_state' ? `로봇 ${ko(r.robot_location)} · 들고 있는 것 ${ko(r.holding) === '-' ? '없음' : ko(r.holding)}` : '');
+      if (currentCall) setItem(currentCall, e.ok ? 'ok' : 'bad', r.cancelled ? '취소됨' : sub, e.seconds.toFixed(0) + ' s');
+      currentCall = null;
+      $('tlSummary').textContent = `${okCount}/${stepCount} 단계 성공`;
+      break;
+    }
+    case 'reply': break;  // the final event carries the same text
+    case 'cancel_requested': setTask('bad', '취소 중…'); break;
+    case 'final':
+      addItem(e.ok ? 'say' : 'bad', e.text || (e.ok ? '완료' : '실패'), '', e.seconds ? e.seconds.toFixed(0) + ' s' : '');
+      // e.ok only means the planner finished normally; Claude's reply says whether the task worked
+      if (e.cancelled) setTask('bad', '취소됨');
+      else if (!e.ok) setTask('bad', '실패');
+      else if (stepCount > okCount) setTask('bad', `끝남 · 실패 ${stepCount - okCount}단계`);
+      else setTask('ok', '완료');
+      st.finished = true;
+      st.plan = [];  // Nav2 keeps no plan once the task is over; don't leave a stale one on the map
+      break;
+    case 'error': addItem('bad', e.text); break;
+  }
+}
+function renderWorld() {
+  const w = st.world; if (!w) return;
+  $('sLoc').textContent = w.robot_location ? ko(w.robot_location) : '이동 중/알 수 없음';
+  $('sHold').textContent = w.holding ? ko(w.holding) : '없음';
+  $('world').innerHTML = Object.entries(w.objects).map(([n, o]) =>
+    `<div><span>${ko(n)}</span><span>${ko(o.location)}</span></div>`).join('');
+}
+
+/* ---------- boot ---------- */
+async function boot() {
+  st.cfg = await (await fetch('config.json')).json();
+  st.mapImg = new Image();
+  st.mapImg.onload = () => { themeMap(); drawMap(); };
+  st.mapImg.src = 'map.png';
+
+  const ros = new Ros(`ws://${location.hostname || 'localhost'}:${st.cfg.rosbridge_port}`);
+  ros.advertise('/task_command', 'std_msgs/msg/String');
+  ros.advertise('/task_cancel', 'std_msgs/msg/Empty');
+  ros.advertise('/task_world', 'std_msgs/msg/Empty');
+  ros.onstate = up => {
+    $('connPill').className = 'pill ' + (up ? 'ok' : 'bad');
+    $('connText').textContent = up ? 'ROS 연결됨' : 'ROS 연결 끊김 (재시도 중)';
+    if (up) setTimeout(() => ros.publish('/task_world', 'std_msgs/msg/Empty', {}), 500);
+  };
+  ros.subscribe('/task_status', 'std_msgs/msg/String', onStatus, 0, 50);
+  // Localized pose (TF map -> base_footprint), republished at 10 Hz by dashboard_server.
+  ros.subscribe('/dashboard/robot_pose', 'geometry_msgs/msg/PoseStamped', m => {
+    const p = m.pose; st.pose = { x: p.position.x, y: p.position.y, yaw: quatYaw(p.orientation) };
+    $('sPose').textContent = `${st.pose.x.toFixed(2)}, ${st.pose.y.toFixed(2)}, ${(st.pose.yaw * 180 / Math.PI).toFixed(0)}°`;
+  }, 100);
+  ros.subscribe('/ground_truth/red_box', 'geometry_msgs/msg/PoseStamped', m => { st.box = m.pose.position; }, 300);
+  ros.subscribe('/plan', 'nav_msgs/msg/Path', m => { st.plan = m.poses.map(p => [p.pose.position.x, p.pose.position.y]); }, 1000);
+  ros.subscribe('/scan', 'sensor_msgs/msg/LaserScan', m => { st.scan = m; }, 400);
+  ros.subscribe('/odom', 'nav_msgs/msg/Odometry', m => {
+    const t = m.twist.twist; $('sVel').textContent = `${t.linear.x.toFixed(2)} m/s · ${t.angular.z.toFixed(2)} rad/s`;
+  }, 250);
+  ros.subscribe('/joint_states', 'sensor_msgs/msg/JointState', m => {
+    for (const [side, key] of [['left', 'L'], ['right', 'R']]) {
+      const i = m.name.indexOf(`openarm_${side}_finger_joint1`); if (i < 0) continue;
+      const open = Math.min(1, Math.abs(m.position[i]) / 0.6);  // 0 = closed (3.6 cm), 1 = open (11.5 cm)
+      $('sGrip' + key).textContent = `${(3.6 + open * 7.9).toFixed(1)} cm`;
+      $('bGrip' + key).style.width = (open * 100).toFixed(0) + '%';
+    }
+  }, 300);
+  ros.subscribe('/aruco/debug_image/compressed', 'sensor_msgs/msg/CompressedImage', m => {
+    $('cam').src = 'data:image/jpeg;base64,' + m.data; $('camEmpty').style.display = 'none';
+  }, 200);
+  ros.subscribe('/clock', 'rosgraph_msgs/msg/Clock', m => {
+    const s = m.clock.sec; $('simTime').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }, 1000);
+  setInterval(drawMap, 250);
+
+  const send = text => {
+    text = text.trim(); if (!text || st.busy) return;
+    ros.publish('/task_command', 'std_msgs/msg/String', { data: text });
+    $('cmdInput').value = '';
+  };
+  $('cmd').addEventListener('submit', ev => { ev.preventDefault(); send($('cmdInput').value); });
+  document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => send(b.textContent)));
+  $('cancelBtn').addEventListener('click', () => ros.publish('/task_cancel', 'std_msgs/msg/Empty', {}));
+}
+boot();
+</script>
+</body>
+</html>

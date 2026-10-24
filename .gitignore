@@ -1,0 +1,16 @@
+# colcon
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# fetched by workshop/setup/install_unbolt.sh at pinned commits
+third_party/
+
+__pycache__/
+*.pyc
+.omc/
+
+# student files from the exercises
+models/my_scene.xml
+frames_*.pdf
+frames_*.gv
