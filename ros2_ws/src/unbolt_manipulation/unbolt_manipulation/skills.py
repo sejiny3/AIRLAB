@@ -27,6 +27,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.time import Time
 from sensor_msgs.msg import JointState
 from shape_msgs.msg import SolidPrimitive
+from std_srvs.srv import Trigger
 import tf2_ros
 
 BASE = 'base_footprint'
@@ -93,6 +94,7 @@ class RobotSkills:
         self.execute = ActionClient(self.node, ExecuteTrajectory, '/execute_trajectory')
         self.cartesian = self.node.create_client(GetCartesianPath, '/compute_cartesian_path')
         self.scene = self.node.create_client(ApplyPlanningScene, '/apply_planning_scene')
+        self.sim_reset = self.node.create_client(Trigger, '/mujoco_bridge/reset')
         self.executor = MultiThreadedExecutor(num_threads=4)
         self.executor.add_node(self.node)
         threading.Thread(target=self.executor.spin, daemon=True).start()
@@ -233,6 +235,35 @@ class RobotSkills:
 
     def stop(self):
         self.cmd_vel.publish(Twist())
+
+    def reset_world(self, timeout=10.0):
+        """Put the robot, its arms and the objects back where the simulation starts.
+
+        Besides the simulator reset, everything that remembers the old world is cleared:
+        AMCL is re-initialised at the map origin (where the robot spawns), the costmaps
+        drop obstacles seen from the old pose, and marker memory / held object are forgotten."""
+        self.stop()
+        if not self.sim_reset.wait_for_service(timeout_sec=timeout):
+            self.log.error('reset: /mujoco_bridge/reset not available')
+            return False
+        res = self._wait(self.sim_reset.call_async(Trigger.Request()), timeout)
+        if res is None or not res.success:
+            self.log.error('reset: simulator reset failed')
+            return False
+        self.holding = None
+        self.held_marker = None
+        self.marker_memory.clear()
+        self.set_support_surface(None)
+        time.sleep(0.5)  # the bridge applies the reset on its next cycle; odometry restarts at 0
+        pose = PoseStamped()
+        pose.header.frame_id = 'map'
+        pose.header.stamp = self.now().to_msg()
+        pose.pose.orientation.w = 1.0
+        self.nav.setInitialPose(pose)
+        time.sleep(1.0)  # let AMCL take the new pose before the costmaps refill
+        self.nav.clearAllCostmaps()
+        self.log.info('world reset: robot at home, objects at their start')
+        return True
 
     def drive_straight(self, distance, speed=0.12):
         """Drive forward (distance > 0) or back up (< 0) using odometry."""

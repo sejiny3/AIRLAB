@@ -163,12 +163,18 @@ $ ros2 run tf2_ros tf2_echo base_footprint aruco_7 --ros-args -p use_sim_time:=t
 
 ## 실습 5. Pick & Place 전체 흐름
 
-월드를 리셋하고 데모를 실행합니다:
+월드를 리셋하고, AMCL에 로봇이 원점에 있다고 다시 알려 준 뒤 데모를 실행합니다:
 
 ```bash
 $ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger
+$ ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
+    "{header: {frame_id: map}, pose: {pose: {orientation: {w: 1.0}}}}"
 $ ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 ```
+
+> 시뮬레이터 리셋은 로봇을 원점으로 옮기지만 AMCL은 그 사실을 모릅니다. 실습 4에서 로봇을 몰았다면
+> 지도 위 위치가 수십 cm 어긋난 채로 남아 주행이 틀어지므로 `/initialpose`로 원점을 다시 알려 줍니다
+> (RViz의 **2D Pose Estimate**로 원점을 찍어도 같습니다). 모듈 4의 플래너를 켜면 `/task_reset` 하나로 둘 다 합니다.
 
 ![Pick & Place](../docs/step5_pick_place.jpg)
 

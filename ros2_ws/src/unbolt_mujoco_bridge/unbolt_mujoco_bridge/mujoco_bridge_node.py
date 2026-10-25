@@ -250,7 +250,11 @@ class MujocoBridge(Node):
 
     def _reset_world(self):
         m, d = self.model, self.data
+        # Keep the simulation clock running: mj_resetData sets time to 0, and /clock jumping
+        # back makes every ROS node clear its TF buffer (Nav2, AMCL and MoveIt lose their state).
+        t = d.time
         mujoco.mj_resetData(m, d)
+        d.time = t
         for name, q in HOME_POSE.items():
             d.qpos[m.joint(name).qposadr[0]] = q
         for name, a in self.pos_actuators.items():
@@ -509,8 +513,6 @@ class MujocoBridge(Node):
 
         while rclpy.ok() and (viewer is None or viewer.is_running()):
             self._apply_commands()
-            if d.time < sim0:  # world was reset
-                wall0, sim0 = time.monotonic(), d.time
             target = sim0 + (time.monotonic() - wall0) * self.rtf
 
             steps = 0

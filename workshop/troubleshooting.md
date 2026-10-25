@@ -100,7 +100,8 @@ $ ros2 daemon stop
 | SLAM 지도가 겹쳐서(벽이 이중으로) 나옴 | 너무 빨리 회전했음. 처음부터 다시: 천천히(`x`로 감속), 특히 회전은 천천히 |
 | `map_saver_cli` 가 `Failed to spin map subscription` | SLAM이 켜져 있는 동안 저장해야 함. `--ros-args -p use_sim_time:=true` 확인 |
 | Nav2: 목표를 줘도 출발 안 함, `Failed to make progress` | AMCL 위치가 틀림 → RViz **2D Pose Estimate**로 실제 위치 알려 주기 |
-| Nav2: 로봇이 제자리에서 계속 돎 (복구 동작 반복) | 목표가 장애물 안/벽 너무 가까이 → 다른 목표. 월드 리셋: `ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger` (리셋 후 2D Pose Estimate를 원점으로) |
+| Nav2: 로봇이 제자리에서 계속 돎 (복구 동작 반복) | 목표가 장애물 안/벽 너무 가까이 → 다른 목표. 아래 "월드 리셋" |
+| 월드 리셋 후 주행이 엉뚱한 곳으로 감 | 시뮬레이터 리셋(`/mujoco_bridge/reset`)만 해서 AMCL이 옛 위치를 기억 | 플래너가 켜져 있으면 대시보드 **초기화** 또는 `ros2 topic pub --once /task_reset std_msgs/msg/Empty`. 아니면 리셋 후 RViz **2D Pose Estimate**로 원점을 찍기 ([모듈 3 실습 5](03_moveit_pick_place.md#실습-5-pick--place-전체-흐름)) |
 | Nav2 노드가 다 안 뜸 (`lifecycle` 관련 오류) | 이전 실행이 남아 있음 → "깨끗하게 종료" 후 다시 |
 | MoveIt: `Unable to sample any valid states for goal tree`, `No IK solution` | 손이 닿지 않는 목표. 더 가까이/높이 조정 |
 | MoveIt: `Start state appears to be in collision` | 팔이 테이블에 걸쳐 있음 → 월드 리셋 |
@@ -123,6 +124,7 @@ $ ros2 daemon stop
 | `busy; ignored command: ...` | 이전 명령이 실행 중 | 끝날 때까지 기다리거나 `ros2 topic pub --once /task_cancel std_msgs/msg/Empty` |
 | 브라우저에서 `localhost:8080`이 안 열림 | `dashboard:=true` 빠짐, 또는 WSL localhost 전달 문제 | Ubuntu에서 `curl -I localhost:8080` 확인 → 되면 `wsl --shutdown` 후 다시. 그래도 안 되면 `hostname -I`의 IP로 `http://<IP>:8080` |
 | 대시보드에 "연결 끊김" | rosbridge(:9090) 안 뜸 | bringup 로그에서 `rosbridge_websocket` 오류 확인. 9090 포트를 다른 프로그램이 쓰는지 |
+| 초기화 버튼을 눌렀는데 "초기화 요청에 응답이 없습니다" | `planner:=true` 없이 bringup을 켬 | `planner:=true`(키가 없으면 `llm:=scripted`도)로 다시 실행 |
 | 카메라 화면이 안 나옴 | 마커 검출 노드 미실행 | `ros2 topic hz /aruco/debug_image/compressed` |
 
 ## 무시해도 되는 메시지

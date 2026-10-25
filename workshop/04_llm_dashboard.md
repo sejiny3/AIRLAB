@@ -127,10 +127,9 @@ $ ros2 topic echo /task_status --field data
 
 ## 실습 2. 실제 Claude로 계획
 
-bringup을 끄고 (`Ctrl + C`) LLM을 켜서 다시 실행합니다:
+bringup을 끄고 (`Ctrl + C`) LLM을 켜서 다시 실행합니다 (다시 켜면 월드도 처음 상태로 시작합니다):
 
 ```bash
-$ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger   # (켜져 있다면) 월드 리셋
 $ ros2 launch unbolt_manipulation bringup.launch.py planner:=true
 ```
 
@@ -197,6 +196,18 @@ $ ros2 topic pub --once /task_cancel std_msgs/msg/Empty
 
 ✅ **체크포인트 4-3**: 취소 후 다시 보낸 명령이 성공했다.
 
+**처음부터 다시 (초기화)**: 상자가 엉뚱한 곳에 있거나 로봇이 꼬였을 때, bringup을 다시 켜지 않고 처음 상태로 되돌립니다.
+
+```bash
+$ ros2 topic pub --once /task_reset std_msgs/msg/Empty
+```
+
+진행 중인 작업을 취소한 뒤 → 시뮬레이터 리셋(로봇·팔·빨간 상자를 처음 위치로) → AMCL 위치 추정을 원점으로 다시 맞추고
+costmap을 비움 → 플래너가 기억하는 상태(위치, 들고 있는 것, 마커 위치)도 처음으로. 몇 초면 끝납니다.
+
+> 시뮬레이터만 리셋하는 `ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger`는 플래너와 AMCL이 옛 상태를
+> 기억하고 있어서 다음 명령이 꼬입니다. 플래너를 켠 상태에서는 `/task_reset`을 쓰세요.
+
 ## 실습 5. 웹 대시보드
 
 ```bash
@@ -209,7 +220,7 @@ Windows의 Chrome/Edge에서 **<http://localhost:8080>** 을 엽니다 (WSL이 l
 
 - **지도**: SLAM 지도 + 로봇 외곽선·방향 + LiDAR 점 + Nav2 경로 + 테이블 + 빨간 상자(시뮬레이터 실제 위치)
 - **헤드 카메라**: 마커 검출 결과가 그려진 영상
-- **명령**: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소
+- **명령**: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소, **초기화**(한 번 누르면 "정말 초기화?"로 바뀌고 4초 안에 한 번 더 누르면 실행, `/task_reset`과 같음)
 - **작업 진행**: Claude가 부른 단계마다 상태·시간·결과, Claude의 답
 - **로봇 상태**: 위치, 들고 있는 물체, 속도, 그리퍼
 
@@ -303,7 +314,7 @@ Claude가 어떻게 반응했는지 `/task_status` 로그와 함께 제출.
 | 파일 | 내용 |
 |---|---|
 | `unbolt_manipulation/task_planner_core.py` | `SYSTEM_PROMPT`, `TOOLS`, `TaskExecutor`, `TaskPlanner`, `ScriptedLLM` |
-| `unbolt_manipulation/task_planner.py` | ROS 노드: `/task_command` → `/task_status`, `/task_cancel`, `/task_world` |
+| `unbolt_manipulation/task_planner.py` | ROS 노드: `/task_command` → `/task_status`, `/task_cancel`, `/task_world`, `/task_reset` |
 | `unbolt_manipulation/ask.py` | 명령 CLI |
 | `unbolt_dashboard/web/index.html` | 대시보드 (외부 라이브러리 없이 rosbridge 프로토콜 직접 구현) |
 | `unbolt_dashboard/dashboard_server.py` | 웹 서버, 지도 PNG, 로봇 위치 TF 재발행 |

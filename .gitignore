@@ -9,6 +9,7 @@ third_party/
 __pycache__/
 *.pyc
 .omc/
+~$*
 
 # student files from the exercises
 models/my_scene.xml

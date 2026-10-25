@@ -9,6 +9,8 @@ One command runs at a time; commands that arrive while busy are rejected.
 /task_cancel (std_msgs/Empty) stops the running task: base motions stop at once, an arm
 motion in progress finishes, and no further step is started. /task_world (std_msgs/Empty)
 asks for the current world state to be re-published (for a dashboard that just connected).
+/task_reset (std_msgs/Empty) cancels a running task, then puts the robot and the objects back
+at the start (simulator reset + AMCL re-initialised + planner world state reset).
 
 Parameters:
   llm      'claude' (default; needs ANTHROPIC_API_KEY or an `ant auth login` profile)
@@ -39,7 +41,9 @@ class TaskPlannerNode(Node):
         self.create_subscription(String, '/task_command', self._on_command, 10)
         self.create_subscription(Empty, '/task_cancel', self._on_cancel, 10)
         self.create_subscription(Empty, '/task_world', lambda _: self._publish_world(), 10)
+        self.create_subscription(Empty, '/task_reset', self._on_reset, 10)
         self.busy = threading.Lock()
+        self.resetting = threading.Lock()
 
         self.get_logger().info('connecting to Nav2 / MoveIt ...')
         self.skills = RobotSkills()
@@ -59,7 +63,7 @@ class TaskPlannerNode(Node):
         if event['type'] == 'tool_result':  # keep dashboards' robot/object state current step by step
             self._publish_world()
         if event['type'] in ('command', 'tool_call', 'tool_result', 'final', 'thought', 'reply', 'error',
-                             'cancel_requested'):
+                             'cancel_requested', 'reset_requested', 'reset'):
             summary = {k: v for k, v in event.items() if k != 'type'}
             self.get_logger().info(f'[{event["type"]}] {json.dumps(summary, ensure_ascii=False)}')
 
@@ -72,6 +76,32 @@ class TaskPlannerNode(Node):
             self.skills.cancel_event.set()
             self.skills.stop()
             self._publish({'type': 'cancel_requested'})
+
+    def _on_reset(self, _msg):
+        if self.resetting.acquire(blocking=False):  # a second press while resetting is ignored
+            threading.Thread(target=self._reset, daemon=True).start()
+
+    def _reset(self):
+        try:
+            self._publish({'type': 'reset_requested', 'busy': self.busy.locked()})
+            self._on_cancel(None)
+            # wait for the cancelled task to wind down (an arm motion in progress finishes first)
+            if not self.busy.acquire(timeout=120.0):
+                self._publish({'type': 'reset', 'ok': False, 'text': '진행 중인 작업이 끝나지 않아 초기화하지 못했습니다.'})
+                return
+            try:
+                self._publish_world()
+                ok = self.skills.reset_world()
+                if ok:
+                    self.executor_.reset()
+                self.skills.cancel_event.clear()
+                self._publish({'type': 'reset', 'ok': ok, 'text': '로봇과 물체를 처음 위치로 되돌렸습니다.' if ok
+                               else '시뮬레이터 초기화에 실패했습니다. bringup 로그를 확인하세요.'})
+            finally:
+                self.busy.release()
+                self._publish_world()
+        finally:
+            self.resetting.release()
 
     def _on_command(self, msg):
         if not self.busy.acquire(blocking=False):

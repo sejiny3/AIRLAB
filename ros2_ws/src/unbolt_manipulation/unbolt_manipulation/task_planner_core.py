@@ -107,6 +107,10 @@ class TaskExecutor:
 
     def __init__(self, skills: RobotSkills):
         self.s = skills
+        self.reset()
+
+    def reset(self):
+        """Symbolic state of a freshly started (or reset) world."""
         self.robot_location = 'home'
         self.object_location = {name: o['location'] for name, o in OBJECTS.items()}
         self.held = None

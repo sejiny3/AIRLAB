@@ -211,6 +211,8 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 - 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG).
 - 명령: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소(`/task_cancel` — 주행·정밀 접근은 즉시 멈추고,
   진행 중인 팔 동작은 마친 뒤 다음 단계를 시작하지 않는다).
+- 초기화(`/task_reset`, 두 번 눌러 확인): 진행 중인 작업을 취소하고 → 시뮬레이터 리셋(로봇·팔·빨간 상자를
+  처음 위치로) → AMCL을 원점으로 다시 맞추고 costmap 비움 → 플래너의 상태(위치·들고 있는 것·마커 기억)도 처음으로.
 - 작업 진행: Claude가 호출한 단계마다 상태·걸린 시간·결과, Claude의 응답.
 - 로봇 상태: 작업 기준 위치, 들고 있는 물체, 지도 위치, 속도, 양손 그리퍼 열림, 시뮬레이션 시간.
 - 페이지를 새로 열면 `/task_world`로 현재 상태를 다시 받아 온다.
@@ -218,7 +220,8 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 ![Dashboard](docs/step7_dashboard.jpg)
 
 대시보드에서 확인한 것: 명령 보내기 → 5단계 완료(76~80 s), 원래 자리로 되돌리기(4단계 완료),
-주행 중·정밀 접근 중 취소, 페이지 새로 고침 후 상태 복원, 휴대폰 폭(375 px) 한 열 배치.
+주행 중·정밀 접근 중 취소, 페이지 새로 고침 후 상태 복원, 휴대폰 폭(375 px) 한 열 배치,
+초기화(대기 중 2 s / 상자를 들고 주행 중 3 s → 같은 명령 다시 성공, 패드 중심에서 0.5 cm).
 
 다른 터미널에서:
 
@@ -233,9 +236,14 @@ ros2 run unbolt_mujoco_bridge arm_demo --ros-args -p use_sim_time:=true
 ros2 topic pub --once /joint_commands sensor_msgs/msg/JointState \
   "{name: [openarm_left_joint1], position: [-0.8]}"
 
-# 월드 리셋
+# 월드 리셋 (task_planner가 켜져 있으면: AMCL·플래너 상태까지 함께, 대시보드 초기화 버튼과 같음)
+ros2 topic pub --once /task_reset std_msgs/msg/Empty
+# 시뮬레이터만 리셋 (planner 없이 실행할 때. 로봇을 움직인 뒤라면 RViz 2D Pose Estimate로 원점을 다시 알려 줄 것)
 ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger
 ```
+
+브리지 리셋은 시뮬레이션 시간을 0으로 되돌리지 않는다. `/clock`이 뒤로 가면 모든 노드가 TF 버퍼를 비워
+Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 
 ## 브리지 인터페이스
 
@@ -253,7 +261,7 @@ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger
 | action | `/{left,right}_{arm,gripper}_controller/follow_joint_trajectory` | control_msgs/FollowJointTrajectory | MoveIt 궤적 실행 |
 | pub | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | 헤드 카메라 5 Hz (그림자·반사 끔) |
 | pub | `/ground_truth/red_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용, 스킬은 사용 안 함) |
-| srv | `/mujoco_bridge/reset` | std_srvs/Trigger | home 자세로 리셋 |
+| srv | `/mujoco_bridge/reset` | std_srvs/Trigger | home 자세로 리셋 (시뮬레이션 시간은 계속 흐름) |
 
 관절 이름: `openarm_{left,right}_joint1..7`, `openarm_{left,right}_finger_joint1`
 (finger_joint2는 equality로 joint1을 따라감), `{left,right}_wheel_joint`.
