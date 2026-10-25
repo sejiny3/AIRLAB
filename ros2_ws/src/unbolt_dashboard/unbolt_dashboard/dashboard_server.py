@@ -10,12 +10,17 @@ The node also publishes /dashboard/robot_pose (geometry_msgs/PoseStamped, map fr
 10 Hz from TF map -> base_footprint: /amcl_pose alone is latched and only updates after
 0.2 m / 0.2 rad of motion, so a page that composes it with odometry gets stale headings.
 
+/dashboard/shutdown (std_msgs/Empty) is the page's "시스템 종료" button: the node announces
+it on /task_status and exits cleanly, and dashboard.launch.py turns that clean exit into a
+shutdown of the whole launch (simulator, Nav2, MoveIt, planner, RViz).
+
   ros2 run unbolt_dashboard dashboard_server --ros-args -p port:=8080
 """
 
 import json
 import os
 import threading
+import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 import cv2
@@ -26,6 +31,7 @@ from ament_index_python.packages import get_package_share_directory
 from geometry_msgs.msg import PoseStamped
 from rclpy.node import Node
 from rclpy.time import Time
+from std_msgs.msg import Empty, String
 
 from unbolt_manipulation.task_planner_core import LOCATIONS, OBJECTS
 
@@ -44,6 +50,9 @@ class DashboardServer(Node):
         self.tf_listener = tf2_ros.TransformListener(self.tf, self)
         self.pose_pub = self.create_publisher(PoseStamped, '/dashboard/robot_pose', 10)
         self.create_timer(0.1, self._publish_pose)
+        self.status_pub = self.create_publisher(String, '/task_status', 10)
+        self.create_subscription(Empty, '/dashboard/shutdown', self._on_shutdown, 10)
+        self.shutdown_at = None  # wall time to exit at, once the button was pressed
         self.declare_parameter('port', 8080)
         self.declare_parameter('rosbridge_port', 9090)
         nav_share = get_package_share_directory('unbolt_navigation')
@@ -99,6 +108,13 @@ class DashboardServer(Node):
         self.get_logger().info(f'dashboard on http://localhost:{port}/ (rosbridge ws port '
                                f'{self.get_parameter("rosbridge_port").value})')
 
+    def _on_shutdown(self, _msg):
+        if self.shutdown_at is not None:
+            return
+        self.get_logger().warn('shutdown requested from the dashboard: stopping every program of this launch')
+        self.status_pub.publish(String(data=json.dumps({'type': 'shutdown'})))
+        self.shutdown_at = time.monotonic() + 1.0  # give rosbridge a moment to relay the event
+
     def _publish_pose(self):
         try:
             t = self.tf.lookup_transform('map', 'base_footprint', Time())
@@ -115,7 +131,9 @@ def main():
     rclpy.init()
     node = DashboardServer()
     try:
-        rclpy.spin(node)
+        # exit code 0 after the button is what dashboard.launch.py waits for
+        while rclpy.ok() and (node.shutdown_at is None or time.monotonic() < node.shutdown_at):
+            rclpy.spin_once(node, timeout_sec=0.1)
     except KeyboardInterrupt:
         pass
     finally:

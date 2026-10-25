@@ -60,6 +60,16 @@
   button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
   button.danger { color: var(--bad); border-color: var(--bad); }
   button.confirm { background: var(--bad); border-color: var(--bad); color: #fff; font-weight: 600; }
+  button.small { padding: 4px 12px; font-size: 12px; border-radius: 999px; white-space: nowrap; }
+  #endScreen { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 16px;
+               background: rgba(10, 12, 18, .72); }
+  #endScreen[hidden] { display: none; }
+  .endbox { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 12px;
+            padding: 22px 26px; max-width: 560px; width: 100%; }
+  .endbox h2 { margin: 0 0 8px; font-size: 18px; }
+  .endbox p { margin: 6px 0; } .endbox .k { color: var(--muted); font-size: 13px; }
+  .endbox pre { margin: 6px 0 10px; padding: 10px 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);
+                font-size: 12px; white-space: pre-wrap; word-break: break-all; }
   button:disabled { opacity: .45; cursor: not-allowed; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: var(--bg); }
@@ -101,7 +111,18 @@
   <span class="spacer"></span>
   <span class="pill" id="modelPill">LLM -</span>
   <span class="pill">시뮬레이션 <b id="simTime" style="margin-left:4px">-</b></span>
+  <button class="danger small" id="shutdownBtn" type="button" title="시뮬레이터, Nav2, MoveIt, 플래너, RViz 등 이 launch의 모든 프로그램을 끕니다">시스템 종료</button>
 </header>
+
+<div id="endScreen" hidden>
+  <div class="endbox" role="alertdialog" aria-labelledby="endTitle">
+    <h2 id="endTitle">모든 프로그램을 종료하는 중…</h2>
+    <p id="endText">시뮬레이터, Nav2, MoveIt, 플래너, RViz를 끄고 있습니다. 10~20초 걸립니다.</p>
+    <p class="k">다시 시작하려면 터미널에서</p>
+    <pre>ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true</pre>
+    <p class="k">다시 켜면 이 페이지가 자동으로 다시 연결됩니다.</p>
+  </div>
+</div>
 
 <main>
   <div class="col">
@@ -367,6 +388,9 @@ function onStatus(msg) {
       st.plan = [];  // Nav2 keeps no plan once the task is over; don't leave a stale one on the map
       break;
     case 'error': addItem('bad', e.text); break;
+    case 'shutdown':  // from dashboard_server (any open dashboard shows it)
+      clearTimeout(shutdownTimer); showEnd('stopping');
+      break;
     case 'reset_requested':
       clearTimeout(resetTimer); setResetting(true); setTask('run', '초기화 중');
       break;
@@ -383,6 +407,22 @@ function onStatus(msg) {
   }
 }
 let resetTimer = null, resetArmed = null;
+// shutdown: 'requested' (button pressed) -> 'stopping' (server confirmed) -> 'stopped' (connection gone)
+let ending = null, shutdownArmed = null, shutdownTimer = null;
+function showEnd(stage) {
+  ending = stage;
+  $('endScreen').hidden = !stage;
+  if (stage === 'stopped') {
+    $('endTitle').textContent = '모든 프로그램을 종료했습니다';
+    $('endText').textContent = 'ROS 연결이 끊겼습니다. 터미널 창은 닫아도 됩니다.';
+  } else if (stage) {
+    $('endTitle').textContent = '모든 프로그램을 종료하는 중…';
+    $('endText').textContent = '시뮬레이터, Nav2, MoveIt, 플래너, RViz를 끄고 있습니다. 10~20초 걸립니다.';
+  }
+}
+function resetShutdownBtn() {
+  const b = $('shutdownBtn'); b.classList.remove('confirm'); b.textContent = '시스템 종료'; b.disabled = false;
+}
 function setResetting(on) {
   const b = $('resetBtn'); b.disabled = on; b.classList.remove('confirm');
   b.textContent = on ? '초기화 중…' : '초기화';
@@ -407,9 +447,12 @@ async function boot() {
   ros.advertise('/task_cancel', 'std_msgs/msg/Empty');
   ros.advertise('/task_world', 'std_msgs/msg/Empty');
   ros.advertise('/task_reset', 'std_msgs/msg/Empty');
+  ros.advertise('/dashboard/shutdown', 'std_msgs/msg/Empty');
   ros.onstate = up => {
     $('connPill').className = 'pill ' + (up ? 'ok' : 'bad');
     $('connText').textContent = up ? 'ROS 연결됨' : 'ROS 연결 끊김 (재시도 중)';
+    if (!up && ending) showEnd('stopped');
+    if (up && ending === 'stopped') { showEnd(null); resetShutdownBtn(); }  // the stack was started again
     if (up) setTimeout(() => ros.publish('/task_world', 'std_msgs/msg/Empty', {}), 500);
   };
   ros.subscribe('/task_status', 'std_msgs/msg/String', onStatus, 0, 50);
@@ -448,6 +491,24 @@ async function boot() {
   $('cmd').addEventListener('submit', ev => { ev.preventDefault(); send($('cmdInput').value); });
   document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => send(b.textContent)));
   $('cancelBtn').addEventListener('click', () => ros.publish('/task_cancel', 'std_msgs/msg/Empty', {}));
+  // Two-step shutdown, like reset: the first click asks, a second click within 4 s confirms.
+  $('shutdownBtn').addEventListener('click', () => {
+    const b = $('shutdownBtn');
+    if (!shutdownArmed) {
+      b.classList.add('confirm'); b.textContent = st.busy ? '작업 중! 그래도 모두 종료?' : '정말 모두 종료?';
+      shutdownArmed = setTimeout(() => { shutdownArmed = null; resetShutdownBtn(); }, 4000);
+      return;
+    }
+    clearTimeout(shutdownArmed); shutdownArmed = null;
+    b.disabled = true; b.textContent = '종료 중…';
+    ros.publish('/dashboard/shutdown', 'std_msgs/msg/Empty', {});
+    showEnd('requested');
+    shutdownTimer = setTimeout(() => {  // dashboard_server answers with a 'shutdown' event right away
+      if (ending !== 'requested') return;
+      showEnd(null); resetShutdownBtn();
+      addItem('bad', '종료 요청에 응답이 없습니다', 'dashboard_server가 실행 중인지 확인하세요 (dashboard:=true)');
+    }, 5000);
+  });
   // Two-step reset: the first click asks, a second click within 4 s confirms.
   $('resetBtn').addEventListener('click', () => {
     const b = $('resetBtn');

@@ -511,37 +511,40 @@ class MujocoBridge(Node):
         wall0, sim0 = time.monotonic(), d.time
         warned_slow = False
 
-        while rclpy.ok() and (viewer is None or viewer.is_running()):
-            self._apply_commands()
-            target = sim0 + (time.monotonic() - wall0) * self.rtf
+        # try/finally: Ctrl+C (KeyboardInterrupt) lands inside this loop, and an open passive
+        # viewer keeps the process alive until the launch kills it 15 s later.
+        try:
+            while rclpy.ok() and (viewer is None or viewer.is_running()):
+                self._apply_commands()
+                target = sim0 + (time.monotonic() - wall0) * self.rtf
 
-            steps = 0
-            while d.time < target and steps < max_steps:
-                mujoco.mj_step(m, d)
-                self._publish_due()
-                steps += 1
-            if steps == max_steps:
-                # Physics can't keep up: re-anchor instead of spiralling behind.
-                wall0, sim0 = time.monotonic(), d.time
-                if not warned_slow:
-                    self.get_logger().warn('simulation is slower than real_time_factor; running as fast as possible')
-                    warned_slow = True
+                steps = 0
+                while d.time < target and steps < max_steps:
+                    mujoco.mj_step(m, d)
+                    self._publish_due()
+                    steps += 1
+                if steps == max_steps:
+                    # Physics can't keep up: re-anchor instead of spiralling behind.
+                    wall0, sim0 = time.monotonic(), d.time
+                    if not warned_slow:
+                        self.get_logger().warn('simulation is slower than real_time_factor; running as fast as possible')
+                        warned_slow = True
 
-            if self.camera_due:
-                self.camera_due = False
-                self._publish_camera(renderer)
+                if self.camera_due:
+                    self.camera_due = False
+                    self._publish_camera(renderer)
 
-            now = time.monotonic()
-            if viewer is not None and now >= next_view:
-                viewer.sync()
-                next_view = now + view_dt
-            if steps < max_steps:
-                time.sleep(0.001)
-
-        if viewer is not None:
-            viewer.close()
-        if renderer is not None:
-            renderer.close()
+                now = time.monotonic()
+                if viewer is not None and now >= next_view:
+                    viewer.sync()
+                    next_view = now + view_dt
+                if steps < max_steps:
+                    time.sleep(0.001)
+        finally:
+            if viewer is not None:
+                viewer.close()
+            if renderer is not None:
+                renderer.close()
 
 
 def main():

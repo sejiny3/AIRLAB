@@ -543,7 +543,10 @@ class RobotSkills:
         return ok
 
     def shutdown(self):
-        self.stop()
+        try:
+            self.stop()
+        except Exception:  # the ROS context is already gone when the launch shuts us down
+            pass
         self.executor.shutdown()
         self.nav.destroy_node()
         self.node.destroy_node()

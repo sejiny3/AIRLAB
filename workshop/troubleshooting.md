@@ -91,7 +91,9 @@ $ conda deactivate                              # 지금 터미널만
 $ conda config --set auto_activate_base false   # 앞으로 새 터미널에서 자동으로 켜지지 않게 (conda는 필요할 때 conda activate)
 ```
 
-**깨끗하게 종료**:
+**깨끗하게 종료**: 대시보드를 켰다면 오른쪽 위 **시스템 종료**(두 번 눌러 확인)가 가장 간단합니다. 모든 프로그램이
+꺼지기까지 15초쯤 걸립니다 (Nav2 컨테이너가 SIGINT에 늦게 반응해 launch가 강제 종료할 때까지 기다림. 로그의
+`escalating to 'SIGKILL'`, `move_group ... exit code -11`은 정상). 대시보드가 없거나 그래도 남은 프로세스가 있으면:
 
 ```bash
 $ pkill -INT -f ros2; sleep 3
