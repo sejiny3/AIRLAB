@@ -8,6 +8,7 @@ third_party/
 
 __pycache__/
 *.pyc
+node_modules/
 .omc/
 ~$*
 
