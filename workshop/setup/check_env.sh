@@ -16,6 +16,11 @@ n=$(nproc); [ "$n" -ge 4 ] && pass "CPU ${n}코어" || warn "CPU ${n}코어 (4�
 mem=$(awk '/MemTotal/{printf "%d", $2/1024/1024+0.5}' /proc/meminfo)
 [ "$mem" -ge 7 ] && pass "WSL 메모리 ${mem}GB" || warn "WSL 메모리 ${mem}GB (8GB 이상 권장, 설치 가이드의 .wslconfig 참고)"
 case "$REPO" in /mnt/*) warn "코드가 Windows 드라이브에 있음 ($REPO) → ~/unbolt 권장" ;; *) pass "코드 위치 $REPO" ;; esac
+# ROS Humble is built for the system Python 3.10; scripts with "#!/usr/bin/env python3"
+# (rosbridge, several Nav2/MoveIt tools) die if conda or a venv puts another python3 first.
+py3=$(command -v python3)
+if [ "$py3" = /usr/bin/python3 ]; then pass "python3 = /usr/bin/python3"
+else fail "python3가 $py3 (conda/venv) → rosbridge 등이 죽음. 'conda deactivate' 또는 'conda config --set auto_activate_base false'"; fi
 
 sec "화면 (WSLg)"
 if [ -n "$WAYLAND_DISPLAY$DISPLAY" ] && [ -d /mnt/wslg ]; then pass "WSLg DISPLAY=$DISPLAY"; else fail "WSLg 없음 (Windows 10 21H2 이하 또는 'wsl --update' 필요)"; fi

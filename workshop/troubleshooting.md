@@ -81,6 +81,16 @@ PowerShell에서 `wsl --shutdown` 후 다시 엽니다.
 | 이전 실행이 안 꺼져서 이상하게 동작 (토픽 발행자가 2개, 로봇 두 대처럼) | `Ctrl + C` 뒤에도 남은 프로세스 | 아래 "깨끗하게 종료" |
 | 다른 사람 로봇의 토픽이 보임 | 같은 네트워크·같은 `ROS_DOMAIN_ID` (WSL 네트워크를 mirrored로 바꾼 경우) | 강사가 정한 번호로 `export ROS_DOMAIN_ID=<번호>` 를 `~/.bashrc`의 unbolt 블록에 |
 
+**conda를 쓰는 노트북**: 프롬프트 앞에 `(base)`가 보이면 conda가 켜져 있는 것입니다. ROS 2 Humble은 Ubuntu의
+Python 3.10(`/usr/bin/python3`)용으로 만들어져 있어서, conda의 `python3`가 먼저 잡히면 `#!/usr/bin/env python3`로
+시작하는 프로그램(rosbridge, Nav2·MoveIt 도구 일부, `python3 ~/patrol.py`)이 `No module named 'rclpy._rclpy_pybind11'`로
+죽습니다. `check_env.sh`의 `python3 = ...` 줄에서 확인할 수 있습니다.
+
+```bash
+$ conda deactivate                              # 지금 터미널만
+$ conda config --set auto_activate_base false   # 앞으로 새 터미널에서 자동으로 켜지지 않게 (conda는 필요할 때 conda activate)
+```
+
 **깨끗하게 종료**:
 
 ```bash
@@ -123,7 +133,8 @@ $ ros2 daemon stop
 | `ask`가 아무것도 안 하고 기다림 | `planner:=true` 없이 bringup을 켬 | `ros2 node list`에 `/task_planner` 있는지 확인 |
 | `busy; ignored command: ...` | 이전 명령이 실행 중 | 끝날 때까지 기다리거나 `ros2 topic pub --once /task_cancel std_msgs/msg/Empty` |
 | 브라우저에서 `localhost:8080`이 안 열림 | `dashboard:=true` 빠짐, 또는 WSL localhost 전달 문제 | Ubuntu에서 `curl -I localhost:8080` 확인 → 되면 `wsl --shutdown` 후 다시. 그래도 안 되면 `hostname -I`의 IP로 `http://<IP>:8080` |
-| 대시보드에 "연결 끊김" | rosbridge(:9090) 안 뜸 | bringup 로그에서 `rosbridge_websocket` 오류 확인. 9090 포트를 다른 프로그램이 쓰는지 |
+| 대시보드에 "연결 끊김", 로그에 `rosbridge_websocket ... process has died ... exit code 1` | conda/venv가 켜져 있어 rosbridge가 ROS용이 아닌 Python으로 실행됨 (`No module named 'rclpy._rclpy_pybind11'`) | 아래 "conda를 쓰는 노트북" |
+| 대시보드에 "연결 끊김" (그 밖의 경우) | rosbridge(:9090) 안 뜸 | bringup 로그에서 `rosbridge_websocket` 오류 확인. 9090 포트를 다른 프로그램이 쓰는지 |
 | 초기화 버튼을 눌렀는데 "초기화 요청에 응답이 없습니다" | `planner:=true` 없이 bringup을 켬 | `planner:=true`(키가 없으면 `llm:=scripted`도)로 다시 실행 |
 | 카메라 화면이 안 나옴 | 마커 검출 노드 미실행 | `ros2 topic hz /aruco/debug_image/compressed` |
 
