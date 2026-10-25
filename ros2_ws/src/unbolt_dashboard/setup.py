@@ -23,6 +23,7 @@ setup(
     entry_points={
         'console_scripts': [
             'dashboard_server = unbolt_dashboard.dashboard_server:main',
+            'dashboard_launcher = unbolt_dashboard.launcher:main',
         ],
     },
 )

@@ -211,6 +211,11 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 - 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG).
 - 명령: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소(`/task_cancel` — 주행·정밀 접근은 즉시 멈추고,
   진행 중인 팔 동작은 마친 뒤 다음 단계를 시작하지 않는다).
+- 연결(시스템 시작): `ros2 run unbolt_dashboard dashboard_launcher`를 켜 두면 ROS가 꺼져 있어도 http://localhost:8080 이
+  열리고 "ROS가 꺼져 있습니다" 화면의 **연결** 버튼(LLM Claude/대역, MuJoCo 창, RViz 선택)으로 bringup 전체를 켠다.
+  런처가 페이지와 시작/종료 API(`/api/stack`)를 맡고, launch 안의 dashboard_server는 8080이 차 있으면 ROS 쪽 일만 한다.
+  시작·종료 요청은 이 컴퓨터에서만 받는다(`--allow-remote`로 해제). 터미널에서 켠 스택이 있거나 이전 스택이 아직 꺼지는 중이면
+  시작을 거절한다. 런처의 Ctrl+C는 자기가 켠 스택도 함께 끈다. 로그: `~/.ros/unbolt_launcher.log`
 - 시스템 종료(헤더 오른쪽, 두 번 눌러 확인): `/dashboard/shutdown` → dashboard_server가 정상 종료(코드 0)하면
   `dashboard.launch.py`가 launch 전체를 끈다(시뮬레이터, Nav2, MoveIt, 플래너, RViz). 서버가 비정상 종료(크래시)하면 끄지 않는다.
   페이지는 "종료했습니다"와 다시 시작 명령을 보여 주고, 다시 켜면 저절로 다시 연결된다.
@@ -225,7 +230,8 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 대시보드에서 확인한 것: 명령 보내기 → 5단계 완료(76~80 s), 원래 자리로 되돌리기(4단계 완료),
 주행 중·정밀 접근 중 취소, 페이지 새로 고침 후 상태 복원, 휴대폰 폭(375 px) 한 열 배치,
 초기화(대기 중 2 s / 상자를 들고 주행 중 3 s → 같은 명령 다시 성공, 패드 중심에서 0.5 cm),
-시스템 종료(누른 뒤 1.8 s에 페이지가 "종료했습니다", 모든 프로세스 종료, 다시 켜면 페이지 자동 재연결).
+시스템 종료(누른 뒤 1.8 s에 페이지가 "종료했습니다", 모든 프로세스 종료, 다시 켜면 페이지 자동 재연결),
+연결(런처로 시작 → 13 s에 rosbridge 연결, 25 s에 플래너 준비, 시작 3/6/10 s에 취소해도 남는 프로세스 0개).
 
 다른 터미널에서:
 

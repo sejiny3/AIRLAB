@@ -70,6 +70,12 @@
   .endbox p { margin: 6px 0; } .endbox .k { color: var(--muted); font-size: 13px; }
   .endbox pre { margin: 6px 0 10px; padding: 10px 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line);
                 font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+  .endbox pre#endLog { max-height: 9em; overflow: hidden; color: var(--muted); }
+  .endbox [hidden] { display: none !important; }
+  .opts { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 12px 0 4px; font-size: 13px; }
+  .opts select { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); margin-left: 6px; }
+  .endactions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  #optNote.bad { color: var(--bad); }
   button:disabled { opacity: .45; cursor: not-allowed; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: var(--bg); }
@@ -111,16 +117,40 @@
   <span class="spacer"></span>
   <span class="pill" id="modelPill">LLM -</span>
   <span class="pill">시뮬레이션 <b id="simTime" style="margin-left:4px">-</b></span>
-  <button class="danger small" id="shutdownBtn" type="button" title="시뮬레이터, Nav2, MoveIt, 플래너, RViz 등 이 launch의 모든 프로그램을 끕니다">시스템 종료</button>
+  <button class="primary small" id="connectBtn" type="button" hidden title="시뮬레이터, Nav2, MoveIt, 플래너를 켜고 연결합니다 (dashboard_launcher)">연결</button>
+  <button class="danger small" id="shutdownBtn" type="button" hidden title="시뮬레이터, Nav2, MoveIt, 플래너, RViz 등 이 launch의 모든 프로그램을 끕니다">시스템 종료</button>
 </header>
 
+<!-- system panel: shutdown progress, and with dashboard_launcher also "ROS is off" / start / starting -->
 <div id="endScreen" hidden>
   <div class="endbox" role="alertdialog" aria-labelledby="endTitle">
-    <h2 id="endTitle">모든 프로그램을 종료하는 중…</h2>
-    <p id="endText">시뮬레이터, Nav2, MoveIt, 플래너, RViz를 끄고 있습니다. 10~20초 걸립니다.</p>
-    <p class="k">다시 시작하려면 터미널에서</p>
-    <pre>ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true</pre>
-    <p class="k">다시 켜면 이 페이지가 자동으로 다시 연결됩니다.</p>
+    <h2 id="endTitle"></h2>
+    <p id="endText"></p>
+    <div id="startForm" hidden>
+      <div class="opts">
+        <label>LLM
+          <select id="optLlm">
+            <option value="claude">Claude</option>
+            <option value="scripted">대역 (scripted, API 키 불필요)</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="optViewer" checked> MuJoCo 창</label>
+        <label><input type="checkbox" id="optRviz"> RViz</label>
+      </div>
+      <p class="k" id="optNote"></p>
+    </div>
+    <pre id="endLog" hidden></pre>
+    <div class="endactions">
+      <button class="primary" id="startBtn" type="button" hidden>연결 (시스템 시작)</button>
+      <button id="stopBtn" type="button" hidden>시작 취소</button>
+      <button id="closeBtn" type="button" hidden>닫기</button>
+    </div>
+    <div id="cliHint" hidden>
+      <p class="k">다시 시작하려면 터미널에서</p>
+      <pre>ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true</pre>
+      <p class="k">다시 켜면 이 페이지가 자동으로 다시 연결됩니다.
+        (<code>ros2 run unbolt_dashboard dashboard_launcher</code>를 켜 두면 이 화면에 "연결" 버튼이 생깁니다.)</p>
+    </div>
   </div>
 </div>
 
@@ -348,6 +378,7 @@ function onStatus(msg) {
   const e = JSON.parse(msg.data);
   switch (e.type) {
     case 'ready': case 'world':
+      if (!sys.plannerSeen) { sys.plannerSeen = true; renderPanel(); }
       st.world = e.world; renderWorld();
       if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
       if (e.busy) setBusy(true);
@@ -389,7 +420,7 @@ function onStatus(msg) {
       break;
     case 'error': addItem('bad', e.text); break;
     case 'shutdown':  // from dashboard_server (any open dashboard shows it)
-      clearTimeout(shutdownTimer); showEnd('stopping');
+      clearTimeout(shutdownTimer); sys.shutting = 'stopping'; renderPanel();
       break;
     case 'reset_requested':
       clearTimeout(resetTimer); setResetting(true); setTask('run', '초기화 중');
@@ -407,21 +438,96 @@ function onStatus(msg) {
   }
 }
 let resetTimer = null, resetArmed = null;
-// shutdown: 'requested' (button pressed) -> 'stopping' (server confirmed) -> 'stopped' (connection gone)
-let ending = null, shutdownArmed = null, shutdownTimer = null;
-function showEnd(stage) {
-  ending = stage;
-  $('endScreen').hidden = !stage;
-  if (stage === 'stopped') {
-    $('endTitle').textContent = '모든 프로그램을 종료했습니다';
-    $('endText').textContent = 'ROS 연결이 끊겼습니다. 터미널 창은 닫아도 됩니다.';
-  } else if (stage) {
+/* ---------- system panel: shutdown, and with dashboard_launcher start ("연결") ---------- */
+// conn: rosbridge connected; plannerSeen: the planner answered since connecting;
+// stack: dashboard_launcher's /api/stack (null without a launcher); shutting: 'requested' | 'stopping';
+// dismissed: the user closed the "ROS is off" panel (the header's 연결 button reopens it).
+const sys = { conn: false, plannerSeen: false, stack: null, shutting: null, dismissed: false, wasShutdown: false };
+let shutdownArmed = null, shutdownTimer = null;
+const launcher = () => !!(st.cfg && st.cfg.launcher);
+function panelMode() {
+  const sk = sys.stack;
+  if (sys.shutting && sys.conn) return 'stopping';
+  if (launcher() && sk) {
+    if (sk.state === 'stopping') return 'stopping';
+    if (sk.state === 'running' && sys.wasShutdown) return 'stopping';  // ROS gone, launch still winding down
+    if (sk.state === 'running' && !(sys.conn && (sys.plannerSeen || sk.ready))) return 'starting';
+    if (!sys.conn && sk.state === 'stopped' && !sk.external) return sys.dismissed ? null : (sys.wasShutdown ? 'stopped' : 'off');
+    return null;
+  }
+  return !sys.conn && sys.wasShutdown ? 'stopped' : null;
+}
+function renderPanel() {
+  const mode = panelMode(), sk = sys.stack, L = launcher();
+  const show = (id, on) => { $(id).hidden = !on; };
+  $('endScreen').hidden = !mode;
+  if (mode === 'stopping') {
     $('endTitle').textContent = '모든 프로그램을 종료하는 중…';
     $('endText').textContent = '시뮬레이터, Nav2, MoveIt, 플래너, RViz를 끄고 있습니다. 10~20초 걸립니다.';
+  } else if (mode === 'stopped') {
+    $('endTitle').textContent = '모든 프로그램을 종료했습니다';
+    $('endText').textContent = L ? '다시 켜려면 아래 "연결"을 누르세요.' : 'ROS 연결이 끊겼습니다. 터미널 창은 닫아도 됩니다.';
+  } else if (mode === 'off' && sk && sk.returncode) {
+    $('endTitle').textContent = '시스템이 멈췄습니다';
+    $('endText').textContent = `켜는 중이거나 실행 중에 launch가 종료됐습니다 (exit code ${sk.returncode}). `
+      + '아래 로그와 ~/.ros/unbolt_launcher.log를 확인하고 다시 "연결"을 눌러 보세요.';
+  } else if (mode === 'off') {
+    $('endTitle').textContent = 'ROS가 꺼져 있습니다';
+    $('endText').textContent = '"연결"을 누르면 시뮬레이터, Nav2, MoveIt, 플래너를 켜고 이 페이지에 연결합니다 (30~60초).';
+  } else if (mode === 'starting') {
+    const t = sk && sk.elapsed != null ? ` ${Math.round(sk.elapsed)}초` : '';
+    $('endTitle').textContent = '시스템을 켜는 중…' + t;
+    $('endText').textContent = !sys.conn ? '프로그램을 켜고 있습니다. rosbridge가 뜨면 연결됩니다.'
+      : '연결됨 · Nav2와 MoveIt이 준비되기를 기다리는 중입니다 (보통 30~60초).';
   }
+  const canStart = L && (mode === 'off' || mode === 'stopped');
+  show('startForm', canStart); show('startBtn', canStart); show('closeBtn', canStart);
+  show('stopBtn', mode === 'starting');
+  show('cliHint', mode === 'stopped' && !L);
+  const failed = mode === 'off' && sk && sk.returncode;
+  const log = (mode === 'starting' || failed) && sk && sk.log.length ? sk.log.slice(failed ? -6 : -4).join('\n') : '';
+  $('endLog').textContent = log; show('endLog', !!log);
+  // header: 연결 when off (with a launcher), 시스템 종료 when connected
+  show('connectBtn', L && !sys.conn && sk && sk.state === 'stopped' && !sk.external);
+  show('shutdownBtn', sys.conn);
 }
 function resetShutdownBtn() {
   const b = $('shutdownBtn'); b.classList.remove('confirm'); b.textContent = '시스템 종료'; b.disabled = false;
+}
+function startOptions() {
+  return { llm: $('optLlm').value, use_viewer: $('optViewer').checked, rviz: $('optRviz').checked };
+}
+function applyKeyState(hasKey) {
+  const claude = $('optLlm').querySelector('option[value="claude"]');
+  claude.disabled = !hasKey;
+  if (!hasKey) $('optLlm').value = 'scripted';
+  if (!$('optNote').classList.contains('bad'))
+    $('optNote').textContent = hasKey ? '' : 'ANTHROPIC_API_KEY가 없어 대역(scripted)으로만 켤 수 있습니다.';
+}
+async function pollStack() {
+  try {
+    const r = await fetch('api/stack', { cache: 'no-store' });
+    if (!r.ok) return;
+    const first = !sys.stack;
+    sys.stack = await r.json();
+    if (first) applyKeyState(sys.stack.api_key);
+    renderPanel();
+  } catch (e) { /* launcher itself is gone: keep the last state */ }
+}
+async function stackCall(action) {
+  const note = $('optNote');
+  try {
+    const r = await fetch('api/stack/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify(action === 'start' ? startOptions() : {}) });
+    const j = await r.json();
+    if (j.status) sys.stack = j.status;
+    note.classList.toggle('bad', !j.ok);
+    note.textContent = j.ok ? '' : j.message;
+    if (!j.ok) applyKeyState(sys.stack ? sys.stack.api_key : true);
+  } catch (e) {
+    note.classList.add('bad'); note.textContent = 'dashboard_launcher에 연결할 수 없습니다.';
+  }
+  renderPanel();
 }
 function setResetting(on) {
   const b = $('resetBtn'); b.disabled = on; b.classList.remove('confirm');
@@ -451,9 +557,15 @@ async function boot() {
   ros.onstate = up => {
     $('connPill').className = 'pill ' + (up ? 'ok' : 'bad');
     $('connText').textContent = up ? 'ROS 연결됨' : 'ROS 연결 끊김 (재시도 중)';
-    if (!up && ending) showEnd('stopped');
-    if (up && ending === 'stopped') { showEnd(null); resetShutdownBtn(); }  // the stack was started again
-    if (up) setTimeout(() => ros.publish('/task_world', 'std_msgs/msg/Empty', {}), 500);
+    sys.conn = up;
+    if (!up) {
+      sys.plannerSeen = false;
+      if (sys.shutting) { sys.wasShutdown = true; sys.shutting = null; }
+    } else {
+      sys.wasShutdown = false; sys.dismissed = false; resetShutdownBtn();  // (re)connected: a stack is up
+      setTimeout(() => ros.publish('/task_world', 'std_msgs/msg/Empty', {}), 500);
+    }
+    renderPanel();
   };
   ros.subscribe('/task_status', 'std_msgs/msg/String', onStatus, 0, 50);
   // Localized pose (TF map -> base_footprint), republished at 10 Hz by dashboard_server.
@@ -502,13 +614,26 @@ async function boot() {
     clearTimeout(shutdownArmed); shutdownArmed = null;
     b.disabled = true; b.textContent = '종료 중…';
     ros.publish('/dashboard/shutdown', 'std_msgs/msg/Empty', {});
-    showEnd('requested');
+    sys.shutting = 'requested'; renderPanel();
     shutdownTimer = setTimeout(() => {  // dashboard_server answers with a 'shutdown' event right away
-      if (ending !== 'requested') return;
-      showEnd(null); resetShutdownBtn();
+      if (sys.shutting !== 'requested' || !sys.conn) return;
+      sys.shutting = null; resetShutdownBtn(); renderPanel();
       addItem('bad', '종료 요청에 응답이 없습니다', 'dashboard_server가 실행 중인지 확인하세요 (dashboard:=true)');
     }, 5000);
   });
+  // "연결": with dashboard_launcher, start the stack from the page
+  $('connectBtn').addEventListener('click', () => { sys.dismissed = false; renderPanel(); });
+  $('startBtn').addEventListener('click', () => {
+    try { localStorage.setItem('unbolt.start', JSON.stringify(startOptions())); } catch (e) { /* no storage */ }
+    sys.plannerSeen = false; sys.wasShutdown = false; stackCall('start');
+  });
+  $('stopBtn').addEventListener('click', () => { sys.wasShutdown = true; stackCall('stop'); });
+  $('closeBtn').addEventListener('click', () => { sys.dismissed = true; renderPanel(); });
+  try {
+    const saved = JSON.parse(localStorage.getItem('unbolt.start') || 'null');
+    if (saved) { $('optLlm').value = saved.llm; $('optViewer').checked = saved.use_viewer; $('optRviz').checked = saved.rviz; }
+  } catch (e) { /* no storage */ }
+  if (launcher()) { pollStack(); setInterval(pollStack, 1500); }
   // Two-step reset: the first click asks, a second click within 4 s confirms.
   $('resetBtn').addEventListener('click', () => {
     const b = $('resetBtn');

@@ -137,6 +137,10 @@ $ ros2 daemon stop
 | 브라우저에서 `localhost:8080`이 안 열림 | `dashboard:=true` 빠짐, 또는 WSL localhost 전달 문제 | Ubuntu에서 `curl -I localhost:8080` 확인 → 되면 `wsl --shutdown` 후 다시. 그래도 안 되면 `hostname -I`의 IP로 `http://<IP>:8080` |
 | 대시보드에 "연결 끊김", 로그에 `rosbridge_websocket ... process has died ... exit code 1` | conda/venv가 켜져 있어 rosbridge가 ROS용이 아닌 Python으로 실행됨 (`No module named 'rclpy._rclpy_pybind11'`) | 아래 "conda를 쓰는 노트북" |
 | 대시보드에 "연결 끊김" (그 밖의 경우) | rosbridge(:9090) 안 뜸 | bringup 로그에서 `rosbridge_websocket` 오류 확인. 9090 포트를 다른 프로그램이 쓰는지 |
+| 대시보드에 **연결** 버튼이 없다 | 페이지를 런처가 아니라 bringup(dashboard_server)이 보여 주는 중 | `ros2 run unbolt_dashboard dashboard_launcher`를 켜고 페이지를 새로 고침 (bringup은 끈 상태에서) |
+| 연결을 눌렀더니 "이전 프로그램이 아직 꺼지는 중입니다" | 방금 끈 시스템의 Nav2·MoveIt이 아직 종료 중 (최대 15초) | 10초쯤 뒤에 다시 연결 |
+| 연결을 눌렀더니 "다른 곳에서 켠 ROS가 이미 실행 중입니다" | 터미널에서 켠 bringup이 있음 | 그대로 쓰면 됨 (페이지가 이미 연결됨). 런처로 켜고 싶으면 그 터미널을 Ctrl+C |
+| "시스템이 멈췄습니다 (exit code …)" | 켜는 중 또는 실행 중에 launch가 종료됨 | 화면의 로그와 `~/.ros/unbolt_launcher.log`에서 `Traceback`, `has died` 찾기 |
 | 초기화 버튼을 눌렀는데 "초기화 요청에 응답이 없습니다" | `planner:=true` 없이 bringup을 켬 | `planner:=true`(키가 없으면 `llm:=scripted`도)로 다시 실행 |
 | 카메라 화면이 안 나옴 | 마커 검출 노드 미실행 | `ros2 topic hz /aruco/debug_image/compressed` |
 
