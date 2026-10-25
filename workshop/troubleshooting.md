@@ -74,7 +74,7 @@ PowerShell에서 `wsl --shutdown` 후 다시 엽니다.
 | 증상 | 원인 | 해결 |
 |---|---|---|
 | `ros2: command not found` | 설치 전에 연 터미널 | 새 터미널을 열거나 `source ~/.bashrc` |
-| `Package 'unbolt_mujoco_bridge' not found` | 워크스페이스 환경 미적용 | `source ~/unbolt/ros2_ws/install/setup.bash` (새 터미널이면 자동) |
+| `Package 'unbolt_mujoco_bridge' not found` (`unbolt_dashboard` 등도 같음) | 워크스페이스 환경 미적용: `~/.bashrc`에 unbolt 블록이 없거나, 블록을 넣기 전에 연 터미널 | `grep ">>> unbolt" ~/.bashrc`로 확인. 있으면 `source ~/.bashrc`, 없으면 설치 스크립트를 다시 실행하거나 [설치 가이드 4-1](00_install.md#4-1-환경-설정-bashrc가-하는-일)대로 직접 넣기 (코드를 `~/unbolt`가 아닌 곳에 두었을 때도) |
 | 새로 만든 파일(노드, launch)이 안 보임 | `--symlink-install`이어도 **새 파일**은 빌드 필요 | `cd ~/unbolt/ros2_ws && colcon build --symlink-install` |
 | `Lookup would require extrapolation into the future/past` | 그 노드가 시뮬레이션 시간을 안 씀 | `--ros-args -p use_sim_time:=true` 붙이기 |
 | `simulation is slower than real_time_factor` 경고 | 노트북이 물리 계산을 못 따라감 | 다른 프로그램 끄기, 전원 연결, `use_viewer:=false` (MuJoCo 창 끄기), RViz 표시 줄이기. 동작은 느려질 뿐 결과는 같음 |

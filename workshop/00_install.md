@@ -255,9 +255,11 @@ ln -sfn ../../third_party/openarm_description ros2_ws/src/openarm_description
 source /opt/ros/humble/setup.bash
 cd ~/unbolt/ros2_ws && colcon build --symlink-install
 cat >> ~/.bashrc <<'EOF'
+# >>> unbolt >>>
 source /opt/ros/humble/setup.bash
 source ~/unbolt/ros2_ws/install/setup.bash
 export UNBOLT_ROOT=~/unbolt
+# <<< unbolt <<<
 EOF
 ```
 
@@ -272,6 +274,54 @@ EOF
   않아도 바로 반영됩니다 (새 파일을 추가했을 때만 다시 빌드).
 
 </details>
+
+### 4-1. 환경 설정: `~/.bashrc`가 하는 일
+
+`ros2` 명령은 **`source`로 불러온 곳의 패키지만** 압니다. 그래서 두 곳을 모두 불러와야 합니다.
+
+| 불러오는 것 | 그러면 생기는 것 | 없으면 |
+|---|---|---|
+| `source /opt/ros/humble/setup.bash` | `ros2` 명령, ROS 기본 패키지 (Nav2, MoveIt, RViz) | `ros2: command not found` |
+| `source ~/unbolt/ros2_ws/install/setup.bash` | 우리가 빌드한 패키지 (`unbolt_dashboard` 등) | `Package 'unbolt_…' not found` |
+| `export UNBOLT_ROOT=~/unbolt` | 모델 파일(`models/`) 위치 | 로봇 모델을 못 찾음 |
+
+`~/.bashrc`는 새 터미널이 열릴 때마다 자동으로 실행되는 파일입니다. 설치 스크립트가 이 줄들을
+`# >>> unbolt >>>` 와 `# <<< unbolt <<<` 사이에 넣어 두므로, 새 터미널은 바로 실습 명령을 쓸 수 있습니다.
+
+**확인** (새 터미널에서):
+
+```bash
+$ grep -A5 ">>> unbolt" ~/.bashrc
+$ ros2 pkg prefix unbolt_dashboard
+/home/student/unbolt/ros2_ws/install/unbolt_dashboard
+$ echo $UNBOLT_ROOT
+/home/student/unbolt
+```
+
+**블록이 없거나, 코드를 `~/unbolt`가 아닌 곳에 두었다면** 직접 넣습니다. `REPO`에 실제 코드 위치를 쓰세요.
+가장 쉬운 방법은 설치 스크립트를 다시 실행하는 것입니다 (블록을 새로 써 주고, 두 번 들어가지 않습니다).
+
+```bash
+$ REPO=~/unbolt          # 실제 코드 위치로 바꾸기
+$ cat >> ~/.bashrc <<EOF
+# >>> unbolt >>>
+source /opt/ros/humble/setup.bash
+source $REPO/ros2_ws/install/setup.bash
+export UNBOLT_ROOT=$REPO
+# <<< unbolt <<<
+EOF
+$ source ~/.bashrc       # 지금 열린 터미널에도 적용
+```
+
+> **이미 열려 있던 터미널은 `.bashrc`를 다시 읽지 않습니다.** 설정을 바꾼 뒤에는 `source ~/.bashrc`를 하거나
+> 새 터미널을 여세요. `Package 'unbolt_dashboard' not found`는 대부분 이 경우입니다.
+
+**다시 빌드해야 할 때**: `--symlink-install` 덕분에 기존 Python·launch·설정·웹 파일을 고치면 바로 반영됩니다.
+새 파일(노드, launch)이나 `setup.py`의 실행 이름을 추가했을 때만 다시 빌드하고 `source`합니다.
+
+```bash
+$ cd ~/unbolt/ros2_ws && colcon build --symlink-install && source install/setup.bash
+```
 
 ---
 
@@ -354,6 +404,20 @@ MuJoCo 뷰어의 로봇이 움직이고 RViz의 LiDAR 점이 따라 바뀌면 �
 `Ctrl + C`로 두 터미널을 모두 종료하세요.
 
 ✅ **체크포인트 3**: 키보드로 로봇이 움직인다.
+
+### 6-2. (선택) 대시보드 열어 보기
+
+모듈 4에서 쓰는 웹 대시보드도 미리 열어 볼 수 있습니다. Ubuntu 터미널에서 런처를 켜 두고 (이 터미널은 끄지 않기):
+
+```bash
+$ ros2 run unbolt_dashboard dashboard_launcher
+```
+
+Windows 브라우저(Chrome, Edge)에서 <http://localhost:8080> → "ROS가 꺼져 있습니다" 화면에서 옵션을 고르고
+**연결 (시스템 시작)**. 25~60초 뒤 "ROS 연결됨"이 뜹니다. API 키가 없으면 LLM을 대역(scripted)으로 고르세요.
+끌 때는 오른쪽 위 **시스템 종료**, 런처까지 끄려면 런처 터미널에서 `Ctrl + C`.
+
+`Package 'unbolt_dashboard' not found`가 나오면 [4-1. 환경 설정](#4-1-환경-설정-bashrc가-하는-일)을 보세요.
 
 ---
 

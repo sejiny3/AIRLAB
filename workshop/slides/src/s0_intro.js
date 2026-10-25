@@ -64,7 +64,7 @@ module.exports = function build() {
 
   s = content('2일 일정', '시작하기',
     '오전 2시간, 오후 4시간입니다. 설치는 반드시 사전에 끝내고 오도록 공지했습니다. 1일차 08:30–09:30에는 설치를 못 끝낸 사람을 위한 헬프데스크가 있습니다.');
-  pill(s, '사전: 집에서 설치 1~2시간 (00_install.md)', 0.6, 1.45, 5.2, C.accent2);
+  pill(s, '사전: 집에서 설치 1~2시간 (다음 "설치" 장)', 0.6, 1.45, 5.2, C.accent2);
   const days = [
     ['1일차 오전', '09:30–11:30', '모듈 1', 'MuJoCo + ROS 2\n브리지', '시뮬레이터, 로봇 모델\n센서, 좌표계'],
     ['1일차 오후', '12:30–16:30', '모듈 2', 'SLAM + Nav2', '지도 만들기\n자율주행, 순찰'],
@@ -170,11 +170,4 @@ module.exports = function build() {
     ['troubleshooting.md 검색', '오류의 일부를 Ctrl + F로 찾는다. 증상별로 원인과 해결이 표로 정리되어 있다'],
     ['깨끗하게 종료하고 다시 시작', '모든 터미널 Ctrl + C → 남은 프로세스 종료 → 다시 launch. 그래도 안 되면 wsl --shutdown'],
     ['빨간 카드 올리기', '조교에게 오류 텍스트를 보여 준다 (API 키가 들어 있지 않은지 확인)']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6 + (i % 2) * 6.15, 1.6 + Math.floor(i / 2) * 2.4, 5.9, 1.2));
-
-  s = content('시작 전에: 설치 점검', '시작하기',
-    '수업 시작 전에 모두 이 명령을 실행하게 합니다. API 키 없음 경고는 정상입니다. python3가 conda를 가리키면 실패로 나오는데, conda deactivate로 해결됩니다. 실패가 있는 학생은 조교가 바로 붙습니다.');
-  code(s, '$ bash ~/unbolt/workshop/setup/check_env.sh\n\n시스템\n  ✔ Ubuntu 22.04.5 LTS\n  ✔ python3 = /usr/bin/python3\n화면 (WSLg)\n  ✔ GPU 가속 OpenGL: D3D12 (...)\nROS 2\n  ✔ ROS 2 Humble 설치됨  ✔ slam_toolbox  ✔ moveit ...\nPython\n  ✔ mujoco 3.12.0   ✔ numpy 1.21.5   ✔ anthropic 2.3.0\nUNBOLT 코드\n  ✔ 워크스페이스 빌드됨\n  ✔ MuJoCo 월드 로드 + 오프스크린 렌더링\n\n결과: 28 통과, 1 경고, 0 실패', 0.6, 1.5, 7.3, 5.2, 14);
-  callout(s, 'ok', 8.2, 1.5, 4.5, 1.6, '마지막 줄이 "0 실패"');
-  callout(s, 'tip', 8.2, 3.3, 4.5, 1.6, '! 경고는 괜찮다 (API 키 없음 등)');
-  callout(s, 'fail', 8.2, 5.1, 4.5, 1.6, '✘ 줄의 안내대로. conda면 conda deactivate');
 };

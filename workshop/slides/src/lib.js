@@ -67,7 +67,8 @@ const ICON_NAMES = ['FaRobot', 'FaClock', 'FaSitemap', 'FaSatelliteDish', 'FaMap
   'FaLayerGroup', 'FaUndo', 'FaStopCircle', 'FaQuestionCircle', 'FaFlagCheckered', 'FaUsers', 'FaBook', 'FaWrench',
   'FaCube', 'FaEye', 'FaCamera', 'FaMemory', 'FaHdd', 'FaMicrochip', 'FaDollarSign', 'FaKeyboard', 'FaLightbulb',
   'FaSearch', 'FaListOl', 'FaPencilAlt', 'FaCompass', 'FaArrowsAlt', 'FaBox', 'FaTable', 'FaPlay', 'FaHome',
-  'FaShieldAlt', 'FaGraduationCap', 'FaLink', 'FaBolt', 'FaRedo', 'FaCrosshairs', 'FaWifi', 'FaFileCode'];
+  'FaShieldAlt', 'FaGraduationCap', 'FaLink', 'FaBolt', 'FaRedo', 'FaCrosshairs', 'FaWifi', 'FaFileCode',
+  'FaWindows', 'FaLinux', 'FaDownload', 'FaTools', 'FaClipboardCheck', 'FaDesktop', 'FaUserPlus', 'FaKey', 'FaFolderOpen', 'FaPowerOff'];
 const IMG = {};
 
 async function loadAssets() {
