@@ -11,6 +11,8 @@ motion in progress finishes, and no further step is started. /task_world (std_ms
 asks for the current world state to be re-published (for a dashboard that just connected).
 /task_reset (std_msgs/Empty) cancels a running task, then puts the robot and the objects back
 at the start (simulator reset + AMCL re-initialised + planner world state reset).
+/task_manual_drive (std_msgs/Empty) says the robot is being driven by hand (the dashboard's
+keyboard driving): the robot is no longer at a known place, so the next task navigates first.
 
 Parameters:
   llm      'claude' (default; needs ANTHROPIC_API_KEY or an `ant auth login` profile)
@@ -42,6 +44,7 @@ class TaskPlannerNode(Node):
         self.create_subscription(Empty, '/task_cancel', self._on_cancel, 10)
         self.create_subscription(Empty, '/task_world', lambda _: self._publish_world(), 10)
         self.create_subscription(Empty, '/task_reset', self._on_reset, 10)
+        self.create_subscription(Empty, '/task_manual_drive', self._on_manual_drive, 10)
         self.busy = threading.Lock()
         self.resetting = threading.Lock()
 
@@ -76,6 +79,13 @@ class TaskPlannerNode(Node):
             self.skills.cancel_event.set()
             self.skills.stop()
             self._publish({'type': 'cancel_requested'})
+
+    def _on_manual_drive(self, _msg):
+        if self.busy.locked() or self.executor_.robot_location is None:
+            return
+        self.executor_.robot_location = None  # driven away from wherever it was
+        self.get_logger().info('driven by hand: robot location now unknown')
+        self._publish_world()
 
     def _on_reset(self, _msg):
         if self.resetting.acquire(blocking=False):  # a second press while resetting is ignored

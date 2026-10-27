@@ -234,8 +234,9 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
   (아는 빈 칸과 미지의 경계)를 따라 스스로 탐색하고, 갈 수 있는 프론티어가 없으면 지도를
   `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장한다. 페이지는 `/map`을 실시간으로 그리고(프론티어는 하늘색,
   탐색 목표는 파란 원), 탐색 시작/멈춤/지도 저장(`/explore/control`)과 상태(`/explore/status`)를 보여 준다.
-  탐색이 끝나거나 멈추면 **키보드 조종**(W A S D/방향키, 누르는 동안만 `/cmd_vel` 10 Hz, LiDAR로 앞뒤 장애물이 가까우면
-  그 방향은 막음)을 쓸 수 있고, 그동안에도 SLAM이 지도를 고친다. 터미널만으로는 `ros2 launch unbolt_navigation explore.launch.py`.
+  탐색이 끝나거나 멈추면(작업 모드에서는 작업이 없을 때) **키보드 조종**(W A S D/방향키, 누르는 동안만 `/cmd_vel` 10 Hz, LiDAR로 앞뒤 장애물이 가까우면
+  그 방향은 막음)을 쓸 수 있고, 그동안에도 SLAM이 지도를 고친다. 작업 모드에서 몰면 페이지가 `/task_manual_drive`를 보내고 플래너가
+  로봇 위치를 "알 수 없음"으로 바꿔, 다음 명령은 주행부터 한다(엉뚱한 자리에서 집거나 놓지 않게). 터미널만으로는 `ros2 launch unbolt_navigation explore.launch.py`.
   탐색 모드의 Nav2 설정은 작업 모드와 다르다(`explore.launch.py`의 `_nav2()`, 작업 모드는 테이블에 붙어야 해서 그대로):
   로봇을 직사각형 대신 반지름 0.44 m 원으로 보고(제자리 회전 때 모서리가 쓸고 지나가는 0.40 m + 여유), footprint clearing을 끄고,
   전역 costmap은 지도 크기를 따라가지 않는 20 × 20 m 이동 창이며, LiDAR는 720개 광선, 회전 0.5 rad/s·직진 0.25 m/s로 천천히 간다.

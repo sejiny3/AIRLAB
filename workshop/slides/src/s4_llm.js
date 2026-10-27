@@ -178,7 +178,7 @@ module.exports = function build() {
   box(s, 6.6, 2.95, 6.1, 0.9, C.accent3);
   text(s, 'rosbridge_websocket (통역사)', { x: 6.6, y: 2.95, w: 6.1, h: 0.9, fontSize: 16, bold: true, color: C.background1, align: 'center', valign: 'middle' });
   arrow(s, 9.65, 3.9, 9.65, 4.3);
-  table(s, [['ROS 토픽', '방향'], ['/task_command, /task_cancel, /task_reset', '→ task_planner'], ['/task_status (JSON 이벤트)', '← task_planner'], ['/scan · /plan · 로봇 위치', '← 브리지·Nav2'], ['/aruco/debug_image/compressed', '← 마커 검출']], 6.6, 4.35, 6.1, [4.0, 2.1], 13);
+  table(s, [['ROS 토픽', '방향'], ['/task_command, /task_cancel, /task_reset, /task_manual_drive', '→ task_planner'], ['/cmd_vel (키보드 조종)', '→ 브리지'], ['/task_status (JSON 이벤트)', '← task_planner'], ['/scan · /plan · 로봇 위치', '← 브리지·Nav2'], ['/aruco/debug_image/compressed', '← 마커 검출']], 6.6, 4.35, 6.1, [4.0, 2.1], 13);
 
   s = content('실습 6. 시스템 프롬프트 고치기', TAG, '--symlink-install이라 빌드 없이 bringup만 다시 시작하면 됩니다. 되묻기 규칙을 넣은 뒤 "작업대로"만 보내면 앞 질문을 기억하지 못합니다. 명령마다 대화가 새로 시작되기 때문입니다(도전 과제 1). 체크포인트 4-5.');
   text(s, 'SYSTEM_PROMPT에 규칙 한 줄 추가 (task_planner_core.py)', { x: 0.6, y: 1.5, w: 7.5, h: 0.5, fontSize: 17, bold: true });

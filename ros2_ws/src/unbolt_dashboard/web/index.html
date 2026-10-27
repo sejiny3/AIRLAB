@@ -216,30 +216,6 @@
       </div>
     </section>
 
-    <section class="card mapping-only">
-      <h2>키보드 조종 <small>W A S D 또는 방향키 · 스페이스 = 정지</small></h2>
-      <div class="body">
-        <div class="tele">
-          <div class="pad" id="pad">
-            <button class="blank" type="button" tabindex="-1"></button>
-            <button type="button" data-k="f" title="앞으로 (W, ↑)">↑</button>
-            <button class="blank" type="button" tabindex="-1"></button>
-            <button type="button" data-k="l" title="왼쪽으로 돌기 (A, ←)">←</button>
-            <button type="button" data-k="stop" title="정지 (스페이스)">■</button>
-            <button type="button" data-k="r" title="오른쪽으로 돌기 (D, →)">→</button>
-            <button class="blank" type="button" tabindex="-1"></button>
-            <button type="button" data-k="b" title="뒤로 (S, ↓)">↓</button>
-            <button class="blank" type="button" tabindex="-1"></button>
-          </div>
-          <div class="tele-info">
-            <p id="teleState">탐색이 끝나면 키보드로 조종할 수 있습니다.</p>
-            <p class="sub">전진 0.25 m/s · 후진 0.15 m/s · 회전 0.7 rad/s. 키를 누르고 있는 동안만 움직입니다.
-              장애물이 가까우면 그쪽으로는 움직이지 않습니다. 움직이는 동안에도 SLAM이 지도를 계속 고칩니다.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="card task-only">
       <h2>명령</h2>
       <div class="body">
@@ -264,6 +240,32 @@
     <section class="card task-only">
       <h2>작업 진행 <small id="tlSummary"></small></h2>
       <ul id="timeline"><li class="empty-tl">아직 실행한 작업이 없습니다.</li></ul>
+    </section>
+
+    <section class="card">
+      <h2>키보드 조종 <small>W A S D 또는 방향키 · 스페이스 = 정지</small></h2>
+      <div class="body">
+        <div class="tele">
+          <div class="pad" id="pad">
+            <button class="blank" type="button" tabindex="-1"></button>
+            <button type="button" data-k="f" title="앞으로 (W, ↑)">↑</button>
+            <button class="blank" type="button" tabindex="-1"></button>
+            <button type="button" data-k="l" title="왼쪽으로 돌기 (A, ←)">←</button>
+            <button type="button" data-k="stop" title="정지 (스페이스)">■</button>
+            <button type="button" data-k="r" title="오른쪽으로 돌기 (D, →)">→</button>
+            <button class="blank" type="button" tabindex="-1"></button>
+            <button type="button" data-k="b" title="뒤로 (S, ↓)">↓</button>
+            <button class="blank" type="button" tabindex="-1"></button>
+          </div>
+          <div class="tele-info">
+            <p id="teleState">ROS에 연결되면 키보드로 조종할 수 있습니다.</p>
+            <p class="sub">전진 0.25 m/s · 후진 0.15 m/s · 회전 0.7 rad/s. 키를 누르고 있는 동안만 움직입니다.
+              장애물이 가까우면 그쪽으로는 움직이지 않습니다.
+              <span class="mapping-only">움직이는 동안에도 SLAM이 지도를 계속 고칩니다.</span>
+              <span class="task-only">작업 중에는 쓸 수 없고, 몰고 나면 다음 명령은 주행부터 다시 합니다.</span></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="card">
@@ -677,7 +679,10 @@ const TELE = { v: 0.25, vBack: 0.15, w: 0.7 };
 const KEYS = { ArrowUp: 'f', KeyW: 'f', ArrowDown: 'b', KeyS: 'b', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r' };
 const held = new Set();
 let teleSending = false;
-const teleOn = () => st.mode === 'mapping' && sys.conn && st.explore && ['idle', 'done', 'stopped'].includes(st.explore.state);
+// 지도 만들기: once exploration is over or stopped. 작업: while the planner is idle (not during a task or reset).
+const teleOn = () => sys.conn && (st.mode === 'mapping'
+  ? !!st.explore && ['idle', 'done', 'stopped'].includes(st.explore.state)
+  : st.mode === 'task' && sys.plannerSeen && !st.busy && !st.resetting);
 function clearance() {
   // nearest LiDAR return ahead / behind (scan from lidar_link, 0.22 m ahead of the base centre)
   const s = st.scan; if (!s) return { front: Infinity, back: Infinity };
@@ -696,8 +701,11 @@ function teleTick(ros) {
   if (!on) {
     held.clear();
     stEl.className = '';
-    stEl.textContent = st.explore && st.explore.state === 'exploring' ? '탐색 중에는 조종할 수 없습니다. "멈춤"을 누르면 조종할 수 있습니다.'
-      : '탐색이 끝나면 키보드로 조종할 수 있습니다.';
+    stEl.textContent = !sys.conn ? 'ROS에 연결되면 키보드로 조종할 수 있습니다.'
+      : st.mode === 'task' ? (st.busy || st.resetting ? '작업 중에는 조종할 수 없습니다. 끝나거나 "작업 취소"를 누르면 조종할 수 있습니다.'
+        : '플래너가 준비되면 조종할 수 있습니다.')
+      : st.explore && st.explore.state === 'exploring' ? '탐색 중에는 조종할 수 없습니다. "멈춤"을 누르면 조종할 수 있습니다.'
+        : '탐색이 끝나면 키보드로 조종할 수 있습니다.';
   }
   let v = 0, w = 0, blocked = '';
   if (on) {
@@ -714,6 +722,8 @@ function teleTick(ros) {
   document.querySelectorAll('#pad button[data-k]').forEach(b => b.classList.toggle('on', held.has(b.dataset.k)));
   document.querySelectorAll('#pad button').forEach(b => { b.disabled = !on; });
   if (v || w) {
+    // 작업: the planner must forget where the robot was (it would pick or place at the wrong spot)
+    if (!teleSending && st.mode === 'task') ros.publish('/task_manual_drive', 'std_msgs/msg/Empty', {});
     ros.publish('/cmd_vel', 'geometry_msgs/msg/Twist', { linear: { x: v, y: 0, z: 0 }, angular: { x: 0, y: 0, z: w } });
     teleSending = true;
   } else if (teleSending) {  // one explicit stop when the keys are released
@@ -774,6 +784,7 @@ async function stackCall(action) {
   renderPanel();
 }
 function setResetting(on) {
+  st.resetting = on;
   const b = $('resetBtn'); b.disabled = on; b.classList.remove('confirm');
   b.textContent = on ? '초기화 중…' : '초기화';
 }
@@ -804,6 +815,7 @@ async function boot() {
   ros.advertise('/dashboard/shutdown', 'std_msgs/msg/Empty');
   ros.advertise('/explore/control', 'std_msgs/msg/String');
   ros.advertise('/cmd_vel', 'geometry_msgs/msg/Twist');
+  ros.advertise('/task_manual_drive', 'std_msgs/msg/Empty');
   ros.onstate = up => {
     $('connPill').className = 'pill ' + (up ? 'ok' : 'bad');
     $('connText').textContent = up ? 'ROS 연결됨' : 'ROS 연결 끊김 (재시도 중)';
