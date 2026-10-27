@@ -118,7 +118,8 @@ $ ros2 daemon stop
 | Nav2 노드가 다 안 뜸 (`lifecycle` 관련 오류) | 이전 실행이 남아 있음 → "깨끗하게 종료" 후 다시 |
 | MoveIt: `Unable to sample any valid states for goal tree`, `No IK solution` | 손이 닿지 않는 목표. 더 가까이/높이 조정 |
 | MoveIt: `Start state appears to be in collision` | 팔이 테이블에 걸쳐 있음 → 월드 리셋 |
-| `pick: marker 7 not visible` | 로봇이 공급 테이블을 보고 있지 않음, 또는 그리퍼가 열린 채로 시야를 가림 → 월드 리셋 후 다시 |
+| `pick: marker 7 not visible` (8, 9도 같음) | 로봇이 그 상자가 있는 테이블을 보고 있지 않음, 또는 그리퍼가 열린 채로 시야를 가림 → 월드 리셋 후 다시 |
+| `approach: execution failed` 또는 `pre-grasp: MoveIt error -4`, 브리지 로그에 `final joint error … (openarm_*_joint6: target …, at …)` | 손이 상자나 테이블 가장자리에 닿아 관절이 목표까지 못 감 (MoveIt은 상자와 테이블 다리를 모름). 로봇이 놓은 상자가 비스듬히 놓였을 때 자주 | 사전 접근 자세는 한 번 자동 재시도. 그래도 실패하면 로봇이 뒤로 물러난 뒤 실패를 보고하고, Claude가 한 번 다시 시도한다. 반복되면 상자 방향(로그의 `grasp yaw`)과 높이를 확인 |
 | `pick: gripper closed on nothing` | 정밀 접근 오차 → 월드 리셋 후 다시. 반복되면 `GRASP_*` 상수를 바꿨는지 확인 |
 | `servo timed out` / `lost marker` | 마커가 시야 밖. 로봇이 테이블 정면을 보는지 확인 (`navigate`가 정확히 도착했는지) |
 
@@ -128,6 +129,8 @@ $ ros2 daemon stop
 |---|---|---|
 | `APIConnectionError` + 원인 `process() takes no keyword arguments` | Ubuntu 기본 Brotli 1.0.9 | `pip3 install --user --upgrade Brotli` |
 | `APIConnectionError` (다른 원인) | 인터넷 / 프록시 / 학교망 차단 | `curl -I https://api.anthropic.com` 로 확인. 휴대폰 핫스팟으로 시험 |
+| `the left spot of work_table is taken by red_box` | 그 자리에 이미 상자가 있다고 플래너가 기억함 (자리 하나에 상자 하나) | 다른 자리(`spot`)나 `auto`로. 실제로는 비어 있다면 "작업대 가서 확인해 줘"로 `check_table`을 불러 기억을 고친다 |
+| `where blue_box is is unknown; check_table ...` | `check_table`이 그 상자를 기억한 자리에서 못 봐서 "모름"으로 바꿈 | 상자가 있을 만한 테이블로 가서 확인하게 시키기, 또는 대시보드 **초기화** |
 | `AuthenticationError` / 401 | 키가 틀림 또는 삭제됨 | `bash ~/unbolt/workshop/setup/setup_api_key.sh` 다시 |
 | `Could not resolve authentication method` / 키가 없다고 함 | 키를 넣기 **전에** 연 터미널에서 실행 | 새 터미널에서 bringup 다시. 확인: `echo ${#ANTHROPIC_API_KEY}` (길이만 나와야 정상) |
 | `credit balance is too low` | 크레딧 소진 | Console → Billing. 강의 중이면 `llm:=scripted`로 계속 |

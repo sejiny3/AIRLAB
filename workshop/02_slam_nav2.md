@@ -89,10 +89,10 @@ $ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
 - **천천히** 다니세요 (`x`로 속도 줄이기). 빠르게 돌면 스캔 매칭이 실패해 지도가 겹쳐 보입니다.
-- 칸막이벽의 문(가운데 y = −0.4~0.8 m)을 지나 서쪽 방까지 다녀오세요.
+- 칸막이벽의 문(x = −1.2 m, y = −0.6~1.0 m)을 지나 서쪽 방까지 다녀오세요.
 - 처음 자리로 돌아오면 루프 클로저로 지도가 살짝 "정리"되는 것을 볼 수 있습니다.
 
-시간이 부족하면 자동 탐색 (약 2분):
+시간이 부족하면 자동 탐색 (약 3분):
 
 ```bash
 $ ros2 run unbolt_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
@@ -161,8 +161,8 @@ $ ros2 run unbolt_navigation nav_goal_test.py --ros-args -p use_sim_time:=true
 
 | 목표 | 걸린 시간 | 위치 오차 (cm) | 방향 오차 (°) |
 |---|---|---|---|
-| (3.0, −1.4) | | | |
-| (−1.9, 1.6) | | | |
+| (4.0, −2.4) | | | |
+| (−2.0, 1.2) | | | |
 | (0.0, 0.0) | | | |
 
 ✅ **체크포인트 2-4**: 3/3 도착, 위치 오차 15 cm 이내 (goal tolerance).
@@ -194,7 +194,7 @@ $ ros2 launch unbolt_navigation navigation.launch.py params_file:=$HOME/my_nav2.
 모듈 1 과제 A의 `my_scene.xml`(상자 추가)을 쓰거나, 지금 만듭니다. 상자를 **주행 경로 위**에 두세요:
 
 ```xml
-<geom name="surprise" type="box" size="0.2 0.2 0.3" pos="2.0 -1.0 0.3" rgba="0.2 0.6 0.2 1"/>
+<geom name="surprise" type="box" size="0.2 0.2 0.3" pos="2.0 -0.1 0.3" rgba="0.2 0.6 0.2 1"/>
 ```
 
 **옛 지도**(상자 없음)로 주행:
@@ -203,8 +203,8 @@ $ ros2 launch unbolt_navigation navigation.launch.py params_file:=$HOME/my_nav2.
 $ ros2 launch unbolt_navigation navigation.launch.py model_path:=$UNBOLT_ROOT/models/my_scene.xml
 ```
 
-처음 위치(원점)에서 `(3.0, −1.4)` 쪽으로 목표를 주고, 상자가 없는 원래 월드(`model_path` 없이)와 비교하세요.
-(강사 노트북 기준: 상자가 없으면 작업대와 기둥 사이 남쪽 길로 약 12초, 상자가 있으면 작업대 북쪽으로 돌아 약 18초)
+처음 위치(원점)에서 `(4.0, −2.4)` 쪽으로 목표를 주고, 상자가 없는 원래 월드(`model_path` 없이)와 비교하세요.
+(강사 노트북 기준: 상자가 없으면 수납장 북쪽으로 곧장 동쪽으로 가다가 내려가 약 18초, 상자가 있으면 상자를 돌아 약 22초. 목표 3개 시험에서는 18 s · 26 s · 11 s로 모두 도착)
 
 관찰할 것:
 
@@ -228,7 +228,7 @@ import rclpy
 from geometry_msgs.msg import PoseStamped
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 
-POINTS = [(3.2, 1.2, 0.0), (3.0, -1.4, -math.pi / 2), (-1.9, 1.6, math.pi / 2), (0.0, 0.0, 0.0)]
+POINTS = [(3.8, 2.8, 0.0), (4.0, -2.4, -math.pi / 2), (-2.0, 1.2, math.pi / 2), (0.0, 0.0, 0.0)]
 
 
 def pose(nav, x, y, yaw):
@@ -304,7 +304,7 @@ $ ros2 run unbolt_dashboard dashboard_launcher
 
 1. 브라우저에서 <http://localhost:8080> → 모드 **지도 만들기 (SLAM + 자동 탐색)** → **연결**
 2. 20~40초 뒤 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 것, 하늘색 프론티어, 파란 탐색 목표를 보세요.
-3. 2~4분 뒤 **탐색 완료** → 지도가 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장됩니다.
+3. 약 7분 뒤 **탐색 완료** (강사 노트북: 목표 19개, 실패 1번, 84 m²) → 지도가 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장됩니다.
 4. 이제 **키보드 조종**: 브라우저 창을 클릭하고 `W A S D` 또는 방향키 (스페이스 = 정지).
    누르고 있는 동안만 움직이고, 장애물이 가까우면 그쪽으로는 가지 않습니다. 몰고 다니는 동안에도 SLAM이 지도를 계속 고치니,
    빈 곳이 남았으면 직접 가서 채우고 **지도 저장**을 다시 누르세요.

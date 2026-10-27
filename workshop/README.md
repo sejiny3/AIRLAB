@@ -28,10 +28,10 @@
 
 | 모듈 | 핵심 기술 | 끝나면 할 수 있는 것 |
 |---|---|---|
-| 1. 시뮬레이터와 브리지 | MuJoCo, MJCF/URDF, TF, LiDAR 레이캐스트, 오도메트리 | 직접 만든 브리지로 로봇을 키보드로 몰고 RViz에서 센서를 본다 |
+| 1. 시뮬레이터와 브리지 | MuJoCo, MJCF/URDF, TF, LiDAR 레이캐스트, 오도메트리 | 직접 만든 브리지로 10 × 8.5 m 방에서 로봇을 키보드로 몰고 RViz에서 센서를 본다 |
 | 2. SLAM과 자율주행 | slam_toolbox, Nav2 (AMCL, costmap, planner/controller) | 방 지도를 만들고 목표점을 찍어 자율주행한다 |
 | 3. 양팔 조작과 Pick & Place | MoveIt 2, IK, Cartesian path, ArUco, planning scene | 카메라로 상자를 찾아 집어서 다른 테이블에 놓는다 |
-| 4. LLM 작업 계획 | Claude 도구 호출, strict schema, 작업 관리자, 웹 대시보드 | 자연어 한 문장으로 주행+조작 전체를 시킨다 |
+| 4. LLM 작업 계획 | Claude 도구 호출, strict schema, 작업 관리자, 웹 대시보드 | 자연어 한 문장으로 주행+조작 전체를 시킨다. 테이블 넷 · 상자 셋으로 자리 지정, 순서, 조건("…이 없으면"), 눈으로 확인까지 |
 | 5. (심화, 선택) VLA | MuJoCo 시연 녹화, PyTorch(CPU) 모방 학습, 공간 소프트맥스, 묶음 예측(ACT식), ROS 노드 | 카메라를 보고 집는 정책을 직접 학습해 집기만 바꿔 끼운다 |
 
 ## 대상과 선수 지식
@@ -53,7 +53,7 @@
 | 2일차 | 09:30–11:30 | **모듈 3** MoveIt 2 양팔 제어, 마커 기반 모바일 매니퓰레이션 | [03_moveit_pick_place.md](03_moveit_pick_place.md) |
 |  | 11:30–12:30 | 점심 | |
 |  | 12:30–16:30 | **모듈 4** LLM 작업 계획, 웹 대시보드, **최종 미션** | [04_llm_dashboard.md](04_llm_dashboard.md) |
-| 심화 (선택) | 약 2시간 | **모듈 5** VLA: 카메라를 보고 집는 정책을 CPU로 학습해 집기만 바꿔 끼우기 | [05_vla.md](05_vla.md) |
+| 심화 (선택) | 약 3시간 | **모듈 5** VLA: 카메라를 보고 집는 정책을 CPU로 학습해 집기만 바꿔 끼우기 | [05_vla.md](05_vla.md) |
 
 각 모듈은 **개념 설명(20~30%) → 따라 하기(50%) → 과제(20~30%)** 순서이고,
 중간중간 ✅ **체크포인트**가 있습니다. 체크포인트를 통과하면 다음으로 넘어가세요.
@@ -98,7 +98,7 @@
 | [05_vla.md](05_vla.md) | 심화 모듈 5 (선택): VLA 집기 정책 시연 녹화 · CPU 학습 · 평가 · 대시보드 VLA 집기 모드 |
 | [troubleshooting.md](troubleshooting.md) | 증상별 문제 해결 |
 | [instructor_guide.md](instructor_guide.md) | 강사·조교용 운영 가이드 (사전 공지, 점검표, 시간 배분) |
-| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 180장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 심화 모듈 5(VLA), 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
+| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 184장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 심화 모듈 5(VLA), 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
 | `setup/check_windows.ps1` | Windows 사전 점검 (+ WSL 설치) |
 | `setup/install_unbolt.sh` | Ubuntu 안에서 ROS 2부터 빌드까지 한 번에 |
 | `setup/check_env.sh` | 설치 결과 점검 (✔/!/✘) |

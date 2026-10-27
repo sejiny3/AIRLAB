@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-UNBOLT world: a 7 m x 6 m room with a partition wall and a few obstacles for
-LiDAR/SLAM, a work table with a red box, and the UNBOLT robot at the origin.
+UNBOLT world: a 10 m x 8.5 m room with a partition wall and obstacles for LiDAR/SLAM,
+three supply tables that each start with one coloured box (red, green, blue), a work
+table with three place spots, and the UNBOLT robot at the origin.
 All static world geoms are in group 0, so the bridge's LiDAR (which only sees
 groups 0-1) ignores the robot's own body (groups 2-3).
+
+Tables are built in a local frame where +y points to the side the robot works from and
+the robot faces local -y; local -x is then on the robot's right (right arm), +x on its left.
+Every place spot is a 10 cm pad with its own ArUco marker (DICT_4X4_50):
+  work_table  1 (left), 2 (middle), 3 (right)
+  supply_N    N1 (right, where its box starts) and N2 (left, spare), e.g. 11 / 12 on supply_1
+  boxes       7 red, 8 green, 9 blue (on their top faces)
+The front legs sit well back from the working edge: the robot's chassis passes under the
+table top by a few centimetres when it lines up with a spot near either end.
 -->
 <mujoco model="unbolt_scene">
   <compiler angle="radian"/>
   <option timestep="0.001" integrator="implicitfast" cone="elliptic" impratio="10"/>
-  <statistic center="0.6 0 0.6" extent="2.0" meansize="0.05"/>
+  <statistic center="1.5 0 0.6" extent="3.0" meansize="0.05"/>
 
   <visual>
     <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
@@ -17,77 +27,148 @@ groups 0-1) ignores the robot's own body (groups 2-3).
     <quality shadowsize="4096"/>
   </visual>
 
+  <default>
+    <default class="supply_table">
+      <geom type="box" rgba="0.35 0.45 0.55 1"/>
+    </default>
+    <default class="work_table">
+      <geom type="box" rgba="0.5 0.4 0.3 1"/>
+    </default>
+    <default class="pad">
+      <geom type="box" size="0.05 0.05 0.0005" contype="0" conaffinity="0"/>
+    </default>
+    <default class="box">
+      <geom type="box" size="0.025 0.025 0.025" mass="0.1" friction="1.2 0.01 0.01"/>
+      <default class="box_marker">
+        <geom type="box" size="0.025 0.025 0.0005" pos="0 0 0.0255" contype="0" conaffinity="0" mass="0"/>
+      </default>
+    </default>
+  </default>
+
   <asset>
     <texture type="skybox" builtin="gradient" rgb1="0.55 0.55 0.58" rgb2="0.2 0.2 0.2" width="512" height="3072"/>
     <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.38 0.38 0.4" rgb2="0.3 0.3 0.32"
              markrgb="0.6 0.6 0.6" width="300" height="300"/>
     <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
     <!-- ArUco DICT_4X4_50 markers (models/make_markers.py); the marker fills 3/4 of the texture -->
-    <texture type="2d" name="aruco_7" file="textures/aruco_7.png"/>
+    <texture type="2d" name="aruco_1" file="textures/aruco_1.png"/>
+    <texture type="2d" name="aruco_2" file="textures/aruco_2.png"/>
     <texture type="2d" name="aruco_3" file="textures/aruco_3.png"/>
-    <texture type="2d" name="aruco_5" file="textures/aruco_5.png"/>
-    <material name="aruco_7" texture="aruco_7"/>
+    <texture type="2d" name="aruco_7" file="textures/aruco_7.png"/>
+    <texture type="2d" name="aruco_8" file="textures/aruco_8.png"/>
+    <texture type="2d" name="aruco_9" file="textures/aruco_9.png"/>
+    <texture type="2d" name="aruco_11" file="textures/aruco_11.png"/>
+    <texture type="2d" name="aruco_12" file="textures/aruco_12.png"/>
+    <texture type="2d" name="aruco_21" file="textures/aruco_21.png"/>
+    <texture type="2d" name="aruco_22" file="textures/aruco_22.png"/>
+    <texture type="2d" name="aruco_31" file="textures/aruco_31.png"/>
+    <texture type="2d" name="aruco_32" file="textures/aruco_32.png"/>
+    <material name="aruco_1" texture="aruco_1"/>
+    <material name="aruco_2" texture="aruco_2"/>
     <material name="aruco_3" texture="aruco_3"/>
-    <material name="aruco_5" texture="aruco_5"/>
+    <material name="aruco_7" texture="aruco_7"/>
+    <material name="aruco_8" texture="aruco_8"/>
+    <material name="aruco_9" texture="aruco_9"/>
+    <material name="aruco_11" texture="aruco_11"/>
+    <material name="aruco_12" texture="aruco_12"/>
+    <material name="aruco_21" texture="aruco_21"/>
+    <material name="aruco_22" texture="aruco_22"/>
+    <material name="aruco_31" texture="aruco_31"/>
+    <material name="aruco_32" texture="aruco_32"/>
     <model name="unbolt_robot" file="unbolt_robot.xml"/>
   </asset>
 
   <worldbody>
-    <light pos="0 0 3" dir="0 0 -1" directional="true"/>
+    <light pos="1.5 0 3" dir="0 0 -1" directional="true"/>
     <geom name="floor" size="0 0 0.05" type="plane" material="groundplane" friction="1 0.01 0.01"/>
-    <camera name="overview" pos="3.9 -2.7 2.8" xyaxes="0.57 0.82 0 -0.4 0.28 0.87" fovy="60"/>
-    <camera name="top" pos="1.0 0 9.0" xyaxes="1 0 0 0 1 0" fovy="45"/>
+    <camera name="overview" pos="7.5 -6.5 5.5" xyaxes="0.735 0.678 0 -0.358 0.388 0.849" fovy="60"/>
+    <camera name="top" pos="1.5 0 11.0" xyaxes="1 0 0 0 1 0" fovy="45"/>
 
     <attach model="unbolt_robot" prefix=""/>
 
-    <!-- room: x in [-2.5, 4.5], y in [-3, 3], walls 1 m high -->
+    <!-- room: x in [-3.5, 6.5], y in [-4.25, 4.25], walls 1 m high -->
     <body name="room">
-      <geom name="wall_north" type="box" size="3.6 0.05 0.5" pos="1.0 3.05 0.5" rgba="0.75 0.75 0.78 1"/>
-      <geom name="wall_south" type="box" size="3.6 0.05 0.5" pos="1.0 -3.05 0.5" rgba="0.75 0.75 0.78 1"/>
-      <geom name="wall_east" type="box" size="0.05 3.0 0.5" pos="4.55 0 0.5" rgba="0.75 0.75 0.78 1"/>
-      <geom name="wall_west" type="box" size="0.05 3.0 0.5" pos="-2.55 0 0.5" rgba="0.75 0.75 0.78 1"/>
-      <!-- partition wall with a 1.2 m doorway at y in [-0.4, 0.8] -->
-      <geom name="partition_a" type="box" size="0.05 1.1 0.5" pos="-1.2 1.9 0.5" rgba="0.68 0.68 0.72 1"/>
-      <geom name="partition_b" type="box" size="0.05 1.3 0.5" pos="-1.2 -1.7 0.5" rgba="0.68 0.68 0.72 1"/>
+      <geom name="wall_north" type="box" size="5.1 0.05 0.5" pos="1.5 4.3 0.5" rgba="0.75 0.75 0.78 1"/>
+      <geom name="wall_south" type="box" size="5.1 0.05 0.5" pos="1.5 -4.3 0.5" rgba="0.75 0.75 0.78 1"/>
+      <geom name="wall_east" type="box" size="0.05 4.25 0.5" pos="6.55 0 0.5" rgba="0.75 0.75 0.78 1"/>
+      <geom name="wall_west" type="box" size="0.05 4.25 0.5" pos="-3.55 0 0.5" rgba="0.75 0.75 0.78 1"/>
+      <!-- partition wall at x = -1.2 with a 1.6 m doorway at y in [-0.6, 1.0]; the west room holds supply_3 -->
+      <geom name="partition_a" type="box" size="0.05 1.625 0.5" pos="-1.2 2.625 0.5" rgba="0.68 0.68 0.72 1"/>
+      <geom name="partition_b" type="box" size="0.05 1.825 0.5" pos="-1.2 -2.425 0.5" rgba="0.68 0.68 0.72 1"/>
       <!-- obstacles -->
-      <geom name="shelf" type="box" size="0.4 0.2 0.6" pos="0.8 2.6 0.6" rgba="0.45 0.35 0.25 1"/>
-      <geom name="pillar" type="cylinder" size="0.15 0.5" pos="1.0 -1.6 0.5" rgba="0.6 0.6 0.65 1"/>
-      <geom name="crate_1" type="box" size="0.25 0.25 0.25" pos="3.6 -2.3 0.25" rgba="0.55 0.42 0.2 1"/>
-      <geom name="crate_2" type="box" size="0.2 0.3 0.3" pos="3.7 2.2 0.3" euler="0 0 0.5" rgba="0.55 0.42 0.2 1"/>
-      <geom name="bin" type="cylinder" size="0.2 0.35" pos="-2.0 -2.4 0.35" rgba="0.2 0.4 0.6 1"/>
+      <geom name="shelf" type="box" size="0.5 0.2 0.6" pos="0.0 3.95 0.6" rgba="0.45 0.35 0.25 1"/>
+      <geom name="pillar" type="cylinder" size="0.15 0.5" pos="1.4 -1.7 0.5" rgba="0.6 0.6 0.65 1"/>
+      <geom name="pillar_2" type="cylinder" size="0.15 0.5" pos="3.0 2.0 0.5" rgba="0.6 0.6 0.65 1"/>
+      <geom name="cabinet" type="box" size="0.3 0.3 0.4" pos="2.6 -1.2 0.4" rgba="0.4 0.42 0.46 1"/>
+      <geom name="crate_1" type="box" size="0.25 0.25 0.25" pos="5.9 -3.6 0.25" rgba="0.55 0.42 0.2 1"/>
+      <geom name="crate_2" type="box" size="0.2 0.3 0.3" pos="5.9 3.4 0.3" euler="0 0 0.5" rgba="0.55 0.42 0.2 1"/>
+      <geom name="crate_3" type="box" size="0.3 0.25 0.3" pos="3.4 -3.6 0.3" rgba="0.55 0.42 0.2 1"/>
+      <geom name="bin" type="cylinder" size="0.2 0.35" pos="-2.9 -3.6 0.35" rgba="0.2 0.4 0.6 1"/>
+      <geom name="locker" type="box" size="0.25 0.5 0.6" pos="-3.2 -1.6 0.6" rgba="0.5 0.52 0.56 1"/>
     </body>
 
-    <!-- Tables: top surface at z = 0.65, where the arms reach best with a forward
-         grasp. The robot's chassis (0.19 m tall) fits under the 0.61 m underside,
-         so it can drive its front edge under the table top. -->
-    <!-- work table = place destination; marker 3 marks the place spot -->
-    <body name="work_table" pos="2.2 0 0.325">
-      <geom name="work_table_top" type="box" size="0.35 0.5 0.02" pos="0 0 0.305" rgba="0.82 0.71 0.55 1"/>
-      <geom name="work_table_leg1" type="box" size="0.02 0.02 0.305" pos="0.31 0.46 0" rgba="0.5 0.4 0.3 1"/>
-      <geom name="work_table_leg2" type="box" size="0.02 0.02 0.305" pos="0.31 -0.46 0" rgba="0.5 0.4 0.3 1"/>
-      <geom name="work_table_leg3" type="box" size="0.02 0.02 0.305" pos="-0.31 0.46 0" rgba="0.5 0.4 0.3 1"/>
-      <geom name="work_table_leg4" type="box" size="0.02 0.02 0.305" pos="-0.31 -0.46 0" rgba="0.5 0.4 0.3 1"/>
-      <geom name="place_pad" type="box" size="0.05 0.05 0.0005" pos="-0.2 -0.15 0.3255" material="aruco_3" contype="0" conaffinity="0"/>
+    <!-- Tables: top surface at z = 0.65, where the arms reach best with a forward grasp.
+         The robot's chassis (0.19 m tall) fits under the 0.61 m underside. -->
+    <!-- work table = where boxes are brought; three place spots 0.25 m apart.
+         Local +y faces west (the robot comes from home). -->
+    <body name="work_table" pos="4.8 0 0.325" euler="0 0 1.5708">
+      <geom name="work_table_top" class="work_table" size="0.60 0.35 0.02" pos="0 0 0.305" rgba="0.82 0.71 0.55 1"/>
+      <geom name="work_table_leg1" class="work_table" size="0.02 0.02 0.305" pos="0.56 0.15 0"/>
+      <geom name="work_table_leg2" class="work_table" size="0.02 0.02 0.305" pos="-0.56 0.15 0"/>
+      <geom name="work_table_leg3" class="work_table" size="0.02 0.02 0.305" pos="0.56 -0.31 0"/>
+      <geom name="work_table_leg4" class="work_table" size="0.02 0.02 0.305" pos="-0.56 -0.31 0"/>
+      <geom name="work_pad_1" class="pad" pos="0.25 0.20 0.3255" material="aruco_1"/>
+      <geom name="work_pad_2" class="pad" pos="0 0.20 0.3255" material="aruco_2"/>
+      <geom name="work_pad_3" class="pad" pos="-0.25 0.20 0.3255" material="aruco_3"/>
     </body>
 
-    <!-- supply table = where the red box starts. 0.8 m wide so its legs stay outside
-         the base when the robot grasps with the right arm (base centred on the table,
-         box 0.15 m to its right). -->
-    <body name="supply_table" pos="-0.15 -2.45 0.325">
-      <geom name="supply_table_top" type="box" size="0.40 0.25 0.02" pos="0 0 0.305" rgba="0.62 0.74 0.82 1"/>
-      <geom name="supply_table_leg1" type="box" size="0.02 0.02 0.305" pos="0.36 0.21 0" rgba="0.35 0.45 0.55 1"/>
-      <geom name="supply_table_leg2" type="box" size="0.02 0.02 0.305" pos="0.36 -0.21 0" rgba="0.35 0.45 0.55 1"/>
-      <geom name="supply_table_leg3" type="box" size="0.02 0.02 0.305" pos="-0.36 0.21 0" rgba="0.35 0.45 0.55 1"/>
-      <geom name="supply_table_leg4" type="box" size="0.02 0.02 0.305" pos="-0.36 -0.21 0" rgba="0.35 0.45 0.55 1"/>
-      <!-- place pad (marker 5) under the box's starting spot, for putting it back -->
-      <geom name="supply_pad" type="box" size="0.05 0.05 0.0005" pos="-0.15 0.09 0.3255" material="aruco_5" contype="0" conaffinity="0"/>
+    <!-- supply tables: 1.2 m wide, two place spots each. Local +y faces the room. -->
+    <!-- supply_1: south wall, red box -->
+    <body name="supply_1" pos="0.0 -3.7 0.325">
+      <geom name="supply_1_top" class="supply_table" size="0.60 0.25 0.02" pos="0 0 0.305" rgba="0.62 0.74 0.82 1"/>
+      <geom name="supply_1_leg1" class="supply_table" size="0.02 0.02 0.305" pos="0.56 0.06 0"/>
+      <geom name="supply_1_leg2" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 0.06 0"/>
+      <geom name="supply_1_leg3" class="supply_table" size="0.02 0.02 0.305" pos="0.56 -0.21 0"/>
+      <geom name="supply_1_leg4" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 -0.21 0"/>
+      <geom name="supply_1_pad_1" class="pad" pos="-0.15 0.09 0.3255" material="aruco_11"/>
+      <geom name="supply_1_pad_2" class="pad" pos="0.15 0.09 0.3255" material="aruco_12"/>
+    </body>
+    <!-- supply_2: north wall, green box -->
+    <body name="supply_2" pos="2.0 3.7 0.325" euler="0 0 3.14159">
+      <geom name="supply_2_top" class="supply_table" size="0.60 0.25 0.02" pos="0 0 0.305" rgba="0.62 0.74 0.82 1"/>
+      <geom name="supply_2_leg1" class="supply_table" size="0.02 0.02 0.305" pos="0.56 0.06 0"/>
+      <geom name="supply_2_leg2" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 0.06 0"/>
+      <geom name="supply_2_leg3" class="supply_table" size="0.02 0.02 0.305" pos="0.56 -0.21 0"/>
+      <geom name="supply_2_leg4" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 -0.21 0"/>
+      <geom name="supply_2_pad_1" class="pad" pos="-0.15 0.09 0.3255" material="aruco_21"/>
+      <geom name="supply_2_pad_2" class="pad" pos="0.15 0.09 0.3255" material="aruco_22"/>
+    </body>
+    <!-- supply_3: west room against the west wall, blue box -->
+    <body name="supply_3" pos="-2.95 2.6 0.325" euler="0 0 -1.5708">
+      <geom name="supply_3_top" class="supply_table" size="0.60 0.25 0.02" pos="0 0 0.305" rgba="0.62 0.74 0.82 1"/>
+      <geom name="supply_3_leg1" class="supply_table" size="0.02 0.02 0.305" pos="0.56 0.06 0"/>
+      <geom name="supply_3_leg2" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 0.06 0"/>
+      <geom name="supply_3_leg3" class="supply_table" size="0.02 0.02 0.305" pos="0.56 -0.21 0"/>
+      <geom name="supply_3_leg4" class="supply_table" size="0.02 0.02 0.305" pos="-0.56 -0.21 0"/>
+      <geom name="supply_3_pad_1" class="pad" pos="-0.15 0.09 0.3255" material="aruco_31"/>
+      <geom name="supply_3_pad_2" class="pad" pos="0.15 0.09 0.3255" material="aruco_32"/>
     </body>
 
-    <!-- red box (5 cm cube, 100 g) with marker 7 on its top face -->
-    <body name="red_box" pos="-0.3 -2.36 0.676">
+    <!-- boxes: 5 cm cubes, 100 g, each on the right place spot of its supply table -->
+    <body name="red_box" pos="-0.15 -3.61 0.676">
       <freejoint name="red_box_free"/>
-      <geom name="red_box" type="box" size="0.025 0.025 0.025" mass="0.1" rgba="0.9 0.1 0.1 1" friction="1.2 0.01 0.01"/>
-      <geom name="red_box_marker" type="box" size="0.025 0.025 0.0005" pos="0 0 0.0255" material="aruco_7" contype="0" conaffinity="0" mass="0"/>
+      <geom name="red_box" class="box" rgba="0.9 0.1 0.1 1"/>
+      <geom name="red_box_marker" class="box_marker" material="aruco_7"/>
+    </body>
+    <body name="green_box" pos="2.15 3.61 0.676">
+      <freejoint name="green_box_free"/>
+      <geom name="green_box" class="box" rgba="0.1 0.7 0.2 1"/>
+      <geom name="green_box_marker" class="box_marker" material="aruco_8"/>
+    </body>
+    <body name="blue_box" pos="-2.86 2.75 0.676">
+      <freejoint name="blue_box_free"/>
+      <geom name="blue_box" class="box" rgba="0.1 0.3 0.9 1"/>
+      <geom name="blue_box_marker" class="box_marker" material="aruco_9"/>
     </body>
   </worldbody>
 </mujoco>

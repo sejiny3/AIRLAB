@@ -36,8 +36,9 @@ def rotation_to_quat(R):
 class ArucoDetector(Node):
     def __init__(self):
         super().__init__('aruco_detector')
-        self.declare_parameter('marker_ids', [7, 3, 5])
-        self.declare_parameter('marker_sizes', [0.0375, 0.075, 0.075])  # black-border side length [m]
+        # boxes 7 / 8 / 9 (red / green / blue), place spots 1-3 (work table) and N1 / N2 (supply table N)
+        self.declare_parameter('marker_ids', [7, 8, 9, 1, 2, 3, 11, 12, 21, 22, 31, 32])
+        self.declare_parameter('marker_sizes', [0.0375] * 3 + [0.075] * 9)  # black-border side length [m]
         self.declare_parameter('publish_debug_image', True)
         ids = self.get_parameter('marker_ids').value
         sizes = self.get_parameter('marker_sizes').value

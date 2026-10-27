@@ -13,7 +13,7 @@ PinkLAB 영상(ROS 2 + MuJoCo 양팔로봇)을 참고해 오픈소스로 재구�
 ```
 models/
   unbolt_robot.xml   로봇 (차동구동 베이스 + OpenArm 받침대 + 양팔 attach)
-  scene.xml          월드 (7x6 m 방, 칸막이벽, 장애물, 공급 테이블, 작업대, 빨간 상자, 마커 3/5/7)
+  scene.xml          월드 (10x8.5 m 방, 칸막이벽, 장애물, 공급 테이블 3개, 작업대, 빨강·초록·파랑 상자, 마커 1-3/7-9/11-32)
 third_party/
   openarm_mujoco/        OpenArm 공식 MJCF (git clone)
   openarm_description/   OpenArm 공식 URDF/xacro (git clone, ros2_ws/src에 심볼릭 링크)
@@ -42,7 +42,7 @@ ros2_ws/src/
   unbolt_manipulation/
     aruco_detector.py            카메라 영상 -> ArUco(DICT_4X4_50) -> TF aruco_<id>
     skills.py                    navigate / servo_to_marker / pick / place 스킬
-    pick_place_demo.py           빨간 상자를 공급 테이블 -> 작업대로 옮기는 데모
+    pick_place_demo.py           빨간 상자를 1번 공급 테이블 -> 작업대 가운데 자리로 옮기는 데모
     task_planner_core.py         Claude 도구 호출 루프 + 스킬을 감싼 도구 + 장소/물체 지식
     task_planner.py, ask.py      ROS 노드(/task_command -> /task_status), 명령 CLI
     launch/bringup.launch.py     sim + Nav2 + move_group + 마커 검출 한 번에
@@ -108,7 +108,7 @@ sudo apt-get install -y ros-humble-slam-toolbox ros-humble-navigation2 ros-humbl
 
 ```bash
 ros2 launch unbolt_navigation slam.launch.py
-# 다른 터미널: 키보드로 돌아다니거나 자동 탐색 (약 2분)
+# 다른 터미널: 키보드로 돌아다니거나 자동 탐색 (약 3분)
 ros2 run unbolt_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
 # 지도 저장 (src 쪽에 저장한 뒤 colcon build 다시)
 ros2 run nav2_map_server map_saver_cli -f $UNBOLT_ROOT/ros2_ws/src/unbolt_navigation/maps/unbolt_room --ros-args -p use_sim_time:=true
@@ -162,10 +162,10 @@ ros2 launch unbolt_manipulation bringup.launch.py
 ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 ```
 
-흐름: 팔 `tuck` → Nav2로 공급 테이블 앞 → 마커 7(상자 윗면)로 정밀 접근 → 집기 → 후진 →
-Nav2로 작업대 앞 → 마커 3(놓을 자리)로 정밀 접근 → 놓기 → 후진.
+흐름: 팔 `tuck` → Nav2로 1번 공급 테이블 앞 → 마커 7(상자 윗면)로 정밀 접근 → 집기 → 후진 →
+Nav2로 작업대 앞 → 마커 2(가운데 놓을 자리)로 정밀 접근 → 놓기 → 후진.
 
-- 월드: 공급 테이블(상자 위치)과 작업대(놓을 자리 마커 3), 둘 다 상판 높이 0.65 m.
+- 월드: 공급 테이블 3개(빨강·초록·파랑 상자가 하나씩, 자리 2칸: 마커 N1·N2)와 작업대(자리 3칸: 마커 1·2·3), 모두 상판 높이 0.65 m. 앞다리는 가장자리에서 약 20 cm 안쪽이라 끝자리에 비껴 서도 차체가 닿지 않는다.
   OpenArm은 팔이 아래로 늘어진 구조라 전방 파지 도달 범위가 base 기준 x 0.30~0.45 m뿐이어서,
   섀시(높이 0.19 m)가 상판 아래로 들어가는 높이로 정했다.
 - 카메라: 받침대 위 헤드 카메라(1280×720, 5 Hz, 47° 하향). 마커 텍스처는 `models/make_markers.py`로 생성.
@@ -199,23 +199,34 @@ bash workshop/setup/setup_api_key.sh          # 키를 ~/.unbolt_key 에 저장 
 ```bash
 ros2 launch unbolt_manipulation bringup.launch.py planner:=true
 ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
-ros2 run unbolt_manipulation ask "빨간 상자를 원래 자리로 갖다 놔"
+ros2 run unbolt_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
+ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
 ```
 
-- 도구: `get_world_state`, `navigate_to(location)`, `pick_object(object)`, `place_object(location)`,
-  `set_arm_posture(posture)` — 모두 `strict` 스키마, 한 번에 하나씩 실행(`disable_parallel_tool_use`).
-- 장소: `supply_table`(놓을 자리 마커 5), `work_table`(마커 3), `home`. 물체: `red_box`(마커 7).
+- 도구: `get_world_state`, `navigate_to(location)`, `pick_object(object)`, `place_object(location, spot)`,
+  `check_table(location)`, `set_arm_posture(posture)`, `wait(seconds)` — 모두 `strict` 스키마, 한 번에 하나씩 실행(`disable_parallel_tool_use`).
+- 장소: `supply_1`~`supply_3`(자리 `right`/`left`, 마커 N1/N2), `work_table`(자리 `left`/`middle`/`right`, 마커 1/2/3), `home`.
+  물체: `red_box`(마커 7), `green_box`(8), `blue_box`(9), 각각 1~3번 공급 테이블의 오른쪽 자리에서 시작.
+- 자리 하나에 상자 하나. `place_object`의 `auto`는 그 상자의 처음 자리(그 테이블일 때), 아니면 첫 빈자리.
+- `check_table`은 서 있는 테이블을 카메라로 보고(안 보이면 25 cm 다가가 다시) 보이는 상자의 자리를 고치고, 기억에 있는데
+  안 보이는 상자는 `unknown`으로 바꾼다. 조건이 있는 명령("…이 없으면", "…이면")은 Claude가 기억 또는 이 도구로 판단한다.
 - 진행 상황은 `/task_status`에 JSON 이벤트(command / tool_call / tool_result / thought / final / world)로 나온다.
 - 모델이 요청을 거절하면 다른 모델로 자동 재시도하는 server-side fallback(`fallbacks: "default"`)을 켜 두었다.
 - API 키 없이 로봇 쪽만 시험: `planner:=true llm:=scripted` (명령의 키워드로 정해진 순서를 재생하는 대역, 계획은 하지 않음).
 
-실제 Claude 시험 (연속 3개 명령, 한 번의 실행):
+실제 Claude 시험 (10 × 8.5 m 방, 연속 6개 명령, 한 번의 실행, 합계 약 $0.50):
 
 | 명령 | Claude의 계획 | 결과 |
 |---|---|---|
-| 빨간 상자를 작업대로 옮겨줘 | world_state → 공급 테이블 이동 → 집기 → 작업대 이동 → 놓기 | 성공, 77 s |
-| 파란 공 좀 가져다 줄래? | (도구 호출 없음) 모르는 물건이라 불가, 가능한 일 안내 | 3 s |
-| 이제 빨간 상자를 원래 자리에 다시 갖다 놔 | world_state → (이미 작업대 앞) 집기 → 공급 테이블 이동 → 놓기 | 성공, 66 s, 처음 자리에서 0.9 cm |
+| 초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘 | 상태 → 2번 → 집기 → 작업대 → 놓기(left) → 3번 → 집기 → 작업대 → 놓기(right) | 성공, 195 s |
+| 작업대에 빨간 상자가 없으면 가져다 놔 | 상태(기억: 없음) → 1번 → 집기 → 작업대 → 놓기(auto → middle) | 성공, 99 s, 판단 근거("로봇 기억으로는")를 답에 밝힘 |
+| 작업대에 뭐가 있는지 가서 확인해 줘 | (이미 작업대 앞) → check_table | 왼쪽 초록 · 가운데 빨강 · 오른쪽 파랑, 10 s |
+| 작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와 | 상태(있음) → 집기 → 1번 → 놓기(auto → 처음 자리) | 성공, 72 s, 원위치로는 가지 않음 |
+| 노란 공 좀 가져다 줄래? | (도구 호출 없음) 모르는 물건이라 불가, 가능한 일 안내 | 3 s |
+| 상자를 모두 원래 자리에 돌려놓고 원위치로 와 | 상태 → 초록·파랑을 처음 자리로 (빨강은 이미 제자리) → 원위치 | 성공, 208 s, 세 상자 모두 처음 자리에서 1.2 cm 이내 |
+
+대역(`llm:=scripted`)으로 "상자를 모두 작업대에 모아" → "가서 확인해" → "모두 제자리로"를 돌리면 집기·놓기 12번이 모두 성공한다
+(왼쪽 자리의 상자는 왼팔로, 나머지는 오른팔로).
 
 실패한 시도에서도 Claude는 도구 결과를 읽고 한 번 재시도한 뒤, 상자를 들고 있는 현재 상태를 정확히 보고했다.
 
@@ -226,7 +237,7 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 # 브라우저(Windows에서도 가능): http://localhost:8080/
 ```
 
-- 지도: SLAM 지도 위에 로봇(외곽선·방향), LiDAR 점, Nav2 경로, 테이블, 빨간 상자(시뮬레이터 실제 위치).
+- 지도: SLAM 지도 위에 로봇(외곽선·방향), LiDAR 점, Nav2 경로, 테이블과 놓는 자리, 상자 세 개(시뮬레이터 실제 위치).
 - 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG).
 - 명령: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소(`/task_cancel` — 주행·정밀 접근은 즉시 멈추고,
   진행 중인 팔 동작은 마친 뒤 다음 단계를 시작하지 않는다).
@@ -256,7 +267,7 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 - 시스템 종료(헤더 오른쪽, 두 번 눌러 확인): `/dashboard/shutdown` → dashboard_server가 정상 종료(코드 0)하면
   `dashboard.launch.py`가 launch 전체를 끈다(시뮬레이터, Nav2, MoveIt, 플래너, RViz). 서버가 비정상 종료(크래시)하면 끄지 않는다.
   페이지는 "종료했습니다"와 다시 시작 명령을 보여 주고, 다시 켜면 저절로 다시 연결된다.
-- 초기화(`/task_reset`, 두 번 눌러 확인): 진행 중인 작업을 취소하고 → 시뮬레이터 리셋(로봇·팔·빨간 상자를
+- 초기화(`/task_reset`, 두 번 눌러 확인): 진행 중인 작업을 취소하고 → 시뮬레이터 리셋(로봇·팔·상자 세 개를
   처음 위치로) → AMCL을 원점으로 다시 맞추고 costmap 비움 → 플래너의 상태(위치·들고 있는 것·마커 기억)도 처음으로.
 - 작업 진행: Claude가 호출한 단계마다 상태·걸린 시간·결과, Claude의 응답.
 - 로봇 상태: 작업 기준 위치, 들고 있는 물체, 지도 위치, 속도, 양손 그리퍼 열림, 시뮬레이션 시간.
@@ -299,22 +310,27 @@ Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 관절 목표를 낸다 (합성곱 + 공간 소프트맥스 + MLP, 60만 매개변수, CPU 추론 4 ms). PyTorch(CPU판)가 필요하다.
 
 ```bash
-ros2 run unbolt_vla record --episodes 600   # MuJoCo만으로 스크립트 전문가 시연 녹화 (~13분, ~/unbolt_vla/demos)
-ros2 run unbolt_vla train                   # CPU 학습 (~35분, ~/unbolt_vla/policy.pt)
+ros2 run unbolt_vla record --episodes 1200  # MuJoCo만으로 스크립트 전문가 시연 녹화 (~40분, ~/unbolt_vla/demos)
+ros2 run unbolt_vla train                   # CPU 학습 (20000단계 ~65분, ~/unbolt_vla/policy.pt)
 ros2 run unbolt_vla evaluate --episodes 100 # 처음 보는 배치에서 정책 vs 전문가
+ros2 run unbolt_vla evaluate --ask-other --episodes 20   # 언어 확인: 옆 상자의 색을 말하면?
 ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
 ```
 
 - 전문가(`expert.py`)는 시뮬레이터가 아는 상자의 실제 위치로 감쇠 최소제곱 IK를 풀어 `pick()`과 같은 경유점(벌리며 다가가기 →
-  15° 비스듬히 밀어 넣기 → 쥐기 → 들기)을 따라간다. 상자 위치·방향, 로봇 정렬 오차, 테이블(공급/작업대)을 시연마다 무작위로 하고,
+  15° 비스듬히 밀어 넣기 → 쥐기 → 들기)을 따라간다. 테이블 넷 · 자리 · 상자 색 셋, 상자 위치·방향, 로봇 정렬 오차를 시연마다 무작위로 하고
+  (절반은 옆자리에 다른 색 상자),
   절반은 실행 목표에 천천히 변하는 잡음을 더한다(DART, 정답은 전문가 목표 그대로).
 - `pick:=vla`: 브리지 헤드 카메라 10 Hz + 손목 카메라 `/wrist_camera/image_raw` 켜기, `vla_pick` 노드 시작,
   플래너 `pick_mode:=vla`(오른팔 기준으로 정렬한 뒤 `/vla/pick`에 문장을 보내고 `/vla/result`를 기다림).
   `vla_pick`은 정책이 "끝"이라고 해도 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고한다.
 - 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/unbolt_vla/policy.pt`가 없으면 시작을 거절). 카드에 손목 카메라와 "끝" 확률.
-- 결과(시연 583개, 12000단계, CPU 35분): 처음 보는 배치 100개에서 정책 100/100(공급 48/48, 작업대 52/52), 전문가 100/100.
-  공급 테이블 시연 297개만으로 학습한 정책은 공급 48/50(접근 시작 자세에서 멈춤 2번), 작업대 0/20(2초 만에 "끝")이었다.
-  ROS 전체에서 "작업대로 옮겨줘"·"원래 자리에 다시 갖다 놔"를 두 번씩 보내 정책 집기 4/4 성공(74~84단계).
+- 결과(10 × 8.5 m 방, 시연 1155개, 20000단계, CPU 약 65분, 검증 L1 0.0385): 처음 보는 배치 100개에서 정책 100/100
+  (네 테이블 모두 100%, 옆에 다른 색 상자가 있던 43번 포함, 다른 상자를 든 적 없음), 전문가 100/100.
+  그러나 `evaluate --ask-other`(정렬한 상자가 아닌 옆 상자의 색을 말함)에서는 20/20 정렬한 상자를 집었다. 정책은 색 낱말이 아니라
+  "오른손 앞에 정렬된 상자"를 단서로 배웠다(shortcut learning). 작업 관리자가 집을 상자의 마커로 정렬하므로 실제 작업은 맞게 된다.
+  ROS 전체에서 "상자를 모두 작업대에 모아" → "모두 제자리로"로 정책 집기 6/6 성공(74~88단계).
+  방을 넓히기 전(테이블 둘) 실험: 공급 테이블 시연 297개만으로 학습한 정책은 공급 48/50, 작업대 0/20(2초 만에 "끝")이었다.
 
 ## 브리지 인터페이스
 
@@ -332,7 +348,7 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true 
 | action | `/{left,right}_{arm,gripper}_controller/follow_joint_trajectory` | control_msgs/FollowJointTrajectory | MoveIt 궤적 실행 |
 | pub | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | 헤드 카메라 5 Hz (그림자·반사 끔, `camera_rate`) |
 | pub | `/wrist_camera/image_raw` | sensor_msgs/Image | 오른손 손목 카메라 96×96, 기본은 끔 (`wrist_camera_rate`, VLA 모드는 10 Hz) |
-| pub | `/ground_truth/red_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용, 스킬은 사용 안 함) |
+| pub | `/ground_truth/{red,green,blue}_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용, 스킬은 사용 안 함) |
 | srv | `/mujoco_bridge/reset` | std_srvs/Trigger | home 자세로 리셋 (시뮬레이션 시간은 계속 흐름) |
 
 관절 이름: `openarm_{left,right}_joint1..7`, `openarm_{left,right}_finger_joint1`

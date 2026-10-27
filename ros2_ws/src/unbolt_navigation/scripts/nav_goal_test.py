@@ -15,8 +15,8 @@ from nav_msgs.msg import Odometry
 # (x, y, yaw) in the map frame. The SLAM map frame coincides with the world
 # frame because the robot starts at the world origin facing +x.
 GOALS = [
-    (3.0, -1.4, -math.pi / 2),   # east side, past the table and the pillar
-    (-1.9, 1.6, math.pi / 2),    # west room, through the doorway
+    (4.0, -2.4, -math.pi / 2),   # south-east, past the cabinet and the pillar
+    (-2.0, 1.2, math.pi / 2),    # west room, through the doorway
     (0.0, 0.0, 0.0),             # back home
 ]
 

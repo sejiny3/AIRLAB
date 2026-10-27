@@ -146,8 +146,15 @@ bringup이 켜진 상태에서:
 $ ros2 run rqt_image_view rqt_image_view /aruco/debug_image
 ```
 
-키보드로 로봇을 공급 테이블(남쪽, 하늘색 상판) 쪽으로 돌려 보세요 (`ros2 run teleop_twist_keyboard teleop_twist_keyboard`).
-빨간 상자 위의 마커 7, 테이블의 마커 5가 초록 테두리와 좌표축으로 표시됩니다.
+키보드로 로봇을 1번 공급 테이블(남쪽 벽, 하늘색 상판) 쪽으로 돌려 보세요 (`ros2 run teleop_twist_keyboard teleop_twist_keyboard`).
+빨간 상자 위의 마커 7과 테이블의 빈자리 마커 12가 초록 테두리와 좌표축으로 표시됩니다
+(상자 밑의 마커 11은 상자에 가려 보이지 않습니다).
+
+| 마커 | 붙은 곳 | 크기 (검은 테두리 한 변) |
+|---|---|---|
+| 7 · 8 · 9 | 빨강 · 초록 · 파랑 상자 윗면 | 3.75 cm |
+| 1 · 2 · 3 | 작업대의 왼쪽 · 가운데 · 오른쪽 자리 (로봇이 볼 때) | 7.5 cm |
+| 11 · 12, 21 · 22, 31 · 32 | N번 공급 테이블의 오른쪽 · 왼쪽 자리 (십의 자리 = 테이블 번호) | 7.5 cm |
 
 ```bash
 $ ros2 run tf2_ros tf2_echo base_footprint aruco_7 --ros-args -p use_sim_time:=true
@@ -181,8 +188,8 @@ $ ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 `pick_place_demo.py`는 스킬을 순서대로 잇는 **상태 기계**입니다. 하나라도 실패하면 거기서 멈춥니다:
 
 ```
- arms tuck ─▶ navigate(공급 테이블 앞) ─▶ servo_to_marker(7) ─▶ pick(7) ─▶ back off
-     ─▶ navigate(작업대 앞) ─▶ servo_to_marker(3) ─▶ place(3) ─▶ back off
+ arms tuck ─▶ navigate(1번 공급 테이블 앞) ─▶ servo_to_marker(7) ─▶ pick(7) ─▶ back off
+     ─▶ navigate(작업대 앞) ─▶ servo_to_marker(2) ─▶ place(2) ─▶ back off
 ```
 
 `pick()` 안에서는 (`skills.py`):
@@ -197,14 +204,19 @@ $ ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 
 마지막 로그의 `red box ends at (...); N cm from the pad centre`를 적으세요.
 
-✅ **체크포인트 3-5**: 상자가 작업대의 마커 3 위에 놓였다 (패드 중심에서 3 cm 이내).
+✅ **체크포인트 3-5**: 상자가 작업대 가운데 자리(마커 2) 위에 놓였다 (패드 중심에서 3 cm 이내).
+
+> **양 끝 자리는 어떻게 집고 놓나?** 로봇은 테이블 가운데 앞에 서지만, 정렬(`servo_to_marker`)이 마커를
+> 팔의 `GRASP_XY`에 맞출 때까지 베이스를 움직이므로 옆자리도 같은 코드로 됩니다. 오른팔로 든 상자를
+> 작업대 왼쪽 자리(가운데에서 25 cm)에 놓으면 베이스가 테이블 중심에서 40 cm 비껴 섭니다.
+> 그래서 테이블 앞다리를 가장자리에서 20 cm 안쪽에 두어, 상판 밑으로 조금 들어가는 차체가 다리에 닿지 않게 했습니다.
 
 ---
 
 ## 과제
 
-**기본 과제 A. 되돌려 놓기.** `pick_place_demo.py`를 복사해서 상자를 **작업대 → 공급 테이블**(놓을 자리 마커 5)로
-되돌리는 `put_back.py`를 만드세요. 공급 테이블 앞 위치는 `SUPPLY_STAGING`, 작업대 앞은 `WORK_STAGING`입니다.
+**기본 과제 A. 되돌려 놓기.** `pick_place_demo.py`를 복사해서 상자를 **작업대 → 1번 공급 테이블**(빨간 상자가 처음 있던
+오른쪽 자리, 마커 11)로 되돌리는 `put_back.py`를 만드세요. 공급 테이블 앞 위치는 `SUPPLY_STAGING`, 작업대 앞은 `WORK_STAGING`입니다.
 
 **기본 과제 B. 파지 파라미터.** `skills.py`의 `PRE_GRASP_UP`(0.04)을 0으로, `GRASP_HEIGHT`(0.015)를 0으로 바꿔
 각각 데모를 돌려 보고 무엇이 실패하는지 로그로 설명하세요. (끝나면 원래 값으로)

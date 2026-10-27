@@ -17,10 +17,12 @@ from ament_index_python.packages import get_package_share_directory
 
 from unbolt_manipulation.task_planner_core import LOCATIONS, OBJECTS
 
-# Table footprints from models/scene.xml (centre x, y, half sizes), for drawing on the map.
+# Table footprints from models/scene.xml (centre x, y, half sizes along map x and y), for drawing on the map.
 TABLES = {
-    'supply_table': (-0.15, -2.45, 0.40, 0.25),
-    'work_table': (2.20, 0.00, 0.35, 0.50),
+    'supply_1': (0.0, -3.7, 0.60, 0.25),
+    'supply_2': (2.0, 3.7, 0.60, 0.25),
+    'supply_3': (-2.95, 2.6, 0.25, 0.60),
+    'work_table': (4.8, 0.0, 0.35, 0.60),
 }
 
 
@@ -47,7 +49,7 @@ class Site:
             'map_name': os.path.splitext(os.path.basename(map_yaml))[0],
             'map': {'resolution': meta['resolution'], 'origin': meta['origin'][:2],
                     'width': int(img.shape[1]), 'height': int(img.shape[0])},
-            'locations': {k: {'staging': v['staging'], 'place_marker': v['place_marker'],
+            'locations': {k: {'staging': v['staging'], 'spots': v['spots'],
                               'description': v['description']} for k, v in LOCATIONS.items()},
             'tables': {k: {'center': v[:2], 'half': v[2:]} for k, v in TABLES.items()},
             'objects': {k: {'marker': v['marker'], 'description': v['description']} for k, v in OBJECTS.items()},

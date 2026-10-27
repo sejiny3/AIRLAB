@@ -13,8 +13,8 @@ import cv2
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# 7 = red box, 3 = place pad on the work table, 5 = place pad on the supply table (under the box)
-MARKERS = {7: 'aruco_7.png', 3: 'aruco_3.png', 5: 'aruco_5.png'}
+# boxes: 7 red, 8 green, 9 blue. Place pads: 1-3 on the work table, N1 / N2 on supply table N.
+MARKERS = {i: f'aruco_{i}.png' for i in (1, 2, 3, 7, 8, 9, 11, 12, 21, 22, 31, 32)}
 CELL = 32
 
 os.makedirs(os.path.join(HERE, 'textures'), exist_ok=True)

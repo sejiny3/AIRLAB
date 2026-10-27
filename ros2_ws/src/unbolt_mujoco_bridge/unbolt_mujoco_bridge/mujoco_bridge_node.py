@@ -128,7 +128,7 @@ class MujocoBridge(Node):
         self.declare_parameter('wrist_camera_name', 'camera_wrist_right')
         self.declare_parameter('wrist_camera_rate', 0.0)  # off unless the VLA policy needs it
         self.declare_parameter('wrist_camera_size', 96)   # square image, the size the policy was trained on
-        self.declare_parameter('tracked_bodies', ['red_box'])
+        self.declare_parameter('tracked_bodies', ['red_box', 'green_box', 'blue_box'])
         self.declare_parameter('ground_truth_rate', 10.0)
 
         p = lambda name: self.get_parameter(name).value
@@ -520,8 +520,8 @@ class MujocoBridge(Node):
                 viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 3.0, -25.0, 150.0
             else:  # the room from above the south-east corner; the mouse still orbits and zooms
                 viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-                viewer.cam.lookat[:] = (1.0, 0.0, 0.3)
-                viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 8.0, -50.0, 110.0
+                viewer.cam.lookat[:] = (1.5, 0.0, 0.3)
+                viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 11.5, -50.0, 110.0
         renderer = None
         if self.camera_id >= 0:
             renderer = mujoco.Renderer(m, self.cam_h, self.cam_w)

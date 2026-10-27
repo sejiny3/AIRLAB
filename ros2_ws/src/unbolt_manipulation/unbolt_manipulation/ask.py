@@ -30,7 +30,11 @@ def main():
         if t == 'tool_call':
             print(f'  -> {e["name"]}({json.dumps(e["input"], ensure_ascii=False)})', flush=True)
         elif t == 'tool_result':
-            res = e['result'].get('message') or e['result'].get('error') or ''
+            r = e['result']
+            res = r.get('message') or r.get('error') or ''
+            if 'spots' in r:  # check_table: what the camera saw on each spot
+                res = ', '.join(f'{s}: {b or "empty"}' for s, b in r['spots'].items())
+                res += f'; not found: {", ".join(r["not_found"])}' if r.get('not_found') else ''
             print(f'     {"OK" if e["ok"] else "FAILED"} ({e["seconds"]:.0f} s) {res}', flush=True)
         elif t in ('thought', 'reply'):
             print(f'  [claude] {e["text"]}', flush=True)

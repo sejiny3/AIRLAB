@@ -42,7 +42,7 @@ PRE_GRASP_UP = 0.04                   # and this much higher: MuJoCo's convex-hu
                                       # MoveIt's mesh hand and could catch the table edge
 GRASP_DEPTH = 0.01                    # fingertips (grasp frame) go this far past the box centre [m]
 LIFT = 0.08                           # lift after grasping / height above the place spot [m]
-BOX_HALF = 0.025                      # red box half size [m]
+BOX_HALF = 0.025                      # box half size (all boxes are 5 cm cubes) [m]
 FINGER_OPEN = {'left': 0.6, 'right': -0.6}
 HOLDING_MIN = 0.06                    # |finger angle| above this after closing = something is held
 
@@ -189,6 +189,25 @@ class RobotSkills:
                               throttle_duration_sec=2.0)
             return m
         return None
+
+    def look_for(self, marker_ids, duration=3.0, max_age=0.6):
+        """Markers detected during the next `duration` seconds: {id: mean position in base_footprint}.
+
+        Only fresh detections count, so a marker that left the view earlier is not reported."""
+        found = {}
+        end = time.time() + duration
+        while time.time() < end:
+            for marker_id in marker_ids:
+                try:
+                    t = self.tf.lookup_transform(BASE, f'aruco_{marker_id}', Time())
+                except tf2_ros.TransformException:
+                    continue
+                stamp = Time.from_msg(t.header.stamp)
+                if (self.now() - stamp).nanoseconds * 1e-9 <= max_age:
+                    tr = t.transform.translation
+                    found.setdefault(marker_id, {})[stamp.nanoseconds] = (tr.x, tr.y, tr.z)
+            time.sleep(0.1)
+        return {m: np.mean(list(p.values()), axis=0) for m, p in found.items()}
 
     def _marker_in_base(self, marker_id, max_age, samples, timeout):
         frame = f'aruco_{marker_id}'
@@ -455,9 +474,12 @@ class RobotSkills:
             obj.operation = CollisionObject.REMOVE
         else:
             obj.operation = CollisionObject.ADD
-            obj.primitives.append(SolidPrimitive(type=SolidPrimitive.BOX, dimensions=[0.5, 0.8, 0.04]))
+            # Every place spot sits 0.15-0.16 m behind the table's front edge, and the tables are at most
+            # 1.2 m wide with spots up to 0.25 m off centre: 0.6 x 1.7 m from the front edge covers the
+            # whole top whichever spot the box is on.
+            obj.primitives.append(SolidPrimitive(type=SolidPrimitive.BOX, dimensions=[0.6, 1.7, 0.04]))
             pose = Pose()
-            pose.position.x, pose.position.y, pose.position.z = center_xy[0] + 0.12, center_xy[1], top_z - 0.02
+            pose.position.x, pose.position.y, pose.position.z = center_xy[0] + 0.15, center_xy[1], top_z - 0.02
             pose.orientation.w = 1.0
             obj.primitive_poses.append(pose)
         scene = PlanningScene(is_diff=True)
@@ -492,10 +514,16 @@ class RobotSkills:
         grasp = center + GRASP_DEPTH * approach + np.array([0.0, 0.0, GRASP_HEIGHT])
         self.set_support_surface(center[2] - BOX_HALF, center[:2])
         pre_offset = PRE_GRASP_BACK * approach - np.array([0.0, 0.0, PRE_GRASP_UP])
+        # The planner's path is random (RRTConnect); if the arm is stopped on the way (a contact
+        # MoveIt does not model), tuck it again and try one more path.
         ok = (self.set_gripper(arm, FINGER_OPEN[arm])
-              and self.move_to_pose(arm, grasp - pre_offset, Rg, 'pre-grasp')
-              and self.move_linear(arm, pre_offset, 'approach')
-              and self.set_gripper(arm, 0.0))
+              and (self.move_to_pose(arm, grasp - pre_offset, Rg, 'pre-grasp')
+                   or (self.move_arms('tuck', (arm,)) and self.move_to_pose(arm, grasp - pre_offset, Rg, 'pre-grasp (retry)')))
+              and self.move_linear(arm, pre_offset, 'approach'))
+        # The hand is around the box: closing moves only the fingers, and the slab (a coarse
+        # stand-in for the table top) can make the closed fingertips look as if they cut into it.
+        self.set_support_surface(None)
+        ok = ok and self.set_gripper(arm, 0.0)
         if ok:
             if self.finger(arm) < HOLDING_MIN:
                 self.log.error(f'pick: gripper closed on nothing (finger {self.finger(arm):.3f})')
@@ -563,7 +591,9 @@ class RobotSkills:
         self.log.info(f'place on marker {marker_id} with {arm} arm at ({target[0]:.3f}, {target[1]:.3f}, {target[2]:.3f})')
 
         self.set_support_surface(p_pad[2], p_pad[:2])
-        ok = (self.move_to_pose(arm, target + np.array([0.0, 0.0, LIFT]), Rg, 'pre-place')
+        above = target + np.array([0.0, 0.0, LIFT])
+        ok = ((self.move_to_pose(arm, above, Rg, 'pre-place')
+               or (self.move_arms('tuck', (arm,)) and self.move_to_pose(arm, above, Rg, 'pre-place (retry)')))
               and self.lower_until_contact(arm, LIFT)
               and self.set_gripper(arm, FINGER_OPEN[arm]))
         if ok:

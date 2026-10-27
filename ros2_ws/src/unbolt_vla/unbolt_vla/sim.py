@@ -1,9 +1,11 @@
 """A pick-only MuJoCo scene for the VLA policy, without ROS: demos, training and evaluation.
 
-The robot stands in front of the supply table or the work table the way the task planner
-leaves it after a coarse line-up: the red box is roughly where the right arm reaches best (GRASP_XY right),
-give or take a few centimetres and degrees, and turned by any angle. Everything the policy
-sees and does goes through this class:
+The robot stands in front of one of the four tables (three supply tables, the work table) the
+way the task planner leaves it after a coarse line-up: the box to pick (red, green or blue) is
+roughly where the right arm reaches best (GRASP_XY right), give or take a few centimetres and
+degrees, and turned by any angle. In half of the episodes a box of another colour stands on
+another place spot of the same table, so the instruction's colour word decides which box to
+take. Everything the policy sees and does goes through this class:
 
   observation  head camera image, right wrist camera image, right arm + finger joint angles
   action       position targets for the 7 right arm joints and the finger, at CONTROL_HZ
@@ -33,13 +35,13 @@ GRASP_XY = (0.38, -0.15)  # where the box should be in the base frame for the ri
 # How far the line-up may be off. The classical servo stops within 1 cm; the policy is
 # trained on a wider spread so that a coarse line-up is enough.
 SPREAD = {'x': 0.04, 'y': 0.05, 'heading': math.radians(8), 'box_yaw': math.radians(45)}
-# The two tables the box can be picked from: where the box usually rests (world x, y; it starts
-# on the supply table and is put back there, and lands on the work table's place pad) and which
-# way the robot faces when it stands in front of the table. They look different (blue / wood).
-TABLES = {
-    'supply': {'box': (-0.30, -2.36), 'box_spread': (0.06, 0.04), 'heading': -math.pi / 2},
-    'work': {'box': (2.00, -0.15), 'box_spread': (0.04, 0.06), 'heading': 0.0},
-}
+BOX_SPREAD = 0.03         # a box rests within this of its place spot's centre (x and y)
+DISTRACTOR = 0.5          # share of episodes with a second box on another spot of the table
+# Tables a box can be picked from (body names in models/scene.xml). Their place spots and the
+# way the robot faces when it works there are read from the model (see PickScene.tables).
+TABLES = ('supply_1', 'supply_2', 'supply_3', 'work_table')
+BOXES = {'red': 'red_box', 'green': 'green_box', 'blue': 'blue_box'}
+PARKED = (30.0, 30.0)     # boxes not in the episode wait on the floor far outside the room
 
 
 def repo_root():
@@ -85,9 +87,11 @@ class PickScene:
         self.other_act = [i for i in range(m.nu) if i not in self.act]
         base_joint = m.joint('base_free')
         self.base_q = m.jnt_qposadr[base_joint.id]
-        box_joint = m.joint('red_box_free')
-        self.box_q = m.jnt_qposadr[box_joint.id]
-        self.box_body = m.body('red_box').id
+        self.box_q = {c: m.jnt_qposadr[m.joint(f'{b}_free').id] for c, b in BOXES.items()}
+        self.box_bodies = {c: m.body(b).id for c, b in BOXES.items()}
+        self.color = 'red'
+        self.box_body = self.box_bodies[self.color]  # the box to pick (the expert reaches for this one)
+        self.tables = self._tables()
         self.site = m.site('right_ee_control_point').id
         self.steps_per_control = int(round(1.0 / (CONTROL_HZ * m.opt.timestep)))
         self.renderers = None
@@ -100,18 +104,50 @@ class PickScene:
                 r.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
         self.cams = {'head': 'head_camera', 'wrist': 'camera_wrist_right'}
 
+    def _tables(self):
+        """Place spots (world x, y of each pad) and the robot's heading at every table.
+
+        A table's local -y is the way the robot faces when it works there (models/scene.xml)."""
+        m, d = self.model, mujoco.MjData(self.model)
+        mujoco.mj_forward(m, d)
+        tables = {}
+        for name in TABLES:
+            body = m.body(name).id
+            R = d.xmat[body].reshape(3, 3)
+            spots = [d.geom_xpos[g][:2].copy() for g in range(m.ngeom)
+                     if m.geom_bodyid[g] == body and '_pad_' in m.geom(g).name]
+            tables[name] = {'spots': spots, 'heading': math.atan2(-R[1, 1], -R[0, 1])}
+        return tables
+
+    def _put_box(self, color, xy, yaw):
+        q = self.box_q[color]
+        self.data.qpos[q:q + 3] = [xy[0], xy[1], 0.676 if xy is not PARKED else 0.03]
+        self.data.qpos[q + 3:q + 7] = [math.cos(yaw / 2), 0, 0, math.sin(yaw / 2)]
+
     # ------------------------------------------------------------------ episode
-    def reset(self, table=None):
-        """New episode: box somewhere on a table ('supply', 'work', or None = either), robot
-        lined up roughly with it."""
+    def reset(self, table=None, color=None, distractor=None):
+        """New episode: a box (`color`, or random) on a place spot of `table` (or a random
+        table), maybe a box of another colour on another spot (`distractor`: True / False /
+        None = random), and the robot lined up roughly with the box to pick."""
         m, d, rng = self.model, self.data, self.rng
         mujoco.mj_resetData(m, d)
-        self.table = table or rng.choice(sorted(TABLES))
-        t = TABLES[self.table]
-        box = np.array(t['box']) + rng.uniform(-1, 1, 2) * t['box_spread']
-        box_yaw = rng.uniform(-SPREAD['box_yaw'], SPREAD['box_yaw'])
-        d.qpos[self.box_q:self.box_q + 3] = [box[0], box[1], 0.676]
-        d.qpos[self.box_q + 3:self.box_q + 7] = [math.cos(box_yaw / 2), 0, 0, math.sin(box_yaw / 2)]
+        self.table = table or str(rng.choice(TABLES))
+        self.color = color or str(rng.choice(sorted(BOXES)))
+        self.box_body = self.box_bodies[self.color]
+        self.distractor = bool(rng.random() < DISTRACTOR) if distractor is None else distractor
+        t = self.tables[self.table]
+        spots = rng.permutation(len(t['spots']))
+        others = [c for c in sorted(BOXES) if c != self.color]
+        other = str(rng.choice(others)) if self.distractor else None
+        box = t['spots'][spots[0]] + rng.uniform(-BOX_SPREAD, BOX_SPREAD, 2)
+        for c in BOXES:
+            if c == self.color:
+                self._put_box(c, box, rng.uniform(-SPREAD['box_yaw'], SPREAD['box_yaw']))
+            elif c == other:
+                xy = t['spots'][spots[1]] + rng.uniform(-BOX_SPREAD, BOX_SPREAD, 2)
+                self._put_box(c, xy, rng.uniform(-SPREAD['box_yaw'], SPREAD['box_yaw']))
+            else:
+                self._put_box(c, PARKED, 0.0)
         # robot facing the table, box at GRASP_XY (+ noise) in its base frame
         heading = t['heading'] + rng.uniform(-SPREAD['heading'], SPREAD['heading'])
         rel = np.array([GRASP_XY[0] + rng.uniform(-SPREAD['x'], SPREAD['x']),
@@ -168,6 +204,10 @@ class PickScene:
     def lifted(self):
         """The box is off the table by 3 cm or more."""
         return self.data.xpos[self.box_body][2] - self.box_z0 > 0.03
+
+    def lifted_other(self):
+        """Another box (the one the instruction did not ask for) was lifted instead."""
+        return any(self.data.xpos[b][2] > 0.705 for c, b in self.box_bodies.items() if c != self.color)
 
     def finger(self):
         return self.data.qpos[self.qadr[-1]]

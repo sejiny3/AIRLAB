@@ -100,8 +100,11 @@ class TrajectoryServer:
             time.sleep(1.0 / RATE_HZ)
 
         if err > self.goal_tolerance:
+            actual = self.bridge.joint_positions(names)
+            worst = max(range(len(names)), key=lambda i: abs(actual[i] - final[i]))
             result.error_code = FollowJointTrajectory.Result.GOAL_TOLERANCE_VIOLATED
-            result.error_string = f'final joint error {err:.3f} rad > tolerance {self.goal_tolerance:.3f}'
+            result.error_string = (f'final joint error {err:.3f} rad > tolerance {self.goal_tolerance:.3f} '
+                                   f'({names[worst]}: target {final[worst]:.3f}, at {actual[worst]:.3f})')
             self.bridge.get_logger().warn(result.error_string)
             goal_handle.abort()
         else:

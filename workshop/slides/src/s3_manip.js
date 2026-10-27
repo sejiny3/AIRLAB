@@ -56,7 +56,7 @@ module.exports = function build() {
   s = content('planning scene: MoveIt이 아는 세상', TAG, 'MoveIt은 MuJoCo의 세계를 모릅니다. planning scene에 넣어 준 것만 피합니다. 그래서 집을 때 테이블 상판을 상자(충돌 물체)로 넣어 줍니다. 계획이 끝나면 다시 빼는 이유: 로봇이 주행하면 base 기준 테이블 위치가 바뀌는데 planning scene의 상판은 그대로 남기 때문입니다.');
   box(s, 0.6, 1.5, 5.9, 3.4, C.background2);
   text(s, 'MuJoCo가 아는 것', { x: 0.85, y: 1.6, w: 5.4, h: 0.45, fontSize: 17, bold: true });
-  bullets(s, ['방, 벽, 테이블, 빨간 상자', '로봇의 모든 부품', '중력, 마찰, 접촉'], 0.85, 2.15, 5.4, 2.6, 16);
+  bullets(s, ['방, 벽, 테이블 네 개, 상자 세 개', '로봇의 모든 부품', '중력, 마찰, 접촉'], 0.85, 2.15, 5.4, 2.6, 16);
   box(s, 6.8, 1.5, 5.9, 3.4, C.accent3);
   text(s, 'MoveIt이 아는 것 (planning scene)', { x: 7.05, y: 1.6, w: 5.4, h: 0.45, fontSize: 17, bold: true, color: C.background1 });
   bullets(s, ['로봇 자신 (URDF + 관절 상태)', '우리가 넣어 준 충돌 물체만', '→ 집을 때 테이블 상판 (0.5 × 0.8 × 0.04 m)'], 7.05, 2.15, 5.4, 2.6, 16, C.background1);
@@ -106,10 +106,10 @@ module.exports = function build() {
   });
 
   s = content('헤드 카메라로 본 세상', TAG, '로봇이 각 테이블 앞에 섰을 때 헤드 카메라 영상입니다(초록 테두리 = ArUco 검출, OpenCV가 그린 것). 아래쪽에 보이는 검은 것은 접은(tuck) 팔입니다. 팔을 펼친 채로 두면 시야를 가려서, 운반·접근 중에는 항상 tuck 자세를 씁니다.');
-  img(s, 'headcam_supply.png', 0.6, 1.5, 5.95, 3.35, '공급 테이블 앞 헤드 카메라: 빨간 상자 위 마커 7 검출');
-  img(s, 'headcam_work.png', 6.75, 1.5, 5.95, 3.35, '작업대 앞 헤드 카메라: 놓을 자리 마커 3 검출');
-  text(s, '공급 테이블 앞: 상자 위 마커 7 (3.75 cm)', { x: 0.6, y: 4.95, w: 5.95, h: 0.4, fontSize: 15, bold: true, align: 'center' });
-  text(s, '작업대 앞: 놓을 자리 마커 3 (7.5 cm)', { x: 6.75, y: 4.95, w: 5.95, h: 0.4, fontSize: 15, bold: true, align: 'center' });
+  img(s, 'headcam_supply.png', 0.6, 1.5, 5.95, 3.35, '1번 공급 테이블 앞 헤드 카메라: 빨간 상자 마커 7과 빈자리 마커 12 검출');
+  img(s, 'headcam_work.png', 6.75, 1.5, 5.95, 3.35, '작업대 앞 헤드 카메라: 놓을 자리 마커 1·2·3 검출');
+  text(s, '1번 공급 테이블 앞: 상자 마커 7 (3.75 cm), 빈자리 12', { x: 0.6, y: 4.95, w: 5.95, h: 0.4, fontSize: 15, bold: true, align: 'center' });
+  text(s, '작업대 앞: 놓을 자리 마커 1·2·3 (7.5 cm)', { x: 6.75, y: 4.95, w: 5.95, h: 0.4, fontSize: 15, bold: true, align: 'center' });
   callout(s, 'why', 0.6, 5.5, 12.1, 1.2, '카메라는 받침대 위(바닥에서 약 1 m)에서 47° 아래를 본다. 아래쪽 검은 것은 접은 팔. 팔을 펴면 시야를 가려서 이동할 때는 항상 tuck.');
 
   s = content('ArUco 마커로 위치 알아내기', TAG, 'aruco_detector.py가 하는 일 세 단계입니다. 마커는 흑백 격자 무늬에 번호가 들어 있어 빠르고 확실하게 찾을 수 있습니다. 마커 크기를 알기 때문에 사진 한 장으로 거리와 방향까지 계산합니다(다음 장).');
@@ -121,7 +121,7 @@ module.exports = function build() {
     text(s, b, { x: x + 0.25, y: 2.45, w: 3.2, h: 1.1, fontSize: 15, color: col });
     if (i < 2) arrow(s, x + 3.75, 2.65, x + 4.1, 2.65);
   });
-  [['마커 7', '빨간 상자 윗면, 3.75 cm'], ['마커 5', '공급 테이블 놓을 자리, 7.5 cm'], ['마커 3', '작업대 놓을 자리, 7.5 cm']].forEach(([a, b], i) => {
+  [['마커 7 · 8 · 9', '빨강·초록·파랑 상자 윗면, 3.75 cm'], ['마커 N1 · N2', 'N번 공급 테이블 오른쪽·왼쪽 자리, 7.5 cm'], ['마커 1 · 2 · 3', '작업대 왼쪽·가운데·오른쪽 자리, 7.5 cm']].forEach(([a, b], i) => {
     const x = 0.6 + i * 4.15;
     circleIcon(s, 'FaQrcode', x, 4.05, 0.6, C.text1);
     text(s, a, { x: x + 0.75, y: 4.0, w: 3.0, h: 0.35, fontSize: 16, bold: true });
@@ -142,9 +142,9 @@ module.exports = function build() {
   callout(s, 'analogy', 7.3, 4.1, 5.4, 1.0, '키를 아는 사람이 작게 보이면 멀리 있다', '비유');
   callout(s, 'why', 0.6, 5.35, 12.1, 1.35, '그래서 마커 크기를 정확히 알려 줘야 한다 (aruco_detector의 marker_sizes 파라미터: 상자 0.0375, 놓을 자리 0.075). 크기를 틀리게 주면 거리도 같은 비율로 틀린다.');
 
-  s = content('실습 4. 마커 검출 확인', TAG, 'bringup이 켜진 상태에서 합니다. 로봇을 공급 테이블(남쪽, 하늘색 상판) 쪽으로 돌려야 마커가 보입니다. 체크포인트 3-4는 tf2_echo로 상자까지 거리 읽기입니다.');
+  s = content('실습 4. 마커 검출 확인', TAG, 'bringup이 켜진 상태에서 합니다. 로봇을 1번 공급 테이블(남쪽 벽, 하늘색 상판) 쪽으로 돌려야 마커가 보입니다. 체크포인트 3-4는 tf2_echo로 상자까지 거리 읽기입니다.');
   lab(s, {
-    cmd: '# 카메라 영상 (검출 결과가 그려짐)\n$ ros2 run rqt_image_view rqt_image_view /aruco/debug_image\n\n# 키보드로 로봇을 공급 테이블 쪽으로 돌리기\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n\n# 로봇 기준 상자 마커 위치\n$ ros2 run tf2_ros tf2_echo base_footprint aruco_7 \\\n    --ros-args -p use_sim_time:=true',
+    cmd: '# 카메라 영상 (검출 결과가 그려짐)\n$ ros2 run rqt_image_view rqt_image_view /aruco/debug_image\n\n# 키보드로 로봇을 1번 공급 테이블 쪽으로 돌리기\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n\n# 로봇 기준 상자 마커 위치\n$ ros2 run tf2_ros tf2_echo base_footprint aruco_7 \\\n    --ros-args -p use_sim_time:=true',
     cmdH: 3.5,
     explain: ['Translation: [x, y, z] = 로봇 기준 상자 위치 [m]', '마커가 안 보이면 TF도 안 나온다 (정상)'],
     ok: '영상에 초록 테두리 + id=7, tf2_echo에 x ≈ 0.8 m 같은 값.\n\n✅ 체크포인트 3-4',
@@ -172,7 +172,7 @@ module.exports = function build() {
   callout(s, 'why', 0.6, 5.4, 12.1, 1.3, '짧은 거리에서는 오도메트리 오차가 작아서(수 mm) 기억한 위치를 믿어도 된다. 오래 움직이면 틀어지니 새로 보이면 바로 갱신한다.');
 
   s = content('Pick & Place = 스킬을 잇는 상태 기계', TAG, 'pick_place_demo.py는 스킬을 and로 잇습니다. 하나라도 실패하면 거기서 멈춥니다. 줄 끝(집기)은 다음 줄로 이어집니다.');
-  ['tuck', '주행: 공급 테이블', '정밀 접근: 마커 7', '집기', '후진', '주행: 작업대', '정밀 접근: 마커 3', '놓기'].forEach((t, i) => {
+  ['tuck', '주행: 1번 공급 테이블', '정밀 접근: 마커 7', '집기', '후진', '주행: 작업대', '정밀 접근: 마커 2', '놓기'].forEach((t, i) => {
     const r = Math.floor(i / 4), c = i % 4;
     const x = 0.6 + c * 3.1, y = 1.5 + r * 1.2;
     box(s, x, y, 2.75, 0.8, i === 3 || i === 7 ? C.accent1 : C.background2);
@@ -186,7 +186,7 @@ module.exports = function build() {
   [['상자 중심 계산', '마커 위치 - 2.5 cm × 마커 z축 (마커는 윗면에 붙어 있다)'], ['팔·손 방향 고르기', '상자가 왼쪽(y > 0)이면 왼팔. 상자 yaw에 맞춰 ±45° 안에서 손 돌리기'], ['planning scene에 상판', '계획하는 동안만 충돌 물체로 추가'], ['pre-grasp → 직선 접근', '10 cm 뒤, 4 cm 위에서 move_linear로 다가감'], ['닫고 확인', '닫은 뒤에도 손가락이 0.06 rad 이상 벌어져 있으면 "잡았다"'], ['들기 → tuck', '직선 8 cm 들고 접은 자세, 상판 제거']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6 + (i % 2) * 6.15, 1.6 + Math.floor(i / 2) * 1.7, 5.9, 0.9));
 
   s = content('place() 안에서 일어나는 일: 조심스럽게 내리기', TAG, '놓을 자리 높이는 멀리서 본 마커로 계산해서 몇 cm 틀릴 수 있습니다(가까이서는 든 상자가 마커를 가림). 그래서 목표 높이까지 무조건 내리지 않고, 내려가다 막히면 "바닥에 닿았다"고 판단합니다. 실제 로봇 팔의 guarded move와 같은 방식입니다.');
-  [['마커 3 위 8 cm로', 'move_to_pose로 놓을 자리 위까지'], ['직선으로 내리기', '8 cm 아래로 move_linear (충돌 검사 끄고)'], ['막히면 = 닿았다', '3 cm 이상 내려간 뒤 막히면 상자가 테이블에 닿은 것'], ['그리퍼 열기', '상자를 놓는다'], ['위로 4 cm → 뒤로', '손가락이 상자를 끌지 않게 먼저 위로'], ['tuck → 그리퍼 닫기', '닫아야 카메라 시야가 열린다']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6 + (i % 2) * 6.15, 1.6 + Math.floor(i / 2) * 1.4, 5.9, 0.7));
+  [['마커 2 위 8 cm로', 'move_to_pose로 놓을 자리 위까지'], ['직선으로 내리기', '8 cm 아래로 move_linear (충돌 검사 끄고)'], ['막히면 = 닿았다', '3 cm 이상 내려간 뒤 막히면 상자가 테이블에 닿은 것'], ['그리퍼 열기', '상자를 놓는다'], ['위로 4 cm → 뒤로', '손가락이 상자를 끌지 않게 먼저 위로'], ['tuck → 그리퍼 닫기', '닫아야 카메라 시야가 열린다']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6 + (i % 2) * 6.15, 1.6 + Math.floor(i / 2) * 1.4, 5.9, 0.7));
   callout(s, 'analogy', 0.6, 5.65, 12.1, 1.05, '눈 감고 컵을 책상에 놓을 때: 천천히 내리다가 "턱" 하고 닿는 느낌이 나면 손을 놓는다', '비유');
 
   s = content('실습 5. Pick & Place 전체 실행', TAG, '실습 4에서 로봇을 몰았다면 시뮬레이터 리셋 후 AMCL에 원점을 다시 알려 줘야 합니다(/initialpose). 마지막 로그의 "N cm from the pad centre"를 적게 하세요. 새로 설치한 환경에서 0.8 cm로 성공했습니다. 체크포인트 3-5.');
@@ -215,7 +215,7 @@ module.exports = function build() {
   ], '답은 발표자 노트에 있습니다.');
 
   s = content('모듈 3 과제', TAG, '도전 과제는 포스터의 "planning scene attach/detach" 항목에 해당합니다. 지금 코드는 상판만 planning scene에 넣습니다.');
-  card(s, { x: 0.6, y: 1.5, w: 5.95, h: 2.5, head: '기본 A. 되돌려 놓기', iconName: 'FaUndo', accent: C.accent2, body: 'pick_place_demo.py를 복사해 상자를 작업대 → 공급 테이블(마커 5)로 되돌리는 put_back.py', bodySize: 15 });
+  card(s, { x: 0.6, y: 1.5, w: 5.95, h: 2.5, head: '기본 A. 되돌려 놓기', iconName: 'FaUndo', accent: C.accent2, body: 'pick_place_demo.py를 복사해 상자를 작업대 → 1번 공급 테이블(처음 자리, 마커 11)로 되돌리는 put_back.py', bodySize: 15 });
   card(s, { x: 6.75, y: 1.5, w: 5.95, h: 2.5, head: '기본 B. 파지 파라미터', iconName: 'FaWrench', accent: C.accent3, body: 'skills.py의 PRE_GRASP_UP(0.04)을 0으로, GRASP_HEIGHT(0.015)를 0으로 바꿔 각각 무엇이 실패하는지 로그로 설명 (끝나면 원래대로)', bodySize: 15 });
   card(s, { x: 0.6, y: 4.2, w: 12.1, h: 2.5, head: '도전. Attach / Detach', iconName: 'FaLink', accent: C.accent1, body: '잡은 상자를 AttachedCollisionObject(5 cm 상자, 손 링크 openarm_*_ee_base_link에 붙이고 손가락 충돌은 touch_links로 허용)로 추가하고, 놓은 뒤 떼어 내도록 pick()/place()를 고치기. RViz MotionPlanning의 Scene Objects에서 확인', bodySize: 15, fill: C.text1, headColor: C.background1, bodyColor: C.accent5 });
 };

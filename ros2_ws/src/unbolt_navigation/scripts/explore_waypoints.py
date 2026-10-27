@@ -13,11 +13,13 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
 
-# World-frame waypoints: east room loop, then through the partition doorway
-# (y in [-0.4, 0.8]) into the west room and back to the start.
+# World-frame waypoints: a loop of the east room (north side, past the work table, south
+# side), then through the partition doorway (y in [-0.6, 1.0]) into the west room and back.
+# Every straight leg keeps at least 0.6 m between the base centre and the obstacles.
 TOUR = [
-    (1.2, 1.2), (3.2, 1.2), (3.2, -1.3), (1.6, -0.9), (0.0, -1.2),
-    (-0.5, 0.2), (-1.85, 0.2), (-1.85, 1.9), (-1.85, -1.5), (-1.85, 0.2),
+    (1.0, 1.0), (0.6, 2.8), (2.0, 2.7), (3.8, 2.8), (5.8, 2.5), (5.8, -2.5),
+    (3.8, -2.6), (2.0, -2.6), (0.6, -2.4), (0.0, -0.8),
+    (-0.5, 0.2), (-2.0, 0.2), (-2.0, 3.5), (-2.0, -2.8), (-2.0, 0.2),
     (-0.3, 0.2), (0.0, 0.0),
 ]
 MAX_V, MAX_W = 0.3, 0.8

@@ -36,7 +36,7 @@
                  │
                  ▼
    ┌──── LLM (Claude) : 무엇을, 어떤 순서로 ────┐      느리다 (초 단위), 가끔 틀린다
-   │  get_world_state → navigate_to(supply_table) │
+   │  get_world_state → navigate_to(supply_1)     │
    │  → pick_object(red_box) → navigate_to(...)   │
    └──────────────┬───────────────────────────────┘
                   │ 도구 호출 (JSON)
@@ -73,7 +73,7 @@ for turn in range(MAX_TURNS):
 | | 스키마 검증 | 월드(세계 상태) 검증 |
 |---|---|---|
 | 어디서 | 도구 정의 `TOOLS` (`strict: True`, `enum`) | `TaskExecutor._tool_*` |
-| 무엇을 | 형식: 장소 이름이 `supply_table` / `work_table` / `home` 중 하나인가 | 의미: 지금 그 일을 할 수 있는 상태인가 |
+| 무엇을 | 형식: 장소 이름이 `supply_1`~`supply_3` / `work_table` / `home` 중 하나인가, 자리가 `auto`/`left`/`middle`/`right` 중 하나인가 | 의미: 지금 그 일을 할 수 있는 상태인가 (그 자리가 비었나, 그 상자가 거기 있나) |
 | 예 | `navigate_to(location="kitchen")` → API가 애초에 만들지 못함 | 들고 있는 게 없는데 `place_object` → `"not holding anything"` |
 | 실패 시 | 생성 자체가 스키마를 따름 | 오류를 도구 결과로 돌려줌 → LLM이 읽고 계획 수정 |
 
@@ -106,10 +106,10 @@ $ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
 >> 빨간 상자를 작업대로 옮겨줘
   -> get_world_state({})
      OK (0 s)
-  -> navigate_to({"location": "supply_table"})
-     OK (21 s) arrived at supply_table
+  -> navigate_to({"location": "supply_1"})
+     OK (13 s) arrived at supply_1
   -> pick_object({"object": "red_box"})
-     OK (25 s) picked red_box with the right arm
+     OK (24 s) picked red_box from the right spot of supply_1 with the right arm
   ...
 == done in 80 s: 빨간 상자를 작업대로 옮겼습니다. (scripted)
 ```
@@ -137,7 +137,7 @@ $ ros2 launch unbolt_manipulation bringup.launch.py planner:=true
 
 ```bash
 $ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
-$ ros2 run unbolt_manipulation ask "파란 공 좀 가져다 줄래?"
+$ ros2 run unbolt_manipulation ask "노란 공 좀 가져다 줄래?"
 $ ros2 run unbolt_manipulation ask "이제 빨간 상자를 원래 자리에 다시 갖다 놔"
 $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 돌아와"
 ```
@@ -145,7 +145,7 @@ $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 
 | 명령 | Claude의 도구 순서 | 결과 | 토큰 / 비용 |
 |---|---|---|---|
 | 빨간 상자를 작업대로 | | | |
-| 파란 공 | | | |
+| 노란 공 | | | |
 | 원래 자리에 | | | |
 | 작업대 갔다가 돌아와 | | | |
 
@@ -154,7 +154,7 @@ $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 
 > 같은 명령도 실행할 때마다 계획이 조금 다를 수 있습니다 (예: `get_world_state`를 먼저 부르는지).
 > 결과가 같으면 정상입니다.
 
-✅ **체크포인트 4-2**: 모르는 물건(파란 공)은 도구를 부르지 않고 안내만 했다.
+✅ **체크포인트 4-2**: 모르는 물건(노란 공)은 도구를 부르지 않고 안내만 했다.
 
 ## 실습 3. 코드 읽기
 
@@ -162,14 +162,16 @@ $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 
 
 | 찾을 것 | 질문 |
 |---|---|
-| `LOCATIONS`, `OBJECTS` | 장소마다 `staging`(Nav2 목표)과 `place_marker`가 있다. LLM은 좌표를 아나? |
+| `LOCATIONS`, `OBJECTS` | 장소마다 `staging`(Nav2 목표)과 놓는 자리 `spots`(마커 번호, 지도 좌표)가 있다. 상자마다 처음 자리 `home`이 있다. LLM은 좌표를 아나? |
 | `SYSTEM_PROMPT` | 로봇의 규칙(먼저 그 장소로 가야 집을 수 있다 등)을 어떻게 알려 주나? 한국어 별칭은? |
 | `TOOLS` | `strict`, `enum`, `additionalProperties: False`가 각각 무엇을 막나? |
-| `TaskExecutor._tool_pick_object` | 월드 검증 두 가지는? 어느 팔로 집을지는 누가 정하나? |
+| `TaskExecutor._tool_pick_object` | 월드 검증 두 가지는? 어느 팔로 집을지는 누가 정하나? 집기에 실패해도 뒤로 물러나는 이유는? |
+| `TaskExecutor._choose_spot` | `auto`는 어떤 순서로 자리를 고르나? 이미 상자가 있는 자리를 고르면? |
+| `TaskExecutor._tool_check_table` | 카메라로 본 상자가 어느 자리인지 어떻게 정하나(`SPOT_MATCH`)? 기억에는 있는데 안 보이는 상자는? |
 | `TaskPlanner.run` | `stop_reason`이 무엇일 때 루프가 끝나나? 도구 결과에 `is_error`를 넣는 이유는? |
 | `task_planner.py` | 명령이 실행 중일 때 새 명령이 오면? |
 
-**핵심**: LLM은 좌표·관절각·팔 선택을 모릅니다. 이름(`supply_table`, `red_box`)만 고르고,
+**핵심**: LLM은 좌표·관절각·팔 선택을 모릅니다. 이름(`supply_1`, `red_box`, `left`)만 고르고,
 구체적인 값은 작업 관리자와 스킬이 정합니다. 그래서 LLM이 엉뚱한 숫자를 만들어 로봇을 위험하게 움직일 수 없습니다.
 
 ## 실습 4. 실패 복구와 취소
@@ -202,11 +204,66 @@ $ ros2 topic pub --once /task_cancel std_msgs/msg/Empty
 $ ros2 topic pub --once /task_reset std_msgs/msg/Empty
 ```
 
-진행 중인 작업을 취소한 뒤 → 시뮬레이터 리셋(로봇·팔·빨간 상자를 처음 위치로) → AMCL 위치 추정을 원점으로 다시 맞추고
+진행 중인 작업을 취소한 뒤 → 시뮬레이터 리셋(로봇·팔·상자 세 개를 처음 위치로) → AMCL 위치 추정을 원점으로 다시 맞추고
 costmap을 비움 → 플래너가 기억하는 상태(위치, 들고 있는 것, 마커 위치)도 처음으로. 몇 초면 끝납니다.
 
 > 시뮬레이터만 리셋하는 `ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger`는 플래너와 AMCL이 옛 상태를
 > 기억하고 있어서 다음 명령이 꼬입니다. 플래너를 켠 상태에서는 `/task_reset`을 쓰세요.
+
+## 실습 4-B. 조건과 순서가 있는 명령
+
+방에는 공급 테이블이 세 개(1번 남쪽 · 빨간 상자, 2번 북쪽 · 초록 상자, 3번 서쪽 방 · 파란 상자) 있고,
+작업대에는 상자를 하나씩 놓는 자리가 왼쪽 · 가운데 · 오른쪽 세 칸 있습니다. 그래서 명령이 훨씬 다양해집니다:
+"무엇을 어디로"뿐 아니라 **어느 자리에**, **어떤 순서로**, **어떤 조건일 때만**.
+
+이를 위해 도구가 두 개 늘고, 하나가 바뀌었습니다:
+
+| 도구 | 하는 일 | 왜 필요한가 |
+|---|---|---|
+| `place_object(location, spot)` | `spot`: `left` / `middle` / `right` 또는 `auto` (그 상자의 처음 자리, 아니면 첫 빈자리) | "작업대 왼쪽에 놓아" 같은 명령. 이미 상자가 있는 자리면 월드 검증이 거절 |
+| `check_table(location)` | 지금 선 테이블을 카메라로 3초 보고, 어느 자리에 어떤 상자가 있는지 보고 (안 보이면 25 cm 다가가 한 번 더) | 기억(`get_world_state`)이 틀렸을 수 있을 때 **눈으로 확인**. 보이는 상자는 그 자리로, 있어야 하는데 안 보이는 상자는 "모름"으로 고친다 |
+| `wait(seconds)` | 1~120초 그 자리에서 기다리기 | "10초 기다렸다가 …" 같은 순서 명령 |
+
+조건 판단은 LLM이 합니다. 시스템 프롬프트에 규칙을 두었습니다:
+**순서는 사람이 말한 대로**, **조건은 행동 전에 상태를 보고 판단**(평소에는 기억, "가서 봐/확인해"라고 하거나
+실패 직후처럼 기억이 틀렸을 수 있으면 `check_table`), **조건이 거짓이면 그 부분을 건너뛰고 답에서 알린다**.
+
+```bash
+$ ros2 run unbolt_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
+$ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 없으면 가져다 놔"
+$ ros2 run unbolt_manipulation ask "작업대에 뭐가 있는지 가서 확인해 줘"
+$ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
+$ ros2 run unbolt_manipulation ask "상자를 모두 원래 자리에 돌려놓고 원위치로 와"
+```
+
+| 명령 | Claude가 조건을 무엇으로 판단했나 (기억 / 카메라) | 도구 순서 | 결과 |
+|---|---|---|---|
+| 초록 먼저 왼쪽, 그다음 파랑 오른쪽 | | | |
+| 빨간 상자가 없으면 가져와 | | | |
+| 가서 확인해 | | | |
+| 있으면 돌려놓고 없으면 원위치 | | | |
+| 모두 원래 자리로 + 원위치 | | | |
+
+✅ **체크포인트 4-3B**: 조건이 들어간 명령에서 Claude가 상태를 먼저 확인하고, 조건에 맞는 쪽만 실행했다.
+
+강사 노트북에서 위 명령을 차례로 보낸 실제 결과입니다 (`claude-opus-5-5`, 한 번의 실행, 상자 세 개가 모두 처음 자리에서 시작):
+
+| 명령 | Claude가 고른 도구 순서 | 결과 · 시간 · 비용 |
+|---|---|---|
+| 초록 먼저 왼쪽, 그다음 파랑 오른쪽 | 상태 → 2번 → 집기(초록) → 작업대 → 놓기(`left`) → 3번 → 집기(파랑) → 작업대 → 놓기(`right`) | 성공, 195 s, $0.14 |
+| 빨간 상자가 없으면 가져와 | 상태(기억: 없음) → 1번 → 집기 → 작업대 → 놓기(`auto` → 가운데) | "로봇 기억으로는 없었어요"라고 근거를 밝히고 실행, 99 s, $0.08 |
+| 가서 확인해 | 작업대(이미 앞) → `check_table` | 왼쪽 초록 · 가운데 빨강 · 오른쪽 파랑, 10 s, $0.03 |
+| 있으면 돌려놓고 없으면 원위치 | 상태(있음) → 집기 → 1번 → 놓기(`auto` → 처음 자리) | "있었기 때문에 원위치로는 가지 않았다"고 보고, 72 s, $0.07 |
+| 노란 공 | (도구 없음) | 알고 있는 물건과 장소를 안내, 3 s, $0.01 |
+| 모두 원래 자리로 + 원위치 | 상태 → 초록·파랑을 각자 처음 자리로 → 원위치 (빨강은 이미 제자리라 건너뜀) | 성공, 208 s, $0.16, 세 상자 모두 처음 자리에서 1.2 cm 이내 |
+
+마지막 답에서 Claude는 "빨간 상자는 기억상 이미 제자리라 옮기지 않았다(카메라로 확인하지는 않았다)"고 덧붙였습니다.
+**무엇을 근거로 판단했는지 말하게** 하면, 사람이 기억이 틀렸을 가능성을 알아챌 수 있습니다.
+
+> **기억과 실제가 다를 때.** MuJoCo 창에서 작업대 위의 상자를 더블클릭하고 `Ctrl + 마우스 오른쪽 드래그`로 바닥에 떨어뜨려
+> 보세요. 플래너는 여전히 작업대에 있다고 기억합니다. 이때 "작업대에 빨간 상자가 있으면 …"을 보내면 Claude가 기억만 믿고 틀리게
+> 판단할 수 있습니다. 같은 명령을 "작업대에 빨간 상자가 있는지 **가서 보고** …"로 바꾸면 `check_table`이 기억을 고칩니다. 직접 비교해 보세요. 로봇 시스템에서
+> "세계 상태를 믿을 것인가, 다시 볼 것인가"는 늘 비용(시간)과 정확도의 맞바꿈입니다.
 
 ## 실습 5. 웹 대시보드
 
@@ -218,7 +275,7 @@ Windows의 Chrome/Edge에서 **<http://localhost:8080>** 을 엽니다 (WSL이 l
 
 ![Dashboard](../docs/step7_dashboard.jpg)
 
-- **지도**: SLAM 지도 + 로봇 외곽선·방향 + LiDAR 점 + Nav2 경로 + 테이블 + 빨간 상자(시뮬레이터 실제 위치)
+- **지도**: SLAM 지도 + 로봇 외곽선·방향 + LiDAR 점 + Nav2 경로 + 테이블 네 개와 놓는 자리 + 빨강·초록·파랑 상자(시뮬레이터 실제 위치)
 - **헤드 카메라**: 마커 검출 결과가 그려진 영상
 - **명령**: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소, **초기화**(한 번 누르면 "정말 초기화?"로 바뀌고 4초 안에 한 번 더 누르면 실행, `/task_reset`과 같음)
 - **시스템 종료** (오른쪽 위): 두 번 눌러 확인하면 시뮬레이터, Nav2, MoveIt, 플래너, RViz까지 **이 launch의 모든 프로그램**을 끕니다.
@@ -262,7 +319,7 @@ http://localhost:8080 을 열면 ROS가 꺼져 있어도 페이지가 뜨고 **"
     ▼
  rosbridge_websocket ──── ROS 2 토픽 ────┬─ /task_command ▶ task_planner
                                           ├─ /task_status  ◀ task_planner (JSON 이벤트)
-                                          ├─ /scan, /plan, /dashboard/robot_pose, /ground_truth/red_box
+                                          ├─ /scan, /plan, /dashboard/robot_pose, /ground_truth/{red,green,blue}_box
                                           └─ /aruco/debug_image/compressed (JPEG)
  dashboard_server (:8080) ── index.html, /map.png, /config.json (지도 해상도·원점, 테이블 위치)
 ```
@@ -300,7 +357,7 @@ http://localhost:8080 을 열면 ROS가 꺼져 있어도 페이지가 뜨고 **"
 
 | 성공 조건 | 확인 방법 |
 |---|---|
-| 상자가 작업대의 놓을 자리(마커 3) 위에 있다 | 대시보드 지도의 빨간 상자 위치, MuJoCo 화면 |
+| 빨간 상자가 작업대의 놓을 자리(마커 1·2·3 중 하나) 위에 있다 | 대시보드 지도의 빨간 상자 위치, MuJoCo 화면 |
 | 사람이 중간에 손대지 않았다 (취소·재명령 없이) | 작업 진행 타임라인 |
 | 3분 이내 | 타임라인의 총 시간 |
 

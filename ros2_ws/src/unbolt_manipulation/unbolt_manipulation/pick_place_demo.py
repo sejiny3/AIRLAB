@@ -1,10 +1,10 @@
-"""End-to-end demo: take the red box from the supply table to the place pad on the work table.
+"""End-to-end demo: take the red box from supply table 1 to the middle place spot on the work table.
 
   ros2 launch unbolt_manipulation bringup.launch.py
   ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 
-Sequence: tuck arms -> Nav2 to the supply table -> servo on marker 7 -> pick ->
-back off -> Nav2 to the work table -> servo on marker 3 -> place -> back off.
+Sequence: tuck arms -> Nav2 to supply table 1 -> servo on marker 7 -> pick ->
+back off -> Nav2 to the work table -> servo on marker 2 -> place -> back off.
 At the end the box's true pose (from the simulator) is compared with the pad.
 """
 
@@ -17,10 +17,10 @@ from nav_msgs.msg import Odometry
 
 from unbolt_manipulation.skills import GRASP_XY, RobotSkills
 
-BOX_MARKER, PAD_MARKER = 7, 3
-SUPPLY_STAGING = (-0.15, -1.55, -math.pi / 2)  # facing the supply table, box ~0.8 m ahead
-WORK_STAGING = (1.20, 0.0, 0.0)                # facing the work table, pad ~0.8 m ahead
-PAD_WORLD = (2.0, -0.15)                       # place pad centre (models/scene.xml)
+BOX_MARKER, PAD_MARKER = 7, 2
+SUPPLY_STAGING = (0.0, -2.8, -math.pi / 2)     # facing supply table 1, box ~0.8 m ahead
+WORK_STAGING = (3.8, 0.0, 0.0)                 # facing the work table, pad ~0.8 m ahead
+PAD_WORLD = (4.6, 0.0)                         # middle place pad centre (models/scene.xml)
 
 
 def main():
@@ -45,7 +45,7 @@ def main():
     try:
         s.wait_ready()
         ok = (step('arms tuck', s.move_arms('tuck'))
-              and step('navigate to supply table', s.navigate(*SUPPLY_STAGING)))
+              and step('navigate to supply table 1', s.navigate(*SUPPLY_STAGING)))
         if ok:
             first = s.marker_in_base(BOX_MARKER, samples=3)
             arm = 'left' if first is not None and first[0][1] > 0 else 'right'
