@@ -104,7 +104,7 @@ module.exports = function build() {
     if (i < 3) arrow(s, 3.75, y + 1.05, 3.75, y + 1.3);
   });
   text(s, '↺ 이 네 단계를 계속 반복', { x: 0.6, y: 6.6, w: 6.3, h: 0.35, fontSize: 14, color: C.text2, align: 'center' });
-  table(s, [['토픽', '주기', '내용'], ['/clock', '250 Hz', '시뮬레이션 시간'], ['/joint_states', '100 Hz', '관절 20개의 각도·속도'], ['/odom + TF', '50 Hz', '바퀴로 계산한 위치'], ['/imu', '50 Hz', '기울기·회전 속도'], ['/scan', '10 Hz', 'LiDAR 360빔'], ['/camera/*', '5 Hz', '헤드 카메라 영상'], ['/ground_truth/*', '10~50 Hz', '진짜 위치 (평가용)']], 7.3, 1.5, 5.4, [1.9, 1.2, 2.3], 14);
+  table(s, [['토픽', '주기', '내용'], ['/clock', '250 Hz', '시뮬레이션 시간'], ['/joint_states', '100 Hz', '관절 20개의 각도·속도'], ['/odom + TF', '50 Hz', '바퀴로 계산한 위치'], ['/imu', '50 Hz', '기울기·회전 속도'], ['/scan', '10 Hz', 'LiDAR 360빔'], ['/camera/*', '5 Hz', '헤드 카메라 영상 (camera_rate)'], ['/wrist_camera/*', '0 / 10 Hz', '손목 카메라, VLA 모드만 (모듈 5)'], ['/ground_truth/*', '10~50 Hz', '진짜 위치 (평가용)']], 7.3, 1.5, 5.4, [1.9, 1.2, 2.3], 13);
 
   s = content('시간의 주인은 시뮬레이터: /clock', TAG, 'use_sim_time을 빠뜨리면 TF가 "미래/과거 시간"이라며 거부하는 오류(Lookup would require extrapolation)가 납니다. 이 강습회의 모든 ros2 run에 --ros-args -p use_sim_time:=true를 붙이는 이유입니다. 게임 속 시계 비유를 쓰세요.');
   box(s, 0.6, 1.5, 5.9, 2.4, C.background2);

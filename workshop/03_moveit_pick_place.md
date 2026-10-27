@@ -230,3 +230,7 @@ MoveIt이 상자의 충돌을 모릅니다. 잡은 직후 상자를 `AttachedCol
 | `unbolt_manipulation/skills.py` | `navigate`, `servo_to_marker`, `move_to_pose`, `move_linear`, `lower_until_contact`, `pick`, `place` |
 | `unbolt_manipulation/aruco_detector.py` | ArUco → TF |
 | MoveIt 2 문서 | <https://moveit.picknik.ai/humble/> |
+
+> 이 모듈의 `pick()`은 마커 좌표로 손 자세를 **계산**해서 집습니다. 같은 집기를 카메라 영상만 보고 **배워서** 하는 방법은
+> [심화 모듈 5 (VLA)](05_vla.md)에서 다룹니다. 거기서 쓰는 스크립트 전문가는 이 모듈의 `pick()`과 같은 경유점(접근 15°,
+> 사전 접근 10 cm 뒤·4 cm 위, 8 cm 들기)을 MoveIt 대신 직접 푼 IK로 따라갑니다.
