@@ -49,9 +49,16 @@ ros2_ws/src/
   unbolt_dashboard/
     web/index.html               대시보드 (외부 라이브러리 없음, rosbridge v2 프로토콜 직접 구현)
     dashboard_server.py          웹 서버(:8080) + 지도 PNG/config + /dashboard/robot_pose(TF map->base)
-    launcher.py                  dashboard_launcher: ROS가 꺼져 있어도 페이지를 띄우고 작업/지도 만들기 모드를 켜고 끔
+    launcher.py                  dashboard_launcher: ROS가 꺼져 있어도 페이지를 띄우고 작업/VLA 집기/지도 만들기 모드를 켜고 끔
     launch/dashboard.launch.py   rosbridge_websocket(:9090) + 웹 서버
     launch/mapping.launch.py     explore.launch.py + 대시보드 (지도 만들기 모드)
+  unbolt_vla/                    VLA 집기 정책 (ROS 없이 학습·평가, PyTorch CPU)
+    sim.py                       집기 전용 MuJoCo 장면 (테이블 앞 로봇, 상자 위치·각도 무작위)
+    expert.py                    스크립트 전문가: MuJoCo IK로 집기 시연 (MoveIt 대신)
+    record.py, train.py          시연 녹화 → 정책 학습 (~/unbolt_vla/demos, ~/unbolt_vla/policy.pt)
+    model.py, runner.py          정책 (카메라 2대 + 명령 문장 + 관절 → 관절 목표 10개 묶음), 실행기
+    evaluate.py                  처음 보는 배치에서 정책과 전문가의 성공률 비교
+    vla_pick_node.py             ROS 노드: /vla/pick 명령 → /joint_commands 10 Hz → /vla/result
   unbolt_description/
     urdf/unbolt.urdf.xacro      베이스 + OpenArm xacro 매크로 (MJCF와 동일 기구학)
     config/openarm_preset.yaml  OpenArm preset (root를 베이스 위 openarm_body_mount로)
@@ -285,6 +292,30 @@ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger
 브리지 리셋은 시뮬레이션 시간을 0으로 되돌리지 않는다. `/clock`이 뒤로 가면 모든 노드가 TF 버퍼를 비워
 Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 
+### VLA 집기 (심화)
+
+집기 한 단계만 학습된 정책으로 바꾼다. 계획(LLM)·주행(Nav2)·상자 앞 정렬(ArUco)·놓기(MoveIt)는 그대로다.
+정책은 머리 카메라(128×72)·오른손 손목 카메라(96×96)·명령 문장·오른팔 관절각을 보고 0.1초마다 앞으로 1초(10단계)의
+관절 목표를 낸다 (합성곱 + 공간 소프트맥스 + MLP, 60만 매개변수, CPU 추론 4 ms). PyTorch(CPU판)가 필요하다.
+
+```bash
+ros2 run unbolt_vla record --episodes 600   # MuJoCo만으로 스크립트 전문가 시연 녹화 (~13분, ~/unbolt_vla/demos)
+ros2 run unbolt_vla train                   # CPU 학습 (~35분, ~/unbolt_vla/policy.pt)
+ros2 run unbolt_vla evaluate --episodes 100 # 처음 보는 배치에서 정책 vs 전문가
+ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
+```
+
+- 전문가(`expert.py`)는 시뮬레이터가 아는 상자의 실제 위치로 감쇠 최소제곱 IK를 풀어 `pick()`과 같은 경유점(벌리며 다가가기 →
+  15° 비스듬히 밀어 넣기 → 쥐기 → 들기)을 따라간다. 상자 위치·방향, 로봇 정렬 오차, 테이블(공급/작업대)을 시연마다 무작위로 하고,
+  절반은 실행 목표에 천천히 변하는 잡음을 더한다(DART, 정답은 전문가 목표 그대로).
+- `pick:=vla`: 브리지 헤드 카메라 10 Hz + 손목 카메라 `/wrist_camera/image_raw` 켜기, `vla_pick` 노드 시작,
+  플래너 `pick_mode:=vla`(오른팔 기준으로 정렬한 뒤 `/vla/pick`에 문장을 보내고 `/vla/result`를 기다림).
+  `vla_pick`은 정책이 "끝"이라고 해도 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고한다.
+- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/unbolt_vla/policy.pt`가 없으면 시작을 거절). 카드에 손목 카메라와 "끝" 확률.
+- 결과(시연 583개, 12000단계, CPU 35분): 처음 보는 배치 100개에서 정책 100/100(공급 48/48, 작업대 52/52), 전문가 100/100.
+  공급 테이블 시연 297개만으로 학습한 정책은 공급 48/50(접근 시작 자세에서 멈춤 2번), 작업대 0/20(2초 만에 "끝")이었다.
+  ROS 전체에서 "작업대로 옮겨줘"·"원래 자리에 다시 갖다 놔"를 두 번씩 보내 정책 집기 4/4 성공(74~84단계).
+
 ## 브리지 인터페이스
 
 | 방향 | 토픽 | 타입 | 비고 |
@@ -299,7 +330,8 @@ Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 | sub | `/cmd_vel` | geometry_msgs/Twist | 0.5 s 동안 명령이 없으면 정지 |
 | sub | `/joint_commands` | sensor_msgs/JointState | 관절 이름별 위치 목표 (16개) |
 | action | `/{left,right}_{arm,gripper}_controller/follow_joint_trajectory` | control_msgs/FollowJointTrajectory | MoveIt 궤적 실행 |
-| pub | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | 헤드 카메라 5 Hz (그림자·반사 끔) |
+| pub | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | 헤드 카메라 5 Hz (그림자·반사 끔, `camera_rate`) |
+| pub | `/wrist_camera/image_raw` | sensor_msgs/Image | 오른손 손목 카메라 96×96, 기본은 끔 (`wrist_camera_rate`, VLA 모드는 10 Hz) |
 | pub | `/ground_truth/red_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용, 스킬은 사용 안 함) |
 | srv | `/mujoco_bridge/reset` | std_srvs/Trigger | home 자세로 리셋 (시뮬레이션 시간은 계속 흐름) |
 
@@ -315,3 +347,4 @@ Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 - [x] 5단계: 마커 기반 Pick & Place
 - [x] 6단계: LLM 작업 계획
 - [x] 7단계: 웹 대시보드
+- [x] 심화: VLA 집기 정책 (`unbolt_vla`, 대시보드 **VLA 집기** 모드)

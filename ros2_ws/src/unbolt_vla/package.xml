@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>unbolt_vla</name>
+  <version>0.1.0</version>
+  <description>A small vision-language-action (VLA) policy for the UNBOLT pick, trained on CPU from scripted MuJoCo demonstrations.</description>
+  <maintainer email="sejiny3@gmail.com">sejin</maintainer>
+  <license>Apache-2.0</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>unbolt_mujoco_bridge</exec_depend>
+  <!-- PyTorch and MuJoCo come from pip (see workshop/05_vla.md) -->
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

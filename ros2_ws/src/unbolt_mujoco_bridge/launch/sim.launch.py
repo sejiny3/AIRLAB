@@ -22,11 +22,15 @@ def generate_launch_description():
         DeclareLaunchArgument('rviz', default_value='true', description='open RViz'),
         DeclareLaunchArgument('model_path', default_value='', description='MJCF scene (default: models/scene.xml)'),
         DeclareLaunchArgument('lidar_samples', default_value='360', description='LiDAR beams per turn'),
+        DeclareLaunchArgument('camera_rate', default_value='5.0', description='head camera images per second'),
+        DeclareLaunchArgument('wrist_camera_rate', default_value='0.0', description='right wrist camera (0 = off)'),
         IncludeLaunchDescription(
             PathJoinSubstitution([bridge_share, 'launch', 'bridge.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'),
                               'model_path': LaunchConfiguration('model_path'),
-                              'lidar_samples': LaunchConfiguration('lidar_samples')}.items(),
+                              'lidar_samples': LaunchConfiguration('lidar_samples'),
+                              'camera_rate': LaunchConfiguration('camera_rate'),
+                              'wrist_camera_rate': LaunchConfiguration('wrist_camera_rate')}.items(),
         ),
         IncludeLaunchDescription(
             PathJoinSubstitution([description_share, 'launch', 'rsp.launch.py']),

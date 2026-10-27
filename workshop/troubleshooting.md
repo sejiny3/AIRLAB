@@ -150,6 +150,18 @@ $ ros2 daemon stop
 | 초기화 버튼을 눌렀는데 "초기화 요청에 응답이 없습니다" | `planner:=true` 없이 bringup을 켬 | `planner:=true`(키가 없으면 `llm:=scripted`도)로 다시 실행 |
 | 카메라 화면이 안 나옴 | 마커 검출 노드 미실행 | `ros2 topic hz /aruco/debug_image/compressed` |
 
+## 심화 모듈 5: VLA
+
+| 증상 | 원인 | 해결 |
+|---|---|---|
+| `No module named 'torch'` | PyTorch 미설치 (설치 스크립트는 넣지 않음) | `pip3 install --user torch --index-url https://download.pytorch.org/whl/cpu` |
+| `record`가 `EGLError` / 렌더링 오류 | `MUJOCO_GL=egl`이 설정돼 있음 (WSL에서는 EGL이 안 됨) | `unset MUJOCO_GL` 후 다시 (기본값이 WSLg의 GLFW를 씀) |
+| `no demos in ~/unbolt_vla/demos` | 녹화를 안 했거나 다른 사용자 홈 | `ros2 run unbolt_vla record --episodes 300` |
+| 학습이 아주 느림 (한 단계 0.5초 이상) | 다른 프로그램(시뮬레이터, 녹화)이 CPU를 씀 | 학습 중에는 bringup을 끄기. `--threads`로 코어 수 지정 |
+| VLA 집기 모드로 연결하면 "학습된 VLA 정책이 없습니다" | `~/unbolt_vla/policy.pt` 없음 | 실습 2~3 (녹화, 학습) 먼저 |
+| 집기에서 `no wrist camera` | 브리지가 손목 카메라를 안 냄 (`pick:=vla` 없이 켬) | `bringup.launch.py ... pick:=vla`, 확인: `ros2 topic hz /wrist_camera/image_raw` (10 Hz) |
+| 정책이 팔을 뻗다가 엉뚱한 곳에서 멈춤, `timeout` | 상자가 학습한 범위 밖(정렬이 크게 틀어짐) 또는 시뮬레이터가 실시간보다 많이 느림 | 대시보드 손목 카메라에 상자가 보이는지 확인. 다른 프로그램을 끄고 다시. MuJoCo 창(`use_viewer`)을 끄면 빨라짐 |
+
 ## 무시해도 되는 메시지
 
 정상 동작 중에도 나오는 경고·오류입니다.

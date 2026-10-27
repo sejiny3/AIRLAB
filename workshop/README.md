@@ -52,6 +52,7 @@
 | 2일차 | 09:30–11:30 | **모듈 3** MoveIt 2 양팔 제어, 마커 기반 모바일 매니퓰레이션 | [03_moveit_pick_place.md](03_moveit_pick_place.md) |
 |  | 11:30–12:30 | 점심 | |
 |  | 12:30–16:30 | **모듈 4** LLM 작업 계획, 웹 대시보드, **최종 미션** | [04_llm_dashboard.md](04_llm_dashboard.md) |
+| 심화 (선택) | 약 2시간 | **모듈 5** VLA: 카메라를 보고 집는 정책을 CPU로 학습해 집기만 바꿔 끼우기 | [05_vla.md](05_vla.md) |
 
 각 모듈은 **개념 설명(20~30%) → 따라 하기(50%) → 과제(20~30%)** 순서이고,
 중간중간 ✅ **체크포인트**가 있습니다. 체크포인트를 통과하면 다음으로 넘어가세요.
@@ -93,9 +94,10 @@
 | [02_slam_nav2.md](02_slam_nav2.md) | 모듈 2 실습 교재 |
 | [03_moveit_pick_place.md](03_moveit_pick_place.md) | 모듈 3 실습 교재 |
 | [04_llm_dashboard.md](04_llm_dashboard.md) | 모듈 4 실습 교재 + 최종 미션 |
+| [05_vla.md](05_vla.md) | 심화 모듈 5 (선택): VLA 집기 정책 시연 녹화 · CPU 학습 · 평가 · 대시보드 VLA 집기 모드 |
 | [troubleshooting.md](troubleshooting.md) | 증상별 문제 해결 |
 | [instructor_guide.md](instructor_guide.md) | 강사·조교용 운영 가이드 (사전 공지, 점검표, 시간 배분) |
-| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 154장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
+| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 170장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 심화 모듈 5(VLA), 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
 | `setup/check_windows.ps1` | Windows 사전 점검 (+ WSL 설치) |
 | `setup/install_unbolt.sh` | Ubuntu 안에서 ROS 2부터 빌드까지 한 번에 |
 | `setup/check_env.sh` | 설치 결과 점검 (✔/!/✘) |

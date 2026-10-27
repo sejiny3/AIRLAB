@@ -39,6 +39,7 @@ class TaskPlannerNode(Node):
         self.declare_parameter('llm', 'claude')
         self.declare_parameter('model', MODEL)
         self.declare_parameter('effort', 'medium')
+        self.declare_parameter('pick_mode', 'classical')  # or 'vla': grasp with unbolt_vla's learned policy
         self.status_pub = self.create_publisher(String, '/task_status', 50)
         self.create_subscription(String, '/task_command', self._on_command, 10)
         self.create_subscription(Empty, '/task_cancel', self._on_cancel, 10)
@@ -51,15 +52,16 @@ class TaskPlannerNode(Node):
         self.get_logger().info('connecting to Nav2 / MoveIt ...')
         self.skills = RobotSkills()
         self.skills.wait_ready()
-        self.executor_ = TaskExecutor(self.skills)
+        self.executor_ = TaskExecutor(self.skills, pick_mode=self.get_parameter('pick_mode').value)
         llm_kind = self.get_parameter('llm').value
         llm = ScriptedLLM() if llm_kind == 'scripted' else None
         self.planner = TaskPlanner(self.executor_, llm=llm, model=self.get_parameter('model').value,
                                    effort=self.get_parameter('effort').value)
         self.llm_kind = llm_kind
         self._publish({'type': 'ready', 'llm': llm_kind, 'model': self.planner.model,
-                       'world': self.executor_.world_state()})
-        self.get_logger().info(f'task planner ready (llm={llm_kind}); send commands on /task_command')
+                       'pick_mode': self.executor_.pick_mode, 'world': self.executor_.world_state()})
+        self.get_logger().info(f'task planner ready (llm={llm_kind}, pick={self.executor_.pick_mode}); '
+                               'send commands on /task_command')
 
     def _publish(self, event):
         self.status_pub.publish(String(data=json.dumps(event, ensure_ascii=False)))
@@ -72,7 +74,8 @@ class TaskPlannerNode(Node):
 
     def _publish_world(self):
         self._publish({'type': 'world', 'busy': self.busy.locked(), 'llm': self.llm_kind,
-                       'model': self.planner.model, 'world': self.executor_.world_state()})
+                       'model': self.planner.model, 'pick_mode': self.executor_.pick_mode,
+                       'world': self.executor_.world_state()})
 
     def _on_cancel(self, _msg):
         if self.busy.locked():

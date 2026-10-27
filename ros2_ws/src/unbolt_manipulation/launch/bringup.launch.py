@@ -12,6 +12,9 @@ With the LLM task planner (needs ANTHROPIC_API_KEY in the environment):
 Everything, with the web dashboard at http://localhost:8080/:
   ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 
+Picking with the learned VLA policy instead of MoveIt (unbolt_vla; train it first, see workshop/05_vla.md):
+  ros2 launch unbolt_manipulation bringup.launch.py planner:=true pick:=vla
+
 On a map made by automatic exploration (unbolt_dashboard mapping.launch.py):
   ros2 launch unbolt_manipulation bringup.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
 """
@@ -19,17 +22,23 @@ On a map made by automatic exploration (unbolt_dashboard mapping.launch.py):
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    vla = PythonExpression(["'", LaunchConfiguration('pick'), "' == 'vla'"])
+    # the policy runs at 10 Hz and was trained with a fresh head and wrist image every step
+    camera_rate = PythonExpression(["'10.0' if '", LaunchConfiguration('pick'), "' == 'vla' else '5.0'"])
+    wrist_rate = PythonExpression(["'10.0' if '", LaunchConfiguration('pick'), "' == 'vla' else '0.0'"])
     return LaunchDescription([
         DeclareLaunchArgument('use_viewer', default_value='true', description='open the MuJoCo viewer'),
         DeclareLaunchArgument('rviz', default_value='true', description='open RViz (navigation view)'),
         DeclareLaunchArgument('planner', default_value='false', description='start the LLM task planner'),
         DeclareLaunchArgument('llm', default_value='claude', description="planner backend: 'claude' or 'scripted'"),
+        DeclareLaunchArgument('pick', default_value='classical',
+                              description="'classical' (MoveIt from the marker pose) or 'vla' (learned policy)"),
         DeclareLaunchArgument('dashboard', default_value='false', description='start rosbridge + web dashboard (:8080)'),
         DeclareLaunchArgument('map', default_value=PathJoinSubstitution(
             [FindPackageShare('unbolt_navigation'), 'maps', 'unbolt_room.yaml']), description='Nav2 map (yaml)'),
@@ -40,7 +49,8 @@ def generate_launch_description():
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('unbolt_navigation'), 'launch', 'navigation.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': LaunchConfiguration('rviz'),
-                              'map': LaunchConfiguration('map')}.items(),
+                              'map': LaunchConfiguration('map'),
+                              'camera_rate': camera_rate, 'wrist_camera_rate': wrist_rate}.items(),
         )]),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('unbolt_moveit_config'), 'launch', 'move_group.launch.py']),
@@ -56,7 +66,15 @@ def generate_launch_description():
             package='unbolt_manipulation',
             executable='task_planner',
             output='screen',
-            parameters=[{'use_sim_time': True, 'llm': LaunchConfiguration('llm')}],
+            parameters=[{'use_sim_time': True, 'llm': LaunchConfiguration('llm'),
+                         'pick_mode': LaunchConfiguration('pick')}],
             condition=IfCondition(LaunchConfiguration('planner')),
+        ),
+        Node(
+            package='unbolt_vla',
+            executable='vla_pick',
+            output='screen',
+            parameters=[{'use_sim_time': True}],
+            condition=IfCondition(vla),
         ),
     ])

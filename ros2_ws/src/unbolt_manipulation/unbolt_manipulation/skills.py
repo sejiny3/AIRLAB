@@ -10,6 +10,7 @@ Geometry the skills rely on (all in base_footprint unless noted):
   - markers come from aruco_detector as TF frames aruco_<id> (z out of the face).
 """
 
+import json
 import math
 import threading
 import time
@@ -27,6 +28,7 @@ from rclpy.executors import MultiThreadedExecutor
 from rclpy.time import Time
 from sensor_msgs.msg import JointState
 from shape_msgs.msg import SolidPrimitive
+from std_msgs.msg import Empty, String
 from std_srvs.srv import Trigger
 import tf2_ros
 
@@ -95,6 +97,12 @@ class RobotSkills:
         self.cartesian = self.node.create_client(GetCartesianPath, '/compute_cartesian_path')
         self.scene = self.node.create_client(ApplyPlanningScene, '/apply_planning_scene')
         self.sim_reset = self.node.create_client(Trigger, '/mujoco_bridge/reset')
+        # learned pick (unbolt_vla's vla_pick node), used by the task planner in VLA mode
+        self.vla_pick_pub = self.node.create_publisher(String, '/vla/pick', 10)
+        self.vla_cancel_pub = self.node.create_publisher(Empty, '/vla/cancel', 10)
+        self.vla_result = None
+        self.vla_done = threading.Event()
+        self.node.create_subscription(String, '/vla/result', self._on_vla_result, 10)
         self.executor = MultiThreadedExecutor(num_threads=4)
         self.executor.add_node(self.node)
         threading.Thread(target=self.executor.spin, daemon=True).start()
@@ -504,6 +512,39 @@ class RobotSkills:
             self.set_gripper(arm, 0.0)  # open fingers in 'tuck' hide the table from the head camera
         self.set_support_surface(None)
         self.log.info(f'pick {"succeeded" if ok else "FAILED"} (finger {self.finger(arm):.3f})')
+        return ok
+
+    def _on_vla_result(self, msg):
+        self.vla_result = json.loads(msg.data)
+        self.vla_done.set()
+
+    def vla_pick(self, marker_id, instruction, timeout=40.0):
+        """Pick with the learned policy instead of MoveIt: the vla_pick node reaches, grasps and
+        lifts with the right arm from camera images alone. The object must already be lined up
+        at GRASP_XY['right']. Afterwards the arm is tucked here, as in pick()."""
+        self.vla_done.clear()
+        self.vla_result = None
+        self.log.info(f'VLA pick: "{instruction}"')
+        self.vla_pick_pub.publish(String(data=instruction))
+        end = time.time() + timeout
+        while not self.vla_done.wait(0.1):
+            if self.cancel_event.is_set() or time.time() > end:
+                self.vla_cancel_pub.publish(Empty())
+                self.vla_done.wait(2.0)
+                break
+        r = self.vla_result or {'ok': False, 'reason': 'no answer from the vla_pick node (is it running?)'}
+        ok = bool(r.get('ok'))
+        if ok:
+            self.holding = 'right'
+            self.held_marker = marker_id
+            self.forget_marker(marker_id)
+        else:
+            self.log.error(f'VLA pick failed: {r.get("reason")}')
+            self.set_gripper('right', FINGER_OPEN['right'])
+        self.move_arms('tuck', ('right',))
+        if not ok:
+            self.set_gripper('right', 0.0)  # open fingers in 'tuck' hide the table from the head camera
+        self.log.info(f'VLA pick {"succeeded" if ok else "FAILED"} ({r.get("reason")}, {r.get("steps", 0)} steps)')
         return ok
 
     def place(self, marker_id):

@@ -53,6 +53,7 @@ v=$(py 'import numpy; print(numpy.__version__)'); case "$v" in 1.*) pass "numpy 
 v=$(py 'import cv2; cv2.aruco.Dictionary_get; print(cv2.__version__)'); [ -n "$v" ] && pass "OpenCV $v (aruco)" || fail "OpenCV aruco 모듈 없음 (pip opencv가 apt 버전을 가리는지 확인)"
 v=$(py 'import anthropic; print(anthropic.__version__)'); [ -n "$v" ] && pass "anthropic $v" || fail "anthropic 없음"
 v=$(py 'import brotli; print(brotli.__version__)'); case "$v" in 1.0.*|"") fail "Brotli ${v:-없음} → pip3 install --user --upgrade Brotli" ;; *) pass "Brotli $v" ;; esac
+v=$(py 'import torch; print(torch.__version__)'); [ -n "$v" ] && pass "torch $v (심화 모듈 5)" || warn "torch 없음 (심화 모듈 5 VLA에만 필요: pip3 install --user torch --index-url https://download.pytorch.org/whl/cpu)"
 
 sec "UNBOLT 코드"
 for d in openarm_mujoco openarm_description; do

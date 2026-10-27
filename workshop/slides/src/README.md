@@ -1,6 +1,6 @@
 # 강의 슬라이드 생성기
 
-`../UNBOLT_workshop.pptx`(154장)를 만드는 코드입니다. 슬라이드 내용을 고칠 때는 PowerPoint에서 직접 고쳐도 되지만,
+`../UNBOLT_workshop.pptx`(170장)를 만드는 코드입니다. 슬라이드 내용을 고칠 때는 PowerPoint에서 직접 고쳐도 되지만,
 여기를 고치고 다시 만들면 디자인(색, 배치, 글꼴)이 전체에서 일관되게 유지됩니다.
 
 | 파일 | 내용 |
@@ -9,6 +9,7 @@
 | `s0_intro.js` | 시작하기 (일정, 환경, ROS 2 용어, 진행 방식) |
 | `s0b_install.js` | 설치 (Windows 점검, WSL + Ubuntu, 설치 스크립트, ~/.bashrc 환경 설정, 빌드, 점검, 첫 실행, 대시보드, API 키) |
 | `s1_bridge.js` ~ `s4_llm.js` | 모듈 1~4 |
+| `s4b_vla.js` | 심화 모듈 5 (VLA 집기 정책, 선택). 그림 `assets/vla_episode.png`(시연 한 편), `assets/dashboard_vla.jpg`(VLA 집기 모드 대시보드) |
 | `s5_end.js` | 마무리, 부록 (오류 TOP 8, 명령 모음) |
 | `render_assets.py` | MuJoCo로 로봇·방·헤드 카메라 그림을 `assets/`에 렌더링 |
 | `assets/` | 렌더링한 그림 + 대시보드 스크린샷 (`../../../docs/`의 그림도 씀) |

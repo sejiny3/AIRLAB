@@ -105,6 +105,11 @@
   .world div span:last-child { font-weight: 600; }
   /* 작업 mode (LLM tasks on a saved map) vs 지도 만들기 mode (SLAM + exploration + keyboard) */
   body.mode-mapping .task-only, body:not(.mode-mapping) .mapping-only { display: none !important; }
+  /* VLA mode = the task mode whose pick runs the learned policy (pick_mode 'vla' from the planner) */
+  body:not(.pick-vla) .vla-only { display: none !important; }
+  .vla { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: start; }
+  #wristCam { width: 120px; height: 120px; image-rendering: pixelated; background: var(--map-unk); border-radius: 8px; display: block; }
+  .vla .sub { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
   .exhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .tele { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
   .pad { display: grid; grid-template-columns: repeat(3, 52px); gap: 6px; touch-action: none; user-select: none; }
@@ -126,6 +131,7 @@
   <span class="pill" id="connPill"><span class="dot"></span><span id="connText">연결 중…</span></span>
   <span class="pill" id="taskPill"><span class="dot"></span><span id="taskText">플래너 대기</span></span>
   <span class="spacer"></span>
+  <span class="pill vla-only" title="집기를 MoveIt 대신 학습된 VLA 정책(unbolt_vla)이 합니다">집기: VLA 정책</span>
   <span class="pill" id="modelPill">LLM -</span>
   <span class="pill">시뮬레이션 <b id="simTime" style="margin-left:4px">-</b></span>
   <button class="primary small" id="connectBtn" type="button" hidden title="시뮬레이터, Nav2, MoveIt, 플래너를 켜고 연결합니다 (dashboard_launcher)">연결</button>
@@ -142,6 +148,7 @@
         <label>모드
           <select id="optMode">
             <option value="task">작업 (LLM 명령, 저장된 지도)</option>
+            <option value="vla">VLA 집기 (작업 + 학습된 집기 정책)</option>
             <option value="mapping">지도 만들기 (SLAM + 자동 탐색)</option>
           </select>
         </label>
@@ -190,6 +197,19 @@
     <section class="card task-only">
       <h2>헤드 카메라 <small>ArUco 마커 검출</small></h2>
       <div class="camwrap"><img id="cam" alt=""><div class="empty" id="camEmpty">카메라 영상을 기다리는 중</div></div>
+    </section>
+    <section class="card task-only vla-only">
+      <h2>VLA 집기 정책 <small id="vlaSub">대기</small></h2>
+      <div class="body vla">
+        <canvas id="wristCam" width="96" height="96" title="오른손 손목 카메라 (정책이 보는 96×96 영상)"></canvas>
+        <div class="stats">
+          <div class="stat"><div class="k">단계 (0.1초마다)</div><div class="v" id="vlaStep">-</div></div>
+          <div class="stat"><div class="k">"다 집었다" 확률</div><div class="v" id="vlaDone">-</div><div class="bar"><div id="bVlaDone"></div></div></div>
+          <div class="stat" style="grid-column: 1 / -1"><div class="k">마지막 집기</div><div class="v" id="vlaResult">-</div></div>
+        </div>
+        <p class="sub">손목 카메라, 머리 카메라, 오른팔 관절각과 명령 문장을 보고 0.1초마다 다음 관절 목표를 냅니다.
+          이동 · 상자 앞 정렬 · 놓기는 작업 모드와 같은 방식(Nav2 · ArUco · MoveIt)입니다.</p>
+      </div>
     </section>
   </div>
 
@@ -487,6 +507,7 @@ function onStatus(msg) {
     case 'ready': case 'world':
       if (!sys.plannerSeen) { sys.plannerSeen = true; renderPanel(); }
       setMode('task');
+      document.body.classList.toggle('pick-vla', e.pick_mode === 'vla');
       st.world = e.world; renderWorld();
       if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
       if (e.busy) setBusy(true);
@@ -582,7 +603,8 @@ function renderPanel() {
   } else if (mode === 'off') {
     $('endTitle').textContent = 'ROS가 꺼져 있습니다';
     $('endText').textContent = '모드를 고르고 "연결"을 누르면 시스템을 켜고 이 페이지에 연결합니다 (30~60초). '
-      + '작업: 저장된 지도에서 LLM 명령으로 상자 옮기기. 지도 만들기: 빈 지도에서 로봇이 스스로 돌아다니며 SLAM으로 지도를 만듭니다.';
+      + '작업: 저장된 지도에서 LLM 명령으로 상자 옮기기. VLA 집기: 작업과 같지만 상자를 집는 동작만 학습된 정책이 카메라를 보고 합니다. '
+      + '지도 만들기: 빈 지도에서 로봇이 스스로 돌아다니며 SLAM으로 지도를 만듭니다.';
   } else if (mode === 'starting') {
     const t = sk && sk.elapsed != null ? ` ${Math.round(sk.elapsed)}초` : '';
     const mapping = sk && sk.options && sk.options.mode === 'mapping';
@@ -610,7 +632,7 @@ function startOptions() {
            use_viewer: $('optViewer').checked, rviz: $('optRviz').checked };
 }
 function showModeOpts() {
-  document.querySelectorAll('.opt-task').forEach(e => { e.hidden = $('optMode').value !== 'task'; });
+  document.querySelectorAll('.opt-task').forEach(e => { e.hidden = $('optMode').value === 'mapping'; });
 }
 // maps the task mode can run on (dashboard_launcher's /api/maps: default + ~/maps, newest first)
 async function loadMaps() {
@@ -763,7 +785,7 @@ async function pollStack() {
     const first = !sys.stack, before = sys.stack && sys.stack.state;
     sys.stack = await r.json();
     if (first) applyKeyState(sys.stack.api_key);
-    if (sys.stack.state === 'running' && sys.stack.options) setMode(sys.stack.options.mode || 'task');
+    if (sys.stack.state === 'running' && sys.stack.options) setMode(sys.stack.options.mode === 'mapping' ? 'mapping' : 'task');
     if (first || (sys.stack.state === 'stopped' && before !== 'stopped')) loadMaps();  // a new map may be saved
     renderPanel();
   } catch (e) { /* launcher itself is gone: keep the last state */ }
@@ -857,6 +879,28 @@ async function boot() {
   }, 300);
   ros.subscribe('/aruco/debug_image/compressed', 'sensor_msgs/msg/CompressedImage', m => {
     $('cam').src = 'data:image/jpeg;base64,' + m.data; $('camEmpty').style.display = 'none';
+  }, 200);
+  ros.subscribe('/vla/status', 'std_msgs/msg/String', m => {
+    const e = JSON.parse(m.data);
+    if (e.step === st.vlaEnd) return;  // the last step's status can arrive after /vla/result
+    st.vlaEnd = null;
+    $('vlaSub').textContent = '집는 중'; $('vlaStep').textContent = `${e.step} (${(e.step / 10).toFixed(1)}초)`;
+    $('vlaDone').textContent = `${Math.round(e.done * 100)}%`; $('bVlaDone').style.width = `${Math.round(e.done * 100)}%`;
+  }, 0);
+  ros.subscribe('/vla/result', 'std_msgs/msg/String', m => {
+    const e = JSON.parse(m.data);
+    st.vlaEnd = e.steps;
+    $('vlaSub').textContent = '대기';
+    $('vlaResult').textContent = `${e.ok ? '성공' : '실패'} · ${e.steps}단계 · ${e.reason}`;
+  }, 0);
+  ros.subscribe('/wrist_camera/image_raw', 'sensor_msgs/msg/Image', m => {  // rgb8; rosbridge sends the bytes as base64
+    const raw = atob(m.data), c = $('wristCam'), ctx = c.getContext('2d');
+    if (c.width !== m.width || c.height !== m.height) { c.width = m.width; c.height = m.height; }
+    const img = ctx.createImageData(m.width, m.height);
+    for (let i = 0, j = 0; i < raw.length; i += 3, j += 4) {
+      img.data[j] = raw.charCodeAt(i); img.data[j + 1] = raw.charCodeAt(i + 1); img.data[j + 2] = raw.charCodeAt(i + 2); img.data[j + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
   }, 200);
   ros.subscribe('/clock', 'rosgraph_msgs/msg/Clock', m => {
     const s = m.clock.sec; $('simTime').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;

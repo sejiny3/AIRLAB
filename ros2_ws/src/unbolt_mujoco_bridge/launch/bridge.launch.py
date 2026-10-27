@@ -39,6 +39,8 @@ def _bridge_node(context):
             'use_viewer': LaunchConfiguration('use_viewer'),
             'real_time_factor': LaunchConfiguration('real_time_factor'),
             'lidar_samples': LaunchConfiguration('lidar_samples'),
+            'camera_rate': float(LaunchConfiguration('camera_rate').perform(context)),
+            'wrist_camera_rate': float(LaunchConfiguration('wrist_camera_rate').perform(context)),
         }],
     )]
 
@@ -49,5 +51,8 @@ def generate_launch_description():
         DeclareLaunchArgument('use_viewer', default_value='true'),
         DeclareLaunchArgument('real_time_factor', default_value='1.0'),
         DeclareLaunchArgument('lidar_samples', default_value='360', description='LiDAR beams per turn'),
+        DeclareLaunchArgument('camera_rate', default_value='5.0', description='head camera images per second'),
+        DeclareLaunchArgument('wrist_camera_rate', default_value='0.0',
+                              description='right wrist camera images per second (0 = off; the VLA policy uses 10)'),
         OpaqueFunction(function=_bridge_node),
     ])

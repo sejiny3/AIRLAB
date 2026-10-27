@@ -14,6 +14,7 @@ Published:
   /scan                sensor_msgs/LaserScan    2D LiDAR (ray casting, world geoms only)
   /camera/image_raw    sensor_msgs/Image        head camera (rgb8, rendered with mujoco.Renderer)
   /camera/camera_info  sensor_msgs/CameraInfo   pinhole intrinsics from the MJCF fovy
+  /wrist_camera/image_raw sensor_msgs/Image     right wrist camera, small (only if wrist_camera_rate > 0; the VLA policy uses it)
   /ground_truth/<body> geometry_msgs/PoseStamped true pose of each tracked free body (world frame)
   TF                   odom -> base_footprint
 
@@ -124,6 +125,9 @@ class MujocoBridge(Node):
         self.declare_parameter('camera_name', 'head_camera')
         self.declare_parameter('camera_frame', 'camera_optical_frame')
         self.declare_parameter('camera_rate', 5.0)  # 0 disables rendering
+        self.declare_parameter('wrist_camera_name', 'camera_wrist_right')
+        self.declare_parameter('wrist_camera_rate', 0.0)  # off unless the VLA policy needs it
+        self.declare_parameter('wrist_camera_size', 96)   # square image, the size the policy was trained on
         self.declare_parameter('tracked_bodies', ['red_box'])
         self.declare_parameter('ground_truth_rate', 10.0)
 
@@ -152,6 +156,9 @@ class MujocoBridge(Node):
         self.camera_name = p('camera_name')
         self.camera_frame = p('camera_frame')
         self.camera_dt = 1.0 / p('camera_rate') if p('camera_rate') > 0 else None
+        self.wrist_name = p('wrist_camera_name')
+        self.wrist_dt = 1.0 / p('wrist_camera_rate') if p('wrist_camera_rate') > 0 else None
+        self.wrist_size = p('wrist_camera_size')
         self.tracked_names = list(p('tracked_bodies'))
         self.gt_objects_dt = 1.0 / p('ground_truth_rate')
         self.rng = np.random.default_rng()
@@ -181,6 +188,7 @@ class MujocoBridge(Node):
         self.scan_pub = self.create_publisher(LaserScan, '/scan', reliable)
         self.image_pub = self.create_publisher(Image, '/camera/image_raw', 2)
         self.camera_info_pub = self.create_publisher(CameraInfo, '/camera/camera_info', 2)
+        self.wrist_pub = self.create_publisher(Image, '/wrist_camera/image_raw', 2) if self.wrist_dt else None
         self.object_pubs = {name: self.create_publisher(PoseStamped, f'/ground_truth/{name}', reliable)
                             for name in self.tracked_bodies}
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -245,6 +253,7 @@ class MujocoBridge(Node):
             self.cam_w, self.cam_h = (int(v) for v in m.cam_resolution[self.camera_id])
             f = (self.cam_h / 2.0) / math.tan(math.radians(m.cam_fovy[self.camera_id]) / 2.0)
             self.cam_k = [f, 0.0, self.cam_w / 2.0, 0.0, f, self.cam_h / 2.0, 0.0, 0.0, 1.0]
+        self.wrist_id = m.camera(self.wrist_name).id if self.wrist_dt else -1
 
         # Free bodies whose true pose is published for evaluation (missing names are skipped).
         names = [b.name for b in (m.body(i) for i in range(m.nbody))]
@@ -266,8 +275,8 @@ class MujocoBridge(Node):
         self.odom_twist = (0.0, 0.0)
         self.prev_wheel = [d.qpos[a] for a in self.wheel_qpos]
         self.next_clock = self.next_js = self.next_odom = self.next_scan = 0.0
-        self.next_camera = self.next_objects = 0.0
-        self.camera_due = False
+        self.next_camera = self.next_objects = self.next_wrist = 0.0
+        self.camera_due = self.wrist_due = False
         self.last_odom_time = d.time
 
     # ------------------------------------------- interface for TrajectoryServer
@@ -345,6 +354,9 @@ class MujocoBridge(Node):
         if self.camera_id >= 0 and t >= self.next_camera:
             self.next_camera = t + self.camera_dt
             self.camera_due = True  # rendered by run() after this batch of steps
+        if self.wrist_id >= 0 and t >= self.next_wrist:
+            self.next_wrist = t + self.wrist_dt
+            self.wrist_due = True
 
     def _publish_joint_states(self):
         d = self.data
@@ -468,19 +480,21 @@ class MujocoBridge(Node):
             p.orientation.w, p.orientation.x, p.orientation.y, p.orientation.z = map(float, d.xquat[body])
             self.object_pubs[name].publish(msg)
 
-    def _publish_camera(self, renderer):
+    def _render_image(self, renderer, camera_id, frame_id):
         d = self.data
-        renderer.update_scene(d, camera=self.camera_id)
+        renderer.update_scene(d, camera=camera_id)
         rgb = renderer.render()
-        stamp = to_time_msg(d.time)
-
         img = Image()
-        img.header.stamp = stamp
-        img.header.frame_id = self.camera_frame
+        img.header.stamp = to_time_msg(d.time)
+        img.header.frame_id = frame_id
         img.height, img.width = rgb.shape[:2]
         img.encoding = 'rgb8'
         img.step = img.width * 3
         img.data = array.array('B', rgb.tobytes())  # bytes would be validated element by element (~130 ms)
+        return img
+
+    def _publish_camera(self, renderer):
+        img = self._render_image(renderer, self.camera_id, self.camera_frame)
         self.image_pub.publish(img)
 
         info = CameraInfo()
@@ -514,6 +528,11 @@ class MujocoBridge(Node):
             # shadows and reflections cost ~4x the render time and don't help marker detection
             renderer.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = False
             renderer.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
+        wrist_renderer = None
+        if self.wrist_id >= 0:
+            wrist_renderer = mujoco.Renderer(m, self.wrist_size, self.wrist_size)
+            wrist_renderer.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = False
+            wrist_renderer.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
 
         max_steps = max(1, int(0.05 / m.opt.timestep))  # catch up at most 50 ms per cycle
         view_dt, next_view = 1.0 / 60.0, 0.0
@@ -542,6 +561,9 @@ class MujocoBridge(Node):
                 if self.camera_due:
                     self.camera_due = False
                     self._publish_camera(renderer)
+                if self.wrist_due:
+                    self.wrist_due = False
+                    self.wrist_pub.publish(self._render_image(wrist_renderer, self.wrist_id, self.wrist_name))
 
                 now = time.monotonic()
                 if viewer is not None and now >= next_view:
@@ -552,8 +574,9 @@ class MujocoBridge(Node):
         finally:
             if viewer is not None:
                 viewer.close()
-            if renderer is not None:
-                renderer.close()
+            for r in (renderer, wrist_renderer):
+                if r is not None:
+                    r.close()
 
 
 def main():

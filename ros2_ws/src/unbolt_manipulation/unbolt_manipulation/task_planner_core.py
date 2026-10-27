@@ -105,8 +105,9 @@ TOOLS = [
 class TaskExecutor:
     """Runs the tools on the robot and keeps a symbolic world state for the planner."""
 
-    def __init__(self, skills: RobotSkills):
+    def __init__(self, skills: RobotSkills, pick_mode='classical'):
         self.s = skills
+        self.pick_mode = pick_mode  # 'classical' (MoveIt grasp from the marker pose) or 'vla' (learned policy)
         self.reset()
 
     def reset(self):
@@ -163,10 +164,15 @@ class TaskExecutor:
         seen = self.s.marker_in_base(marker, samples=3, use_memory=True)
         if seen is None:
             return False, {'error': f'{object} (marker {marker}) is not visible from here'}
-        arm = 'left' if seen[0][1] > 0 else 'right'
+        # the policy was trained on the right arm only
+        arm = 'right' if self.pick_mode == 'vla' else 'left' if seen[0][1] > 0 else 'right'
         if not self.s.servo_to_marker(marker, GRASP_XY[arm]):
             return False, {'error': f'could not line up with {object}'}
-        if not self.s.pick(marker):
+        if self.pick_mode == 'vla':
+            picked = self.s.vla_pick(marker, f'pick up the {object.replace("_", " ")}')
+        else:
+            picked = self.s.pick(marker)
+        if not picked:
             return False, {'error': f'grasping {object} failed; it is probably still on the table'}
         self.held, self.object_location[object] = object, 'gripper'
         self.s.drive_straight(-0.35)
