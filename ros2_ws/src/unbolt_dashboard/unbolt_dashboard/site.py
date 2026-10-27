@@ -3,7 +3,7 @@
 Both dashboard_server (inside the ROS launch) and dashboard_launcher (outside it, so the
 page stays up while ROS is off) serve the same site:
   /             web/index.html
-  /map.png      the saved Nav2 map (unbolt_navigation/maps/unbolt_room) as an image
+  /map.png      the Nav2 map in use (default unbolt_navigation/maps/unbolt_room) as an image
   /config.json  map geometry (resolution, origin, size), known places and the rosbridge port
 """
 
@@ -31,12 +31,20 @@ def default_map_yaml():
 class Site:
     def __init__(self, map_yaml, rosbridge_port, launcher=False):
         self.web_dir = os.path.join(get_package_share_directory('unbolt_dashboard'), 'web')
+        self.rosbridge_port = rosbridge_port
+        self.launcher = launcher
+        self.load(map_yaml)
+
+    def load(self, map_yaml):
+        """Serve `map_yaml` (a Nav2 map) as /map.png and in /config.json from now on."""
         meta = yaml.safe_load(open(map_yaml))
         img = cv2.imread(os.path.join(os.path.dirname(map_yaml), meta['image']), cv2.IMREAD_GRAYSCALE)
+        self.map_yaml = map_yaml
         self.map_png = cv2.imencode('.png', img)[1].tobytes()
         self.config = json.dumps({
-            'rosbridge_port': rosbridge_port,
-            'launcher': launcher,  # the page offers the "연결" (start) button only with a launcher
+            'rosbridge_port': self.rosbridge_port,
+            'launcher': self.launcher,  # the page offers the "연결" (start) button only with a launcher
+            'map_name': os.path.splitext(os.path.basename(map_yaml))[0],
             'map': {'resolution': meta['resolution'], 'origin': meta['origin'][:2],
                     'width': int(img.shape[1]), 'height': int(img.shape[0])},
             'locations': {k: {'staging': v['staging'], 'place_marker': v['place_marker'],

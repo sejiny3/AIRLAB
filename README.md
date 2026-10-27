@@ -29,7 +29,9 @@ ros2_ws/src/
     maps/unbolt_room.yaml/.pgm   SLAM으로 만든 지도
     scripts/explore_waypoints.py 지도 작성용 자동 탐색 (ground truth 기반 웨이포인트 주행)
     scripts/nav_goal_test.py     Nav2 목표 3개 연속 주행 + 실제 위치 오차 측정
+    scripts/frontier_explorer.py 프론티어 기반 능동 탐색 (SLAM 지도만 사용, Nav2로 주행, 끝나면 ~/maps에 저장)
     launch/slam.launch.py, navigation.launch.py
+    launch/explore.launch.py     시뮬레이터 + slam_toolbox + Nav2(지도 없이) + frontier_explorer
   unbolt_moveit_config/
     config/unbolt.srdf.base      그룹(left_arm/right_arm/both_arms/그리퍼), 자세(home/ready/open/closed)
     config/unbolt.srdf           = base + 자기충돌 행렬 (scripts/generate_srdf.sh로 생성)
@@ -47,7 +49,9 @@ ros2_ws/src/
   unbolt_dashboard/
     web/index.html               대시보드 (외부 라이브러리 없음, rosbridge v2 프로토콜 직접 구현)
     dashboard_server.py          웹 서버(:8080) + 지도 PNG/config + /dashboard/robot_pose(TF map->base)
+    launcher.py                  dashboard_launcher: ROS가 꺼져 있어도 페이지를 띄우고 작업/지도 만들기 모드를 켜고 끔
     launch/dashboard.launch.py   rosbridge_websocket(:9090) + 웹 서버
+    launch/mapping.launch.py     explore.launch.py + 대시보드 (지도 만들기 모드)
   unbolt_description/
     urdf/unbolt.urdf.xacro      베이스 + OpenArm xacro 매크로 (MJCF와 동일 기구학)
     config/openarm_preset.yaml  OpenArm preset (root를 베이스 위 openarm_body_mount로)
@@ -101,6 +105,14 @@ ros2 launch unbolt_navigation slam.launch.py
 ros2 run unbolt_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
 # 지도 저장 (src 쪽에 저장한 뒤 colcon build 다시)
 ros2 run nav2_map_server map_saver_cli -f $UNBOLT_ROOT/ros2_ws/src/unbolt_navigation/maps/unbolt_room --ros-args -p use_sim_time:=true
+```
+
+실제 위치를 쓰지 않는 자동 탐색 (프론티어 탐색, 끝나면 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장):
+
+```bash
+ros2 launch unbolt_navigation explore.launch.py
+ros2 topic echo /explore/status --field data       # 상태 JSON
+ros2 launch unbolt_navigation navigation.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
 ```
 
 저장된 지도로 주행 (RViz의 "2D Goal Pose"로 목표 지정):
@@ -216,6 +228,23 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
   런처가 페이지와 시작/종료 API(`/api/stack`)를 맡고, launch 안의 dashboard_server는 8080이 차 있으면 ROS 쪽 일만 한다.
   시작·종료 요청은 이 컴퓨터에서만 받는다(`--allow-remote`로 해제). 터미널에서 켠 스택이 있거나 이전 스택이 아직 꺼지는 중이면
   시작을 거절한다. 런처의 Ctrl+C는 자기가 켠 스택도 함께 끈다. 로그: `~/.ros/unbolt_launcher.log`
+  모드는 둘: **작업**(bringup, 지도는 기본 지도 또는 `~/maps`의 저장 지도 중 선택 → `bringup.launch.py map:=...`)과
+  **지도 만들기**(`unbolt_dashboard mapping.launch.py`).
+- 지도 만들기 모드: 빈 지도에서 slam_toolbox + Nav2(map_server/AMCL 없이) + `frontier_explorer.py`가 프론티어
+  (아는 빈 칸과 미지의 경계)를 따라 스스로 탐색하고, 갈 수 있는 프론티어가 없으면 지도를
+  `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장한다. 페이지는 `/map`을 실시간으로 그리고(프론티어는 하늘색,
+  탐색 목표는 파란 원), 탐색 시작/멈춤/지도 저장(`/explore/control`)과 상태(`/explore/status`)를 보여 준다.
+  탐색이 끝나거나 멈추면 **키보드 조종**(W A S D/방향키, 누르는 동안만 `/cmd_vel` 10 Hz, LiDAR로 앞뒤 장애물이 가까우면
+  그 방향은 막음)을 쓸 수 있고, 그동안에도 SLAM이 지도를 고친다. 터미널만으로는 `ros2 launch unbolt_navigation explore.launch.py`.
+  탐색 모드의 Nav2 설정은 작업 모드와 다르다(`explore.launch.py`의 `_nav2()`, 작업 모드는 테이블에 붙어야 해서 그대로):
+  로봇을 직사각형 대신 반지름 0.44 m 원으로 보고(제자리 회전 때 모서리가 쓸고 지나가는 0.40 m + 여유), footprint clearing을 끄고,
+  전역 costmap은 지도 크기를 따라가지 않는 20 × 20 m 이동 창이며, LiDAR는 720개 광선, 회전 0.5 rad/s·직진 0.25 m/s로 천천히 간다.
+  처음에는 MuJoCo 창을 켠 실행의 절반 정도에서 방이 비스듬히 두 번 그려졌다. 추적해 보니 로봇이 공급 테이블 다리에 걸려 바퀴만
+  헛돌았고(오도메트리가 수십 도 틀어짐), 오도메트리에서 출발해 스캔을 맞추는 slam_toolbox가 틀린 각도로 지도를 이었다. 다리에
+  부딪힌 근본 원인은 시뮬레이터의 LiDAR: 브리지가 쓰던 `mj_multiRay`(MuJoCo 3.12)가 테이블 다리 두 개를 방 대부분에서 건너뛰었다
+  (같은 방향의 `mj_ray`는 맞힘). 브리지는 이제 광선마다 `mj_ray`를 쓴다(360개에 약 1 ms). 위 탐색 설정은 가는 장애물을 한 번 보면
+  놓치지 않게 하는 나머지 조치다. 고친 뒤 MuJoCo 창을 켠 채 6번 연속: 6번 모두 159~220초에 방 전체(41.4~41.8 m²) 완료,
+  SLAM 위치 오차 3 cm·1° 이하, 실제 자세를 MuJoCo 충돌 검사로 다시 돌려 봐도 접촉 0.
 - 시스템 종료(헤더 오른쪽, 두 번 눌러 확인): `/dashboard/shutdown` → dashboard_server가 정상 종료(코드 0)하면
   `dashboard.launch.py`가 launch 전체를 끈다(시뮬레이터, Nav2, MoveIt, 플래너, RViz). 서버가 비정상 종료(크래시)하면 끄지 않는다.
   페이지는 "종료했습니다"와 다시 시작 명령을 보여 주고, 다시 켜면 저절로 다시 연결된다.

@@ -12,8 +12,8 @@ module.exports = function build() {
     'RViz와 Python으로 목표점 주행을 시키고 오차를 잰다',
   ], '점심 직후 모듈입니다. 오전 실습 6에서 잰 오도메트리 오차를 상기시키고 시작합니다: "그 오차를 어떻게 바로잡을까?"');
 
-  s = content('오늘 오후에 할 일', TAG, '4시간 흐름입니다. 지도 만들기(실습 1~2) → 지도로 주행(실습 3~4) → 실험(실습 5~6) → 프로그래밍(실습 7) → 통합 데모.');
-  [['12:30', '개념', '위치 추정, SLAM, Nav2 구조'], ['13:00', '실습 1~2', '지도 만들기, 저장'], ['13:50', '실습 3~4', '목표점 주행, 오차 재기'], ['14:50', '실습 5~6', '파라미터 실험, 지도에 없는 장애물'], ['15:40', '실습 7', 'Python으로 순찰 프로그램'], ['16:10', '통합 데모', '내 지도 + 내 순찰 프로그램 시연']].forEach(([t, h, b], i) => {
+  s = content('오늘 오후에 할 일', TAG, '4시간 흐름입니다. 지도 만들기(실습 1~2) → 지도로 주행(실습 3~4) → 실험(실습 5~6) → 프로그래밍(실습 7) → 자동 탐색(실습 8, 시간이 모자라면 시연) → 통합 데모.');
+  [['12:30', '개념', '위치 추정, SLAM, Nav2 구조'], ['13:00', '실습 1~2', '지도 만들기, 저장'], ['13:50', '실습 3~4', '목표점 주행, 오차 재기'], ['14:50', '실습 5~6', '파라미터 실험, 지도에 없는 장애물'], ['15:40', '실습 7~8', 'Python으로 순찰 프로그램, 자동 탐색으로 지도 만들기'], ['16:10', '통합 데모', '내 지도 + 내 순찰 프로그램 시연']].forEach(([t, h, b], i) => {
     const y = 1.5 + i * 0.88;
     pill(s, t, 0.6, y + 0.17, 1.2, i % 2 ? C.accent2 : C.text1);
     box(s, 2.1, y, 10.6, 0.72, C.background2);
@@ -193,6 +193,38 @@ module.exports = function build() {
   s = content('BasicNavigator 자주 쓰는 함수', TAG, '모듈 3의 skills.py도 이 함수들로 주행합니다. 특히 cancelTask는 모듈 4의 작업 취소, setInitialPose는 초기화 버튼에서 씁니다.');
   table(s, [['함수', '하는 일', '이 강습회에서'], ['waitUntilNav2Active()', 'Nav2가 다 켜질 때까지 기다림', '모든 스크립트의 시작'], ['goToPose(pose)', '목표 하나로 주행 시작 (바로 돌아옴)', '순찰, 스킬의 navigate'], ['isTaskComplete()', '끝났는지 확인 (True/False)', '반복문 조건'], ['getFeedback()', '남은 거리, 걸린 시간 등', '진행 표시'], ['getResult()', 'SUCCEEDED / FAILED / CANCELED', '성공 판정'], ['cancelTask()', '주행 중단', '모듈 4 작업 취소'], ['followWaypoints([...])', '여러 지점을 한 번에', '과제'], ['setInitialPose(pose)', 'AMCL에 현재 위치 알려 주기', '초기화 버튼']], 0.6, 1.5, 12.1, [3.4, 5.0, 3.7], 15);
 
+  s = content('자동 탐색: 프론티어를 따라가면 지도가 완성된다', TAG, '실습 1에서는 사람이 몰면서 지도를 만들었습니다. 이번에는 로봇이 스스로 다닙니다(능동 탐색, active exploration). 프론티어는 아는 빈 곳과 모르는 곳의 경계입니다. 그림은 대시보드의 지도 만들기 모드로, 하늘색 선이 프론티어, 파란 원이 지금 가는 곳(설 자리), 점선 끝의 하늘색 점이 보러 가는 프론티어입니다. 프론티어가 하나도 안 남으면 지도가 완성된 것입니다.');
+  img(s, 'dashboard_mapping_map.png', 0.6, 1.5, 6.9, 5.2, '지도 만들기 모드의 지도: 자라는 SLAM 지도, 하늘색 프론티어, 탐색 목표와 경로');
+  [['FaMap', '아는 빈 곳', 'LiDAR가 비춰 본 바닥. 지도에서 밝은 칸'], ['FaQuestionCircle', '모르는 곳 (미지)', '아직 한 번도 못 본 곳. 지도에서 회색 칸'], ['FaCompass', '프론티어 = 둘의 경계', '빈 칸인데 바로 옆이 미지인 칸. 여기 가서 보면 그 너머가 지도에 채워진다']].forEach(([ic, h, b], i) => {
+    card(s, { x: 7.8, y: 1.5 + i * 1.3, w: 4.9, h: 1.15, head: h, body: b, iconName: ic, accent: [C.text2, C.accent5, C.accent2][i], headSize: 15, bodySize: 13 });
+  });
+  callout(s, 'analogy', 7.8, 5.5, 4.9, 1.2, '불 꺼진 집을 손전등으로: 빛이 닿는 끝까지 걸어가기를 반복하면 집 전체가 보인다');
+
+  s = content('frontier_explorer가 1초마다 하는 일', TAG, 'unbolt_navigation/scripts/frontier_explorer.py입니다. ①②는 OpenCV 몇 줄(오른쪽 코드), ③이 핵심입니다. 설 자리는 costmap 비용이 낮고(벽에서 약 0.55 m 이상), 로봇이 갈 수 있고, 프론티어에서 빈 공간을 따라 1 m 안이어야 합니다. "빈 공간을 따라"가 중요합니다: 직선 거리로 재면 칸막이 벽 반대편이 뽑혀서 그 너머를 못 봅니다. 그래도 못 보면 다른 자리에서 한 번 더, 두 번 실패하면 그 프론티어는 포기합니다(벽에 붙은 좁은 틈 등). 탐색 모드의 Nav2는 로봇을 반지름 0.44 m 원으로 봅니다(회전 때 모서리가 쓰는 0.40 m + 여유). 실제로 겪은 문제: 처음에는 실행 절반 정도에서 지도가 비스듬히 두 번 그려졌는데, 추적해 보니 로봇이 공급 테이블 다리에 걸려 바퀴만 헛돌았고(오도메트리 틀어짐), 근본 원인은 브리지의 LiDAR가 쓰던 mj_multiRay가 테이블 다리 두 개를 건너뛴 것이었습니다(지금은 광선마다 mj_ray). 고친 뒤 6번 연속 성공. 강사 노트북에서 약 2~4분, 목표 15개 안팎, 실패 0~1번이었습니다.');
+  [['프론티어 칸 찾기', '빈 칸 중 옆이 미지인 칸 (/map)'], ['묶기', '붙어 있는 칸끼리 한 묶음, 0.3 m 미만은 무시'], ['설 자리 고르기', 'costmap이 낮고 · 갈 수 있고 · 빈 공간을 따라 1 m 안'], ['점수로 하나 고르기', '가는 거리 − 프론티어 길이 보너스'], ['Nav2로 가기', 'NavigateToPose. 가는 도중 프론티어가 지워지면 바로 다음으로'], ['끝', '갈 수 있는 프론티어가 없으면 지도 저장 (~/maps)']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6, 1.5 + i * 0.86, 6.4, 0.4));
+  code(s, '# ① 프론티어 칸\nfree = (grid >= 0) & (grid < 25)\nunknown = grid < 0\nfrontier = free & (cv2.dilate(\n    unknown.astype(np.uint8), cross) > 0)\n\n# ② 붙어 있는 칸끼리 묶기\nn, labels, stats, _ = \\\n  cv2.connectedComponentsWithStats(\n    frontier.astype(np.uint8),\n    connectivity=8)', 7.3, 1.5, 5.4, 3.5, 12);
+  callout(s, 'why', 7.3, 5.2, 5.4, 1.5, '거리는 빈 공간을 따라 잰다: 직선으로 재면 벽 반대편에 서서 아무것도 못 본다');
+
+  s = content('실습 8. 대시보드로 자동 지도 만들기', TAG, '런처의 "지도 만들기" 모드는 시뮬레이터 + slam_toolbox + Nav2(저장된 지도·AMCL 없이) + frontier_explorer + 대시보드를 켭니다(unbolt_dashboard mapping.launch.py). 준비되면 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 모습과 목표가 바뀌는 순간을 같이 보세요. 터미널로만 하려면 ros2 launch unbolt_navigation explore.launch.py (RViz로 보기). 체크포인트 2-7.');
+  img(s, 'dashboard_explored.png', 0.6, 1.5, 6.9, 5.2, '탐색이 끝난 지도 만들기 화면: 완성된 지도, 저장 경로, 키보드 조종');
+  code(s, '$ ros2 run unbolt_dashboard \\\n      dashboard_launcher\n# 브라우저: http://localhost:8080', 7.8, 1.5, 4.9, 1.2, 13);
+  [['모드: 지도 만들기 → 연결', '20~40초 뒤 탐색이 저절로 시작'], ['지켜보기', '지도가 자라고, 하늘색 프론티어가 줄어든다'], ['탐색 완료 (3~4분)', '~/maps에 지도 자동 저장']].forEach(([h, b], i) => step(s, i + 1, h, b, 7.8, 2.9 + i * 0.9, 4.9, 0.4));
+  callout(s, 'ok', 7.8, 5.6, 4.9, 1.1, '"탐색 완료" + 저장 경로 ✅ 2-7');
+
+  s = content('탐색이 끝나면: 키보드로 몰기 · 저장 · 작업에 쓰기', TAG, '탐색이 끝나거나 멈춤을 누르면 키보드 조종 카드가 켜집니다. 페이지를 한 번 클릭하고 W A S D 또는 방향키. 누르고 있는 동안만 /cmd_vel을 10 Hz로 보내고, 떼면 멈춥니다(브리지도 0.5초 동안 명령이 없으면 멈춤). LiDAR로 앞(약 0.35 m)이나 뒤(약 0.7 m)가 막혔으면 그쪽으로는 안 갑니다. 몰고 다니는 동안에도 SLAM이 지도를 고치므로, 남은 회색 곳을 채운 뒤 지도 저장을 다시 누르면 됩니다. 저장한 지도는 작업 모드의 지도 목록에 나옵니다. 로봇이 같은 자리(원점)에서 출발하므로 공급 테이블·작업대 좌표가 그대로 맞습니다.');
+  const keys = [['W', 1, 0, '앞 0.25 m/s'], ['A', 0, 1, '왼쪽 회전'], ['S', 1, 1, '뒤 0.15 m/s'], ['D', 2, 1, '오른쪽 회전']];
+  keys.forEach(([k, cx, cy, lbl]) => {
+    const x = 0.9 + cx * 1.25, y = 1.7 + cy * 1.25;
+    box(s, x, y, 1.1, 1.1, k === 'W' ? C.accent1 : C.text1);
+    text(s, k, { x, y, w: 1.1, h: 1.1, fontSize: 28, bold: true, color: C.background1, align: 'center', valign: 'middle', margin: 0 });
+    text(s, lbl, { x: x - 0.1, y: y + (cy ? 1.15 : -0.45), w: 1.3, h: 0.4, fontSize: 12, color: C.text2, align: 'center', margin: 0 });
+  });
+  text(s, '방향키도 같음 · 스페이스 = 정지\n누르는 동안만 움직인다', { x: 0.6, y: 4.6, w: 4.1, h: 0.8, fontSize: 14, color: C.text2, align: 'center' });
+  callout(s, 'warn', 0.6, 5.5, 4.1, 1.2, '앞이나 뒤가 너무 가까우면 그 방향으로는 안 움직인다 (LiDAR 확인)');
+  [['FaKeyboard', '키보드로 빈 곳 채우기', '몰고 다니는 동안에도 SLAM이 지도를 계속 고친다. 남은 회색 곳에 가 보기'], ['FaHdd', '지도 저장', '"지도 저장"을 누를 때마다 ~/maps에 새 파일 (.yaml + .pgm)'], ['FaPlay', '작업 모드에서 쓰기', '시스템 종료 → 모드 "작업" → 지도 목록에서 내 지도 → 연결. 장소 좌표는 그대로 맞다']].forEach(([ic, h, b], i) => {
+    card(s, { x: 5.0, y: 1.5 + i * 1.75, w: 7.7, h: 1.6, head: h, body: b, iconName: ic, accent: [C.accent2, C.accent3, C.accent1][i], headSize: 16, bodySize: 14 });
+  });
+
   s = content('전반부 통합 데모', TAG, '1일차 마무리입니다. 아침에 만든 브리지 위에 SLAM과 Nav2가 올라가 한 줄로 이어졌다는 것을 정리합니다.');
   flow(s, [['ros2 launch', C.text1, C.background1], ['MuJoCo 물리', C.accent3, C.background1], ['브리지', C.text1, C.background1], ['SLAM 지도', C.accent3, C.background1], ['AMCL', C.text1, C.background1], ['Nav2', C.accent1, C.background1], ['/cmd_vel', C.text1, C.background1]], 0.6, 1.7, 12.1, 1.0, 0.25, 14);
   text(s, '↻ /cmd_vel 은 다시 MuJoCo로', { x: 0.6, y: 2.85, w: 12.1, h: 0.4, fontSize: 14, color: C.text2, align: 'right' });
@@ -213,10 +245,11 @@ module.exports = function build() {
     ['지도에 없는 장애물이 global costmap에도 나타나는 이유는?', 'global costmap에도 obstacle_layer(LiDAR)가 있어서, 지금 보이는 장애물을 지도 위에 더한다.'],
     ['로봇이 제자리에서 계속 회전만 한다. 의심할 것 두 가지는?', '목표가 벽 안/너무 가까움, 또는 AMCL 위치가 틀림(2D Pose Estimate로 고치기).'],
     ['지도를 망쳤을 때 가장 빠른 해결은?', 'SLAM을 끄고 다시 켜서 처음부터 천천히 다시 만든다(2분).'],
+    ['자동 탐색에서 프론티어란? 탐색은 언제 끝날까?', '아는 빈 칸과 모르는 칸의 경계. 갈 수 있는(설 자리가 있는) 프론티어가 하나도 남지 않으면 끝.'],
   ], '답은 발표자 노트에 있습니다.');
 
   s = content('모듈 2 과제', TAG, '기본 과제는 모두 하고, 도전 과제는 관심 있는 학생에게 권합니다.');
   card(s, { x: 0.6, y: 1.5, w: 12.1, h: 1.6, head: '기본. 파라미터 실험 보고서', iconName: 'FaPencilAlt', accent: C.accent2, body: '실습 5의 실험 A~D 중 두 개: 스크린샷 + 시간·오차 표 + 한 줄 해석', bodySize: 15 });
-  card(s, { x: 0.6, y: 3.3, w: 5.95, h: 3.3, head: '도전 1. 자동 지도 작성', iconName: 'FaCompass', accent: C.accent1, body: 'explore_waypoints.py는 진짜 위치를 쓴다. /odom과 /scan만으로 방을 탐색해 지도를 만드는 노드를 만들어 보자.\n힌트: frontier 탐색(지도의 "아는 곳과 모르는 곳의 경계"로 가기), 벽 따라가기', bodySize: 14 });
+  card(s, { x: 0.6, y: 3.3, w: 5.95, h: 3.3, head: '도전 1. 더 똑똑한 탐색', iconName: 'FaCompass', accent: C.accent1, body: 'frontier_explorer.py는 "가까운 곳 + 긴 프론티어"로 고른다. 설 자리에서 광선을 쏘아 새로 보일 미지 칸 수(정보 이득)를 점수에 넣어 보자.\n탐색 시간과 목표 수를 3번씩 재서 비교', bodySize: 14 });
   card(s, { x: 6.75, y: 3.3, w: 5.95, h: 3.3, head: '도전 2. 출입 금지 구역', iconName: 'FaShieldAlt', accent: C.accent6, body: 'Nav2 keepout filter로 방 한쪽을 출입 금지로 만들고, 그쪽 목표를 주면 계획이 실패하는 것을 보이자.\n힌트: nav2_costmap_2d::KeepoutFilter, 금지 구역을 칠한 mask 지도', bodySize: 14 });
 };

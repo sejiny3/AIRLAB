@@ -44,11 +44,11 @@ class DashboardServer(Node):
         self.shutdown_at = None  # wall time to exit at, once the button was pressed
         self.declare_parameter('port', 8080)
         self.declare_parameter('rosbridge_port', 9090)
-        self.declare_parameter('map_yaml', default_map_yaml())
+        self.declare_parameter('map_yaml', '')
 
         port = self.get_parameter('port').value
         rosbridge_port = self.get_parameter('rosbridge_port').value
-        site = Site(self.get_parameter('map_yaml').value, rosbridge_port)
+        site = Site(self.get_parameter('map_yaml').value or default_map_yaml(), rosbridge_port)
         self.httpd = None
         try:
             self.httpd = ThreadingHTTPServer(('0.0.0.0', port), site.handler())

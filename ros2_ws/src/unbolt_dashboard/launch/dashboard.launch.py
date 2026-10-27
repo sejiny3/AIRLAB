@@ -27,11 +27,13 @@ def generate_launch_description():
         package='unbolt_dashboard',
         executable='dashboard_server',
         output='screen',
-        parameters=[{'port': LaunchConfiguration('port'), 'rosbridge_port': LaunchConfiguration('rosbridge_port')}],
+        parameters=[{'port': LaunchConfiguration('port'), 'rosbridge_port': LaunchConfiguration('rosbridge_port'),
+                     'map_yaml': LaunchConfiguration('map_yaml')}],
     )
     return LaunchDescription([
         DeclareLaunchArgument('port', default_value='8080', description='dashboard HTTP port'),
         DeclareLaunchArgument('rosbridge_port', default_value='9090', description='rosbridge websocket port'),
+        DeclareLaunchArgument('map_yaml', default_value='', description='map drawn on the page (default: unbolt_room)'),
         Node(
             package='rosbridge_server',
             executable='rosbridge_websocket',

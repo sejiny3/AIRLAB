@@ -3,15 +3,19 @@
   ros2 run unbolt_dashboard dashboard_launcher          # then open http://localhost:8080
   ros2 run unbolt_dashboard dashboard_launcher --port 8080 --allow-remote
 
-It serves the same page as dashboard_server (site.py) and runs
-  ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true ...
-as a child process when the page asks. Inside that launch dashboard_server finds port
-8080 taken and only does its ROS jobs; the page talks to ROS through rosbridge as usual,
-and the "시스템 종료" button still ends the launch (the launcher just sees its child exit).
+It serves the same page as dashboard_server (site.py) and runs, as a child process when the
+page asks, one of
+  ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true ...   (작업)
+  ros2 launch unbolt_dashboard mapping.launch.py ...                                   (지도 만들기)
+Inside that launch dashboard_server finds port 8080 taken and only does its ROS jobs; the
+page talks to ROS through rosbridge as usual, and the "시스템 종료" button still ends the
+launch (the launcher just sees its child exit).
 
 API (JSON), start/stop only from this machine unless --allow-remote:
   GET  /api/stack        state ("stopped" | "running" | "stopping"), ready, options, log tail, ...
-  POST /api/stack/start  {"llm": "claude" | "scripted", "use_viewer": bool, "rviz": bool}
+  GET  /api/maps         maps to run the task mode on: the default one and those in ~/maps
+  POST /api/stack/start  {"mode": "task" | "mapping", "llm": "claude" | "scripted",
+                          "use_viewer": bool, "rviz": bool, "map": "<yaml from /api/maps>"}
   POST /api/stack/stop   Ctrl+C for the launch (for a start that hangs before ROS connects)
 """
 
@@ -30,7 +34,22 @@ from http.server import ThreadingHTTPServer
 from unbolt_dashboard.site import Site, default_map_yaml
 
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
-READY_LINE = 'task planner ready'
+READY_LINES = ('task planner ready', 'frontier explorer ready')
+MAP_DIR = os.path.expanduser('~/maps')  # where frontier_explorer saves the maps it builds
+
+
+def list_maps():
+    """The default map, then every map in MAP_DIR (newest first)."""
+    maps = [{'name': '기본 지도 (unbolt_room)', 'path': default_map_yaml(), 'mtime': None}]
+    try:
+        names = [n for n in os.listdir(MAP_DIR) if n.endswith('.yaml')]
+    except OSError:
+        names = []
+    found = []
+    for n in names:
+        path = os.path.join(MAP_DIR, n)
+        found.append({'name': n[:-5], 'path': path, 'mtime': os.path.getmtime(path)})
+    return maps + sorted(found, key=lambda m: -m['mtime'])
 
 
 def group_alive(pgid):
@@ -61,7 +80,8 @@ def reap_group(pgid):
             time.sleep(0.2)
 
 
-STACK_NODES = ('mujoco_bridge', 'component_container', 'move_group', 'task_planner', 'rosbridge_websocket')
+STACK_NODES = ('mujoco_bridge', 'component_container', 'move_group', 'task_planner', 'rosbridge_websocket',
+               'slam_toolbox', 'bt_navigator', 'frontier_explorer')
 
 
 def leftover_nodes():
@@ -96,6 +116,7 @@ class Stack:
         self.started = None
         self.ready = False
         self.returncode = None
+        self.stop_requested = False  # a stop we were asked for is not a crash, whatever the exit code
         self.tail = deque(maxlen=12)
 
     def status(self):
@@ -113,7 +134,7 @@ class Stack:
                 'external': self.proc is None and port_open(self.rosbridge_port),
             }
 
-    def start(self, llm='claude', use_viewer=True, rviz=False):
+    def start(self, mode='task', llm='claude', use_viewer=True, rviz=False, map_yaml=None):
         with self.lock:
             if self.proc is not None:
                 return False, '이미 실행 중입니다.'
@@ -122,12 +143,19 @@ class Stack:
             left = leftover_nodes()
             if left:
                 return False, f'이전 프로그램이 아직 꺼지는 중입니다 ({", ".join(left)}). 10초쯤 뒤에 다시 누르세요.'
-            if llm not in ('claude', 'scripted'):
-                return False, 'llm은 claude 또는 scripted'
-            if llm == 'claude' and not os.environ.get('ANTHROPIC_API_KEY'):
-                return False, 'ANTHROPIC_API_KEY가 없어 Claude를 쓸 수 없습니다. 대역(scripted)을 고르세요.'
-            cmd = ['ros2', 'launch', 'unbolt_manipulation', 'bringup.launch.py', 'planner:=true', 'dashboard:=true',
-                   f'llm:={llm}', f'use_viewer:={str(bool(use_viewer)).lower()}', f'rviz:={str(bool(rviz)).lower()}']
+            flags = [f'use_viewer:={str(bool(use_viewer)).lower()}', f'rviz:={str(bool(rviz)).lower()}']
+            if mode == 'mapping':
+                cmd = ['ros2', 'launch', 'unbolt_dashboard', 'mapping.launch.py'] + flags
+                llm = map_yaml = None
+            elif mode == 'task':
+                if llm not in ('claude', 'scripted'):
+                    return False, 'llm은 claude 또는 scripted'
+                if llm == 'claude' and not os.environ.get('ANTHROPIC_API_KEY'):
+                    return False, 'ANTHROPIC_API_KEY가 없어 Claude를 쓸 수 없습니다. 대역(scripted)을 고르세요.'
+                cmd = ['ros2', 'launch', 'unbolt_manipulation', 'bringup.launch.py', 'planner:=true',
+                       'dashboard:=true', f'llm:={llm}', f'map:={map_yaml}'] + flags
+            else:
+                return False, 'mode는 task 또는 mapping'
             env = dict(os.environ)
             if shutil.which('python3') != '/usr/bin/python3':
                 # conda/venv first on PATH breaks every "#!/usr/bin/env python3" ROS tool (rosbridge first)
@@ -135,8 +163,9 @@ class Stack:
             log = open(self.log_path, 'w')
             self.proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env,
                                          start_new_session=True, text=True, bufsize=1)
-            self.state, self.ready, self.returncode = 'running', False, None
-            self.options = {'llm': llm, 'use_viewer': bool(use_viewer), 'rviz': bool(rviz)}
+            self.state, self.ready, self.returncode, self.stop_requested = 'running', False, None, False
+            self.options = {'mode': mode, 'llm': llm, 'use_viewer': bool(use_viewer), 'rviz': bool(rviz),
+                            'map': map_yaml}
             self.started = time.time()
             self.tail.clear()
             threading.Thread(target=self._pump, args=(self.proc, log), daemon=True).start()
@@ -147,7 +176,7 @@ class Stack:
             proc = self.proc
             if proc is None:
                 return False, '실행 중이 아닙니다.'
-            self.state = 'stopping'
+            self.state, self.stop_requested = 'stopping', True
         os.killpg(proc.pid, signal.SIGINT)  # what Ctrl+C in a terminal sends
         threading.Thread(target=self._escalate, args=(proc,), daemon=True).start()
         return True, 'Ctrl+C를 보냈습니다.'
@@ -169,7 +198,7 @@ class Stack:
             log.flush()
             text = ANSI.sub('', line).rstrip()
             with self.lock:
-                if READY_LINE in text:
+                if any(r in text for r in READY_LINES):
                     self.ready = True
                 if text and 'Message Filter dropping' not in text:
                     self.tail.append(text[:300])
@@ -179,7 +208,8 @@ class Stack:
         reap_group(proc.pid)  # the launch is the group leader (start_new_session)
         with self.lock:
             if self.proc is proc:
-                self.proc, self.state, self.returncode, self.ready = None, 'stopped', code, False
+                self.proc, self.state, self.ready = None, 'stopped', False
+                self.returncode = None if self.stop_requested else code
         log.close()
 
 
@@ -194,17 +224,33 @@ def main():
     os.makedirs(os.path.dirname(args.log), exist_ok=True)
     stack = Stack(args.rosbridge_port, args.log)
 
+    def start(body):
+        mode = body.get('mode', 'task')
+        map_yaml = body.get('map') or default_map_yaml()
+        previous = site.map_yaml
+        if mode == 'task':
+            if map_yaml not in [m['path'] for m in list_maps()]:  # only maps the page was offered
+                return False, f'지도를 찾을 수 없습니다: {map_yaml}'
+            try:
+                site.load(map_yaml)  # the page draws the map the stack runs on
+            except Exception as e:  # noqa: BLE001 - a broken yaml/pgm in ~/maps
+                site.load(previous)
+                return False, f'지도를 읽을 수 없습니다 ({map_yaml}): {e}'
+        ok, msg = stack.start(mode, body.get('llm', 'claude'), body.get('use_viewer', True), body.get('rviz', False),
+                              map_yaml)
+        if not ok and site.map_yaml != previous:
+            site.load(previous)
+        return ok, msg
+
     def api(h, method, path):
         if method == 'GET' and path == '/api/stack':
             return h.send_json(stack.status())
+        if method == 'GET' and path == '/api/maps':
+            return h.send_json({'maps': list_maps(), 'current': site.map_yaml})
         if method == 'POST' and path in ('/api/stack/start', '/api/stack/stop'):
             if not args.allow_remote and h.client_address[0] not in ('127.0.0.1', '::1', '::ffff:127.0.0.1'):
                 return h.send_json({'ok': False, 'message': '이 컴퓨터에서만 켜고 끌 수 있습니다 (--allow-remote).'}, 403)
-            if path.endswith('/start'):
-                body = h.read_json()
-                ok, msg = stack.start(body.get('llm', 'claude'), body.get('use_viewer', True), body.get('rviz', False))
-            else:
-                ok, msg = stack.stop()
+            ok, msg = start(h.read_json()) if path.endswith('/start') else stack.stop()
             return h.send_json({'ok': ok, 'message': msg, 'status': stack.status()}, 200 if ok else 409)
         return h.send_error(404)
 

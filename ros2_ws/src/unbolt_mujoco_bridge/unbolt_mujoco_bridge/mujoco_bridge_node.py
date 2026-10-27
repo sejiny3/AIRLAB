@@ -231,7 +231,7 @@ class MujocoBridge(Node):
         self.lidar_angles = -math.pi + np.arange(self.lidar_n) * (2 * math.pi / self.lidar_n)
         self.lidar_dirs = np.stack([np.cos(self.lidar_angles), np.sin(self.lidar_angles),
                                     np.zeros(self.lidar_n)], axis=1)
-        self.lidar_geomid = np.zeros(self.lidar_n, dtype=np.int32)
+        self.lidar_geomid = np.zeros(1, dtype=np.int32)
         self.lidar_dist = np.zeros(self.lidar_n, dtype=np.float64)
 
         sens = lambda name: slice(m.sensor(name).adr[0], m.sensor(name).adr[0] + m.sensor(name).dim[0])
@@ -430,9 +430,12 @@ class MujocoBridge(Node):
     def _publish_scan(self):
         m, d = self.model, self.data
         origin = d.site_xpos[self.lidar_site].copy()
-        vec = (self.lidar_dirs @ d.site_xmat[self.lidar_site].reshape(3, 3).T).ravel()
-        mujoco.mj_multiRay(m, d, origin, vec, LIDAR_GEOMGROUP, 1, -1,
-                           self.lidar_geomid, self.lidar_dist, None, self.lidar_n, self.lidar_max)
+        vec = self.lidar_dirs @ d.site_xmat[self.lidar_site].reshape(3, 3).T
+        # One mj_ray per beam (about 1 ms for 360). mj_multiRay, which casts them all in one call,
+        # skips some thin geoms it should hit (MuJoCo 3.12): two supply table legs were invisible
+        # from most of the room, and the robot drove into them.
+        for k in range(self.lidar_n):
+            self.lidar_dist[k] = mujoco.mj_ray(m, d, origin, vec[k], LIDAR_GEOMGROUP, 1, -1, self.lidar_geomid)
         ranges = self.lidar_dist.copy()
         hit = ranges >= 0.0
         ranges[hit] += self.rng.normal(0.0, self.lidar_noise, hit.sum())

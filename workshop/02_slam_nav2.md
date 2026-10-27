@@ -9,7 +9,7 @@
 | 13:50–14:40 | 실습 3~4: AMCL 위치 추정, 목표점 주행, costmap 읽기 |
 | 14:40–14:50 | 휴식 |
 | 14:50–15:40 | 실습 5~6: 파라미터 바꿔 보기, 지도에 없는 장애물 |
-| 15:40–16:10 | 실습 7: Python으로 순찰 프로그램 (Nav2 Simple Commander) |
+| 15:40–16:10 | 실습 7: Python으로 순찰 프로그램 (Nav2 Simple Commander), 실습 8: 자동 탐색으로 지도 만들기 (시간이 모자라면 강사 시연) |
 | 16:10–16:30 | **전반부 통합 데모**, 과제 안내 |
 
 ## 학습 목표
@@ -268,6 +268,71 @@ $ python3 ~/patrol.py --ros-args -p use_sim_time:=true
 
 ✅ **체크포인트 2-6**: 네 곳 순찰 성공.
 
+## 실습 8. 자동 탐색으로 지도 만들기 (대시보드)
+
+실습 1에서는 사람이 키보드로 몰면서 지도를 만들었습니다. 이번에는 **로봇이 스스로** 돌아다니며 지도를 만듭니다.
+이것을 능동 탐색(active exploration)이라고 하고, 가장 널리 쓰는 방법이 **프론티어(frontier) 탐색**입니다.
+
+**프론티어**는 "아는 빈 곳"과 "모르는 곳"의 경계입니다. SLAM 지도에서 빈 칸(흰색)인데 바로 옆이 미지(회색)인 칸들이죠.
+프론티어에 가서 보면 그 너머가 지도에 채워지고, 새 프론티어가 생깁니다. 이것을 프론티어가 없어질 때까지 반복합니다.
+
+```
+ ┌─ /map (slam_toolbox) ─┐   ① 프론티어 칸 찾기: 빈 칸 + 옆이 미지
+ │                       │   ② 붙어 있는 칸끼리 묶기 (길이 0.3 m 미만은 무시)
+ │  frontier_explorer    │   ③ 묶음마다 "설 자리" 고르기: costmap 비용이 낮고(벽에서 0.55 m 이상),
+ │                       │      로봇이 갈 수 있고, 프론티어에서 1 m 안 (벽 너머 말고 같은 쪽)
+ └──────────┬────────────┘   ④ 점수 = 가는 거리 − 프론티어 길이 보너스 → 가장 좋은 곳으로
+            │ NavigateToPose  ⑤ 가는 동안 LiDAR가 프론티어를 지우면 바로 다음 곳으로
+            ▼                 ⑥ 갈 수 있는 프론티어가 없으면 끝 → 지도 자동 저장 (~/maps)
+          Nav2 → /cmd_vel → 로봇
+```
+
+코드는 `unbolt_navigation/scripts/frontier_explorer.py` 하나(약 350줄)입니다. 프론티어 찾기는 OpenCV 몇 줄입니다:
+
+```python
+free = (grid >= 0) & (grid < 25)          # 빈 칸
+unknown = grid < 0                          # 미지
+frontier = free & (cv2.dilate(unknown.astype(np.uint8), cross) > 0)   # 빈 칸 중 옆이 미지
+n, labels, stats, _ = cv2.connectedComponentsWithStats(frontier.astype(np.uint8), connectivity=8)
+```
+
+**대시보드로 하기** (런처 사용, [실습 5 웹 대시보드](04_llm_dashboard.md#실습-5-웹-대시보드) 참고):
+
+```bash
+$ ros2 run unbolt_dashboard dashboard_launcher
+```
+
+1. 브라우저에서 <http://localhost:8080> → 모드 **지도 만들기 (SLAM + 자동 탐색)** → **연결**
+2. 20~40초 뒤 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 것, 하늘색 프론티어, 파란 탐색 목표를 보세요.
+3. 2~4분 뒤 **탐색 완료** → 지도가 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장됩니다.
+4. 이제 **키보드 조종**: 브라우저 창을 클릭하고 `W A S D` 또는 방향키 (스페이스 = 정지).
+   누르고 있는 동안만 움직이고, 장애물이 가까우면 그쪽으로는 가지 않습니다. 몰고 다니는 동안에도 SLAM이 지도를 계속 고치니,
+   빈 곳이 남았으면 직접 가서 채우고 **지도 저장**을 다시 누르세요.
+5. **시스템 종료** → 모드 **작업**, 지도 목록에서 방금 저장한 지도를 고르고 **연결**하면 그 지도로 작업 모드가 켜집니다.
+
+**터미널로 하기** (대시보드 없이, RViz로 보기):
+
+```bash
+$ ros2 launch unbolt_navigation explore.launch.py
+$ ros2 topic echo /explore/status --field data            # 상태 (JSON)
+$ ros2 topic pub --once /explore/control std_msgs/msg/String "{data: stop}"    # start / stop / save
+$ ros2 launch unbolt_navigation navigation.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
+```
+
+✅ **체크포인트 2-7**: 자동 탐색이 끝나고 `~/maps`에 지도가 저장됐다. 키보드로 로봇을 몰 수 있다.
+
+> **실제로 겪은 문제: 지도가 비스듬히 두 번 그려진다.** 처음 만든 탐색은 실행 절반 정도에서 방을 비스듬히 겹쳐 그렸습니다.
+> 실제 위치와 SLAM 위치, 오도메트리를 같이 기록해 보니 로봇이 공급 테이블의 4 cm 다리에 걸려 **바퀴만 헛돌았고**, 오도메트리가
+> 수십 도 틀어지자 오도메트리에서 출발해 스캔을 맞추는 SLAM이 틀린 각도로 지도를 이었습니다. 왜 다리를 못 피했을까요?
+> 시뮬레이터의 LiDAR가 그 다리를 **아예 못 봤습니다**: 브리지가 쓰던 `mj_multiRay`가 다리 두 개를 건너뛰었고(같은 광선을 `mj_ray`로
+> 쏘면 맞음), 지금은 광선마다 `mj_ray`를 씁니다([모듈 1 실습 5](01_mujoco_ros2_bridge.md#실습-5-lidar--광선-360개)).
+> 덤으로 탐색 모드의 Nav2는 로봇을 반지름 0.44 m 원으로 보고(회전 때 모서리가 쓰는 0.40 m + 여유), 가는 장애물을 한 번 보면
+> 놓치지 않게 설정했습니다(720개 광선, footprint clearing 끔, 전역 costmap 20 × 20 m 이동 창). 자세한 내용은
+> `explore.launch.py`의 `_nav2()` 주석에 있습니다. 증상(겹친 지도)에서 원인(센서 버그)까지 측정으로 좁혀 가는 과정 자체가 좋은 공부거리입니다.
+
+> **생각해 보기.** 칸막이 문 너머 서쪽 방에는 벽 그림자처럼 비스듬한 프론티어가 생깁니다. 문 앞에 서면 왜 그 너머가 잘 안 보일까요?
+> `frontier_explorer.py`는 이 문제를 어떻게 피하나요? (힌트: `MID_WEIGHT`, `MAX_TRIES`)
+
 ## 전반부 통합 데모 (16:10–16:30)
 
 지금까지 만든 것이 한 줄로 이어집니다:
@@ -284,8 +349,9 @@ ros2 launch  →  MuJoCo 물리  →  브리지(/scan, /odom, /clock)  →  SLAM
 
 **기본 과제.** 실습 5의 실험 A~D 중 두 개를 골라 결과(스크린샷 + 시간·오차 표 + 한 줄 해석)를 제출.
 
-**도전 과제 1. 자동 지도 작성.** `explore_waypoints.py`는 실제 위치(ground truth)를 씁니다. 이것을 쓰지 않고
-`/odom`과 `/scan`만으로 방을 탐색해 지도를 만드는 노드를 만드세요. (힌트: frontier 탐색, 또는 벽 따라가기)
+**도전 과제 1. 더 똑똑한 탐색.** `frontier_explorer.py`는 "가까운 곳 + 긴 프론티어"로 다음 목표를 고릅니다.
+설 자리에서 LiDAR 광선을 쏘아 **새로 보이게 될 미지 칸의 수(정보 이득)**를 계산해 점수에 넣어 보고, 탐색 시간과 목표 수가
+어떻게 바뀌는지 3번씩 재서 비교하세요.
 
 **도전 과제 2. 출입 금지 구역.** Nav2의 keepout filter(`nav2_costmap_2d::KeepoutFilter`)로 방 한쪽을
 출입 금지로 만들고, 그쪽 목표를 주면 계획이 실패하는 것을 보이세요.
@@ -304,4 +370,6 @@ ros2 launch  →  MuJoCo 물리  →  브리지(/scan, /odom, /clock)  →  SLAM
 | `unbolt_navigation/config/slam_toolbox.yaml` | SLAM 설정 (해상도 0.05, 루프 클로저) |
 | `unbolt_navigation/config/nav2_params.yaml` | Nav2 설정 (맨 위 주석에 공식 파일과 다른 점) |
 | `unbolt_navigation/scripts/nav_goal_test.py` | BasicNavigator 사용 예 + 실제 위치 비교 |
+| `unbolt_navigation/scripts/frontier_explorer.py` | 프론티어 자동 탐색 (실습 8) |
+| `unbolt_navigation/launch/explore.launch.py` | 시뮬레이터 + SLAM + Nav2(지도 없이) + 자동 탐색 |
 | Nav2 문서 | <https://docs.nav2.org/> (Humble 버전 선택) |

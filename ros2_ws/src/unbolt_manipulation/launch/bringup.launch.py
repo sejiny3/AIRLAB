@@ -11,6 +11,9 @@ With the LLM task planner (needs ANTHROPIC_API_KEY in the environment):
 
 Everything, with the web dashboard at http://localhost:8080/:
   ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
+
+On a map made by automatic exploration (unbolt_dashboard mapping.launch.py):
+  ros2 launch unbolt_manipulation bringup.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
 """
 
 from launch import LaunchDescription
@@ -28,12 +31,16 @@ def generate_launch_description():
         DeclareLaunchArgument('planner', default_value='false', description='start the LLM task planner'),
         DeclareLaunchArgument('llm', default_value='claude', description="planner backend: 'claude' or 'scripted'"),
         DeclareLaunchArgument('dashboard', default_value='false', description='start rosbridge + web dashboard (:8080)'),
+        DeclareLaunchArgument('map', default_value=PathJoinSubstitution(
+            [FindPackageShare('unbolt_navigation'), 'maps', 'unbolt_room.yaml']), description='Nav2 map (yaml)'),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('unbolt_dashboard'), 'launch', 'dashboard.launch.py']),
+            launch_arguments={'map_yaml': LaunchConfiguration('map')}.items(),
         )], condition=IfCondition(LaunchConfiguration('dashboard'))),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('unbolt_navigation'), 'launch', 'navigation.launch.py']),
-            launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': LaunchConfiguration('rviz')}.items(),
+            launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': LaunchConfiguration('rviz'),
+                              'map': LaunchConfiguration('map')}.items(),
         )]),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('unbolt_moveit_config'), 'launch', 'move_group.launch.py']),

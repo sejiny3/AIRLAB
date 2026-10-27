@@ -95,7 +95,7 @@
 | [04_llm_dashboard.md](04_llm_dashboard.md) | 모듈 4 실습 교재 + 최종 미션 |
 | [troubleshooting.md](troubleshooting.md) | 증상별 문제 해결 |
 | [instructor_guide.md](instructor_guide.md) | 강사·조교용 운영 가이드 (사전 공지, 점검표, 시간 배분) |
-| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 150장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
+| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 154장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
 | `setup/check_windows.ps1` | Windows 사전 점검 (+ WSL 설치) |
 | `setup/install_unbolt.sh` | Ubuntu 안에서 ROS 2부터 빌드까지 한 번에 |
 | `setup/check_env.sh` | 설치 결과 점검 (✔/!/✘) |

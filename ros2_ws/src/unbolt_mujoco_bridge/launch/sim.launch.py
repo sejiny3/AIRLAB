@@ -21,10 +21,12 @@ def generate_launch_description():
         DeclareLaunchArgument('use_viewer', default_value='true', description='open the MuJoCo viewer'),
         DeclareLaunchArgument('rviz', default_value='true', description='open RViz'),
         DeclareLaunchArgument('model_path', default_value='', description='MJCF scene (default: models/scene.xml)'),
+        DeclareLaunchArgument('lidar_samples', default_value='360', description='LiDAR beams per turn'),
         IncludeLaunchDescription(
             PathJoinSubstitution([bridge_share, 'launch', 'bridge.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'),
-                              'model_path': LaunchConfiguration('model_path')}.items(),
+                              'model_path': LaunchConfiguration('model_path'),
+                              'lidar_samples': LaunchConfiguration('lidar_samples')}.items(),
         ),
         IncludeLaunchDescription(
             PathJoinSubstitution([description_share, 'launch', 'rsp.launch.py']),

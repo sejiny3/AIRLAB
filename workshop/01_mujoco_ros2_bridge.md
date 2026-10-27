@@ -59,7 +59,7 @@
    그 시간을 씁니다. 노트북이 느려서 시뮬레이션이 실제보다 느리게 가도 TF·센서 타임스탬프가 서로 맞습니다.
 2. **물리 상태는 MuJoCo, 기구학 트리는 URDF.** 브리지는 관절 각도(`/joint_states`)만 내고,
    링크 사이 좌표 변환(TF)은 `robot_state_publisher`가 URDF로 계산합니다. 그래서 **두 모델의 치수가 같아야** 합니다.
-3. **센서는 시뮬레이터 안에서 계산한다.** LiDAR는 MuJoCo의 광선 투사(`mj_multiRay`), 오도메트리는 바퀴 관절 각도,
+3. **센서는 시뮬레이터 안에서 계산한다.** LiDAR는 MuJoCo의 광선 투사(`mj_ray`), 오도메트리는 바퀴 관절 각도,
    카메라는 MuJoCo 렌더러로 만듭니다. 실제 로봇 드라이버가 내는 것과 같은 토픽·메시지 형태로 냅니다.
 
 ### 로봇 구성
@@ -187,9 +187,9 @@ MuJoCo 뷰어와 RViz의 팔이 **똑같이** 움직이면 MJCF와 URDF가 일�
 
 ```python
 origin = d.site_xpos[self.lidar_site].copy()                              # LiDAR 위치 (월드 좌표)
-vec = (self.lidar_dirs @ d.site_xmat[self.lidar_site].reshape(3, 3).T).ravel()   # 360개 방향을 로봇 자세로 회전
-mujoco.mj_multiRay(m, d, origin, vec, LIDAR_GEOMGROUP, 1, -1,
-                   self.lidar_geomid, self.lidar_dist, None, self.lidar_n, self.lidar_max)
+vec = self.lidar_dirs @ d.site_xmat[self.lidar_site].reshape(3, 3).T     # 360개 방향을 로봇 자세로 회전
+for k in range(self.lidar_n):                                             # 광선 하나씩 (360개에 약 1 ms)
+    self.lidar_dist[k] = mujoco.mj_ray(m, d, origin, vec[k], LIDAR_GEOMGROUP, 1, -1, self.lidar_geomid)
 ranges = self.lidar_dist.copy()
 hit = ranges >= 0.0
 ranges[hit] += self.rng.normal(0.0, self.lidar_noise, hit.sum())          # 노이즈 σ = 1 cm
@@ -199,6 +199,9 @@ ranges[~hit | (ranges > self.lidar_max)] = math.inf                       # 안 
 - `LIDAR_GEOMGROUP = [1, 1, 0, 0, 0, 0]`: geom **그룹 0, 1만** 봅니다. 로봇 자신의 몸(다른 그룹)은 안 보이게 해서
   자기 팔을 장애물로 착각하지 않게 합니다.
 - 실제 LiDAR는 한 바퀴 도는 동안 시간이 흐르지만 여기서는 360개를 한순간에 쏩니다 (`time_increment = 0`).
+- 처음에는 광선 여러 개를 한 번에 쏘는 `mj_multiRay`를 썼는데, MuJoCo 3.12에서 가는 물체 일부를 건너뛰었습니다
+  (공급 테이블 다리 두 개가 방 대부분에서 안 보였고, 자동 탐색 중 로봇이 그 다리에 부딪혔습니다). 그래서 광선마다 `mj_ray`를 부릅니다.
+  센서가 이상하면 같은 광선을 다른 방법으로 쏘아 비교해 보는 것이 좋은 확인 방법입니다.
 
 **확인**: RViz에서 `LaserScan` 표시의 **Size**를 0.05로 키우고, 키보드로 벽에 다가가 보세요.
 

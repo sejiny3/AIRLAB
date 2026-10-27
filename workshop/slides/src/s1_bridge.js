@@ -176,7 +176,7 @@ module.exports = function build() {
   text(s, '로봇', { x: cx - 0.35, y: cy - 0.25, w: 0.7, h: 0.5, fontSize: 12, bold: true, color: C.background1, align: 'center', valign: 'middle', margin: 0 });
   box(s, cx + 0.55, cy - 1.35, 0.5, 0.9, C.text2);
   text(s, '광선 360개를 쏘아\n처음 맞는 곳까지의 거리', { x: 0.6, y: 5.85, w: 4.2, h: 0.8, fontSize: 14, color: C.text2, align: 'center' });
-  code(s, 'origin = d.site_xpos[lidar_site].copy()   # LiDAR 위치\nvec = (lidar_dirs @ R.T).ravel()          # 360방향 회전\nmujoco.mj_multiRay(m, d, origin, vec,\n                   LIDAR_GEOMGROUP, 1, -1, # 그룹 0,1만\n                   geomid, dist, None, n, max_range)\nranges = dist.copy()\nhit = ranges >= 0.0\nranges[hit] += rng.normal(0, 0.01, hit.sum())  # 노이즈 1 cm\nranges[~hit] = math.inf                   # 안 맞으면 inf', 5.0, 1.5, 7.7, 3.3, 13);
+  code(s, 'origin = d.site_xpos[lidar_site].copy()   # LiDAR 위치\nvec = lidar_dirs @ R.T                    # 360방향 회전\nfor k in range(n):                        # 광선 하나씩\n    dist[k] = mujoco.mj_ray(m, d, origin, vec[k],\n        LIDAR_GEOMGROUP, 1, -1, geomid)   # 그룹 0,1만\nranges = dist.copy()\nhit = ranges >= 0.0\nranges[hit] += rng.normal(0, 0.01, hit.sum())  # 노이즈 1 cm\nranges[~hit] = math.inf                   # 안 맞으면 inf', 5.0, 1.5, 7.7, 3.3, 13);
   callout(s, 'analogy', 5.0, 5.0, 3.75, 1.7, '박쥐가 초음파로 벽까지 거리를 재는 것과 같다.');
   callout(s, 'why', 8.95, 5.0, 3.75, 1.7, '노이즈를 일부러 넣는다. 실제 센서도 1~2 cm 흔들린다.');
 

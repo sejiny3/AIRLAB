@@ -38,6 +38,7 @@ def _bridge_node(context):
             'model_path': model_path,
             'use_viewer': LaunchConfiguration('use_viewer'),
             'real_time_factor': LaunchConfiguration('real_time_factor'),
+            'lidar_samples': LaunchConfiguration('lidar_samples'),
         }],
     )]
 
@@ -47,5 +48,6 @@ def generate_launch_description():
         DeclareLaunchArgument('model_path', default_value='', description='MJCF scene (default: models/scene.xml)'),
         DeclareLaunchArgument('use_viewer', default_value='true'),
         DeclareLaunchArgument('real_time_factor', default_value='1.0'),
+        DeclareLaunchArgument('lidar_samples', default_value='360', description='LiDAR beams per turn'),
         OpaqueFunction(function=_bridge_node),
     ])

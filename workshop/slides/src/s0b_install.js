@@ -194,7 +194,7 @@ module.exports = function build() {
     '모듈 4에서 쓰는 웹 대시보드를 설치 확인용으로 미리 열어 봅니다. 런처를 켜 두면 ROS가 꺼져 있어도 페이지가 뜨고, 연결 버튼으로 전체 시스템을 켭니다. 처음 켤 때는 Nav2와 MoveIt이 함께 떠서 25~60초 걸립니다. 런처 터미널은 끄지 않고 둡니다. API 키가 없으면 LLM 옵션을 대역(scripted)으로 고릅니다.');
   img(s, 'dashboard_off.png', 0.6, 1.5, 6.4, 4.0, 'ROS가 꺼져 있을 때의 대시보드: 연결 버튼과 시작 옵션');
   code(s, '$ ros2 run unbolt_dashboard dashboard_launcher\n# Windows 브라우저 → http://localhost:8080', 0.6, 5.7, 6.4, 1.0, 13);
-  card(s, { x: 7.3, y: 1.5, w: 5.4, h: 2.05, head: '방법 1. 런처 (추천)', body: '런처를 켜 두고 브라우저에서 연결 → 옵션 고르기 → 25초쯤 뒤 "ROS 연결됨". 끌 때는 시스템 종료', iconName: 'FaPowerOff', accent: C.accent2, headSize: 16, bodySize: 14 });
+  card(s, { x: 7.3, y: 1.5, w: 5.4, h: 2.05, head: '방법 1. 런처 (추천)', body: '런처를 켜 두고 브라우저에서 모드(작업 / 지도 만들기) 고르기 → 연결 → 25초쯤 뒤 "ROS 연결됨". 끌 때는 시스템 종료', iconName: 'FaPowerOff', accent: C.accent2, headSize: 16, bodySize: 14 });
   card(s, { x: 7.3, y: 3.7, w: 5.4, h: 1.65, head: '방법 2. launch로 직접', body: 'bringup.launch.py planner:=true dashboard:=true (키가 없으면 llm:=scripted)', iconName: 'FaTerminal', accent: C.accent3, headSize: 16, bodySize: 14 });
   callout(s, 'fail', 7.3, 5.5, 5.4, 1.2, '페이지가 안 열림 → 런처 터미널이 살아 있나. Package not found → 환경 설정');
 

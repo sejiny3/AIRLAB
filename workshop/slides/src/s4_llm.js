@@ -156,7 +156,7 @@ module.exports = function build() {
   img(s, 'dashboard_off.png', 0.6, 1.5, 6.9, 4.3, 'ROS가 꺼져 있을 때의 대시보드: 연결 버튼과 시작 옵션');
   code(s, '# 한 번만 켜 두기 (터미널 하나)\n$ ros2 run unbolt_dashboard dashboard_launcher', 0.6, 6.0, 6.9, 0.75, 13);
   step(s, 1, 'http://localhost:8080 열기', '"ROS가 꺼져 있습니다" 화면이 뜬다', 7.8, 1.6, 4.9, 0.6);
-  step(s, 2, '옵션 고르고 연결', 'LLM (Claude / 대역), MuJoCo 창, RViz', 7.8, 2.7, 4.9, 0.6);
+  step(s, 2, '모드·옵션 고르고 연결', '작업(지도·LLM) 또는 지도 만들기, MuJoCo 창, RViz', 7.8, 2.7, 4.9, 0.6);
   step(s, 3, '25~60초 기다리기', '켜지는 동안 진행 상황과 로그가 보인다. 중간에 시작 취소 가능', 7.8, 3.8, 4.9, 0.8);
   step(s, 4, '끝: 시스템 종료 → 다시 연결', '런처 터미널의 Ctrl+C는 런처가 켠 시스템도 함께 끈다', 7.8, 5.1, 4.9, 0.8);
 
