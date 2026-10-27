@@ -101,7 +101,9 @@ class MujocoBridge(Node):
         super().__init__('mujoco_bridge')
         self.declare_parameter('model_path', '')
         self.declare_parameter('use_viewer', True)
-        self.declare_parameter('viewer_track_robot', True)
+        # false: a free camera over the whole room, so driving shows (a camera that follows the
+        # robot keeps it in the middle of the window, and on the plain floor it looks parked)
+        self.declare_parameter('viewer_track_robot', False)
         self.declare_parameter('real_time_factor', 1.0)
         self.declare_parameter('clock_rate', 250.0)
         self.declare_parameter('joint_state_rate', 100.0)
@@ -502,6 +504,10 @@ class MujocoBridge(Node):
                 viewer.cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
                 viewer.cam.trackbodyid = self.base_body
                 viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 3.0, -25.0, 150.0
+            else:  # the room from above the south-east corner; the mouse still orbits and zooms
+                viewer.cam.type = mujoco.mjtCamera.mjCAMERA_FREE
+                viewer.cam.lookat[:] = (1.0, 0.0, 0.3)
+                viewer.cam.distance, viewer.cam.elevation, viewer.cam.azimuth = 8.0, -50.0, 110.0
         renderer = None
         if self.camera_id >= 0:
             renderer = mujoco.Renderer(m, self.cam_h, self.cam_w)
