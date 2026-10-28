@@ -18,6 +18,7 @@ import time
 import numpy as np
 import rclpy
 from geometry_msgs.msg import Pose, PoseStamped, Twist
+from lifecycle_msgs.srv import GetState
 from moveit_msgs.action import ExecuteTrajectory, MoveGroup
 from moveit_msgs.msg import (CollisionObject, Constraints, JointConstraint, MoveItErrorCodes,
                              OrientationConstraint, PlanningScene, PositionConstraint)
@@ -119,8 +120,43 @@ class RobotSkills:
             self.execute.wait_for_server(timeout_sec=timeout) and \
             self.cartesian.wait_for_service(timeout_sec=timeout) and \
             self.scene.wait_for_service(timeout_sec=timeout)
-        self.nav.waitUntilNav2Active()
+        self.wait_nav2_active()
         return ok
+
+    def wait_nav2_active(self):
+        """BasicNavigator.waitUntilNav2Active() without its unbounded waits.
+
+        It asks AMCL for its lifecycle state once and waits for the answer forever; when a busy
+        AMCL drops that reply ("failed to send response to /amcl/get_state") the planner never
+        starts. Here every question has a timeout and is asked again."""
+        self._wait_node_active('amcl')
+        pose = PoseStamped()
+        pose.header.frame_id = 'map'
+        pose.pose.orientation.w = 1.0  # the robot starts at the map origin
+        sent = 0.0
+        while not self.nav.initial_pose_received:
+            if time.time() - sent > 2.0:
+                pose.header.stamp = self.nav.get_clock().now().to_msg()
+                self.nav.setInitialPose(pose)  # also clears initial_pose_received until amcl_pose arrives
+                sent = time.time()
+            rclpy.spin_once(self.nav, timeout_sec=0.5)
+        self._wait_node_active('bt_navigator')
+        self.log.info('Nav2 is active')
+
+    def _wait_node_active(self, name, ask_timeout=2.0):
+        client = self.nav.create_client(GetState, f'/{name}/get_state')
+        start = time.time()
+        while True:
+            if client.wait_for_service(timeout_sec=1.0):
+                future = client.call_async(GetState.Request())
+                rclpy.spin_until_future_complete(self.nav, future, timeout_sec=ask_timeout)
+                if future.done() and future.result() is not None and future.result().current_state.label == 'active':
+                    self.nav.destroy_client(client)
+                    return
+                if not future.done():
+                    future.cancel()  # the reply was lost or is late: ask again
+            self.log.info(f'waiting for {name} to become active ({time.time() - start:.0f} s)', throttle_duration_sec=10.0)
+            time.sleep(0.5)
 
     @staticmethod
     def _wait(future, timeout=60.0):
