@@ -83,7 +83,7 @@ module.exports = function build() {
 
   s = content('실습 환경', '시작하기',
     '모든 것이 노트북의 WSL 안에서 돕니다. WSLg 덕분에 MuJoCo와 RViz 창이 Windows 창처럼 뜹니다. 8 GB 노트북은 .wslconfig로 WSL 메모리를 6 GB로 올려야 합니다(설치 가이드 2-4). API 키가 없어도 모듈 4는 scripted 모드로 할 수 있습니다.');
-  const stack = [['MuJoCo 3.12 · OpenArm v2 · UNBOLT 코드', C.accent1, C.background1], ['ROS 2 Humble · Nav2 · MoveIt 2', C.accent2, C.background1], ['Ubuntu 22.04', C.accent3, C.background1], ['WSL2 + WSLg (리눅스 GUI 창)', C.accent3, C.background1], ['Windows 10/11 노트북', C.accent5, C.text1]];
+  const stack = [['MuJoCo 3.12 · OpenArm v2 · AIRLAB 코드', C.accent1, C.background1], ['ROS 2 Humble · Nav2 · MoveIt 2', C.accent2, C.background1], ['Ubuntu 22.04', C.accent3, C.background1], ['WSL2 + WSLg (리눅스 GUI 창)', C.accent3, C.background1], ['Windows 10/11 노트북', C.accent5, C.text1]];
   stack.forEach(([t, f, col], i) => {
     const y = 1.5 + i * 1.0;
     box(s, 0.6, y, 6.4, 0.8, f);

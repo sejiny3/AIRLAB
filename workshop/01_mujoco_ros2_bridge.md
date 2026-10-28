@@ -78,9 +78,9 @@ base_footprint (바닥 투영점)
 
 | 파일 | 형식 | 쓰는 곳 |
 |---|---|---|
-| `models/unbolt_robot.xml` | MJCF | MuJoCo 물리 (질량, 관성, 충돌, 액추에이터) |
+| `models/airlab_robot.xml` | MJCF | MuJoCo 물리 (질량, 관성, 충돌, 액추에이터) |
 | `models/scene.xml` | MJCF | 10 m × 8.5 m 방, 벽, 공급 테이블 3개 · 작업대, 빨강·초록·파랑 상자 + 로봇 `attach` |
-| `ros2_ws/src/unbolt_description/urdf/unbolt.urdf.xacro` | URDF/Xacro | TF, RViz, MoveIt, Nav2 footprint |
+| `ros2_ws/src/airlab_description/urdf/airlab.urdf.xacro` | URDF/Xacro | TF, RViz, MoveIt, Nav2 footprint |
 | `third_party/openarm_mujoco`, `openarm_description` | MJCF, URDF | OpenArm 공식 모델 (팔은 가져다 붙인다) |
 
 팔은 OpenArm 공식 모델을 **그대로 가져와 붙입니다**: MJCF는 `<attach model="bimanual"/>`,
@@ -91,7 +91,7 @@ URDF는 xacro 매크로 + preset 파일. 베이스·센서만 우리가 씁니�
 ## 실습 1. MuJoCo 단독 실행 (ROS 없이)
 
 ```bash
-$ cd ~/unbolt/models
+$ cd ~/airlab/models
 $ python3 -m mujoco.viewer --mjcf=scene.xml
 ```
 
@@ -125,7 +125,7 @@ $ python3 -m mujoco.viewer --mjcf=scene.xml
 
 ## 실습 2. 모델 파일 읽기
 
-`models/unbolt_robot.xml`을 열어 아래를 찾아보세요 (VS Code: `$ code ~/unbolt`).
+`models/airlab_robot.xml`을 열어 아래를 찾아보세요 (VS Code: `$ code ~/airlab`).
 
 | 찾을 것 | 확인할 내용 |
 |---|---|
@@ -136,7 +136,7 @@ $ python3 -m mujoco.viewer --mjcf=scene.xml
 | `<camera name="head_camera" ...>` | `fovy`, 해상도, 방향(`xyaxes`) |
 | `<attach model="bimanual" .../>` | 팔을 어디에 붙이는지 |
 
-그리고 `unbolt.urdf.xacro`에서 같은 값(바퀴 반지름 0.08, 간격 0.45, LiDAR (0.22, 0, 0.13),
+그리고 `airlab.urdf.xacro`에서 같은 값(바퀴 반지름 0.08, 간격 0.45, LiDAR (0.22, 0, 0.13),
 받침대 (-0.05, 0, 0.11))을 찾아 MJCF와 같은지 확인하세요.
 
 > **알아 두면 좋은 함정: MuJoCo 접촉은 두 geom 중 큰 값을 쓴다.** 캐스터에 `condim="1"`(마찰 없음)을 줘도
@@ -149,7 +149,7 @@ $ python3 -m mujoco.viewer --mjcf=scene.xml
 터미널 1:
 
 ```bash
-$ ros2 launch unbolt_mujoco_bridge sim.launch.py
+$ ros2 launch airlab_mujoco_bridge sim.launch.py
 ```
 
 터미널 2:
@@ -192,7 +192,7 @@ RViz에서: 왼쪽 **TF** 표시를 켜고 **Show Names**, 팔 관절 하나를 
 ```bash
 $ ros2 topic pub --once /joint_commands sensor_msgs/msg/JointState \
     "{name: [openarm_left_joint1, openarm_left_joint4], position: [-0.8, 1.2]}"
-$ ros2 run unbolt_mujoco_bridge arm_demo --ros-args -p use_sim_time:=true    # 10초 데모
+$ ros2 run airlab_mujoco_bridge arm_demo --ros-args -p use_sim_time:=true    # 10초 데모
 $ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger                 # 원위치
 ```
 
@@ -202,7 +202,7 @@ MuJoCo 뷰어와 RViz의 팔이 **똑같이** 움직이면 MJCF와 URDF가 일�
 
 ## 실습 5. LiDAR = 광선 360개
 
-`ros2_ws/src/unbolt_mujoco_bridge/unbolt_mujoco_bridge/mujoco_bridge_node.py`의 `_publish_scan()`:
+`ros2_ws/src/airlab_mujoco_bridge/airlab_mujoco_bridge/mujoco_bridge_node.py`의 `_publish_scan()`:
 
 ```python
 origin = d.site_xpos[self.lidar_site].copy()                              # LiDAR 위치 (월드 좌표)
@@ -270,7 +270,7 @@ $ ros2 topic echo /ground_truth/odom --field pose.pose.position --once
    ```xml
    <geom name="my_box" type="box" size="0.2 0.2 0.3" pos="1.5 1.0 0.3" rgba="0.2 0.6 0.2 1"/>
    ```
-3. 실행: `ros2 launch unbolt_mujoco_bridge sim.launch.py model_path:=$UNBOLT_ROOT/models/my_scene.xml`
+3. 실행: `ros2 launch airlab_mujoco_bridge sim.launch.py model_path:=$AIRLAB_ROOT/models/my_scene.xml`
 4. RViz의 LiDAR에 새 상자가 보이는지 확인. `group="3"`을 주면 어떻게 되는지도 확인하고 이유를 설명하세요.
 
 **기본 과제 B. LiDAR 파라미터**
@@ -278,8 +278,8 @@ $ ros2 topic echo /ground_truth/odom --field pose.pose.position --once
 브리지 노드를 직접 실행해서 빔 수와 노이즈를 바꿔 봅니다:
 
 ```bash
-$ ros2 run unbolt_mujoco_bridge mujoco_bridge --ros-args \
-    -p model_path:=$UNBOLT_ROOT/models/scene.xml -p lidar_samples:=720 -p lidar_noise_std:=0.05
+$ ros2 run airlab_mujoco_bridge mujoco_bridge --ros-args \
+    -p model_path:=$AIRLAB_ROOT/models/scene.xml -p lidar_samples:=720 -p lidar_noise_std:=0.05
 ```
 
 `ros2 topic echo /scan --once --field angle_increment` 로 빔 간격(360빔이면 0.01745 rad)이 바뀐 것을 확인하고,
@@ -304,7 +304,7 @@ $ ros2 run unbolt_mujoco_bridge mujoco_bridge --ros-args \
 
 | 파일 | 볼 곳 |
 |---|---|
-| `unbolt_mujoco_bridge/mujoco_bridge_node.py` | `run()` (스텝 루프), `_apply_commands()`, `_publish_due()`, `_publish_scan()`, `_update_odometry()`, `load_model()` |
-| `unbolt_mujoco_bridge/trajectory_server.py` | MoveIt 궤적 실행 (모듈 3) |
-| `unbolt_mujoco_bridge/launch/sim.launch.py` | 브리지 + robot_state_publisher + RViz |
-| `unbolt_description/urdf/unbolt.urdf.xacro` | 베이스 + OpenArm xacro 매크로 |
+| `airlab_mujoco_bridge/mujoco_bridge_node.py` | `run()` (스텝 루프), `_apply_commands()`, `_publish_due()`, `_publish_scan()`, `_update_odometry()`, `load_model()` |
+| `airlab_mujoco_bridge/trajectory_server.py` | MoveIt 궤적 실행 (모듈 3) |
+| `airlab_mujoco_bridge/launch/sim.launch.py` | 브리지 + robot_state_publisher + RViz |
+| `airlab_description/urdf/airlab.urdf.xacro` | 베이스 + OpenArm xacro 매크로 |

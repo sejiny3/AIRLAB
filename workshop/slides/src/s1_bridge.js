@@ -51,7 +51,7 @@ module.exports = function build() {
   code(s, 'import mujoco\nm = mujoco.MjModel.from_xml_path("models/scene.xml")  # 설계도 읽기\nd = mujoco.MjData(m)                                  # 상태 만들기\nfor _ in range(1000):\n    d.ctrl[:] = ...         # 모터에 명령\n    mujoco.mj_step(m, d)    # 물리 계산 1 ms\nprint(d.time, d.qpos[:3])   # 1초 뒤 시간과 위치', 0.6, 3.8, 7.6, 2.9, 13);
   callout(s, 'analogy', 8.5, 3.8, 4.2, 2.9, 'MjModel = 악보, MjData = 지금 연주 중인 마디. mj_step은 박자 하나를 넘기는 것.');
 
-  s = content('MJCF 파일 읽는 법', TAG, 'models/unbolt_robot.xml의 일부를 줄여서 보여 줍니다. body 안에 body가 들어가며 나무 모양을 이루고, joint가 움직임을, geom이 모양과 충돌을, actuator가 모터를 정의합니다. 실습 2에서 실제 파일을 열어 이 태그들을 찾습니다.');
+  s = content('MJCF 파일 읽는 법', TAG, 'models/airlab_robot.xml의 일부를 줄여서 보여 줍니다. body 안에 body가 들어가며 나무 모양을 이루고, joint가 움직임을, geom이 모양과 충돌을, actuator가 모터를 정의합니다. 실습 2에서 실제 파일을 열어 이 태그들을 찾습니다.');
   code(s, '<worldbody>\n  <body name="base_link" pos="0 0 0.08">        <!-- 몸체 -->\n    <freejoint name="base_free"/>               <!-- 자유롭게 움직임 -->\n    <geom type="box" size="0.27 0.19 0.05"/>    <!-- 모양·충돌 -->\n    <body name="left_wheel" pos="0 0.225 0">\n      <joint name="left_wheel_joint" type="hinge" axis="0 1 0"/>\n      <geom type="sphere" size="0.08"/>         <!-- 바퀴 r=0.08 -->\n    </body>\n    <site name="lidar_link" pos="0.22 0 0.13"/> <!-- 센서 위치 -->\n    <camera name="head_camera" pos="0.05 0 0.97" fovy="60"/>\n  </body>\n</worldbody>\n<actuator>\n  <velocity name="left_wheel_vel" joint="left_wheel_joint" kv="8"/>\n</actuator>', 0.6, 1.5, 7.9, 5.2, 13);
   table(s, [['태그', '뜻'], ['body', '물체 하나. 안에 body를 넣으면 붙어서 같이 움직임'], ['joint', '움직일 수 있는 방향 (hinge = 회전)'], ['geom', '모양, 충돌, 마찰'], ['site / camera', '센서·카메라를 달 위치'], ['actuator', '모터. velocity = 속도 제어, position = 각도 제어']], 8.8, 1.5, 3.9, [1.3, 2.6], 13);
   s.addNotes('표시된 값은 실제 파일과 같은 값입니다(바퀴 반지름 0.08, 바퀴 간격 0.45 → y = ±0.225, LiDAR (0.22, 0, 0.13)). 코드는 이해를 돕기 위해 줄였습니다.');
@@ -70,7 +70,7 @@ module.exports = function build() {
 
   s = content('실습 1. MuJoCo 혼자 실행하기', TAG, 'ROS 없이 MuJoCo만 띄워 봅니다. 아무 명령이 없으면 팔이 아래로 처지는 것을 보여 주세요. 브리지는 중력 보상(gravcomp)을 켜서 이를 막습니다. 체크포인트 1-1.');
   lab(s, {
-    cmd: '$ cd ~/unbolt/models\n$ python3 -m mujoco.viewer --mjcf=scene.xml\n\n# 창이 뜨면\n#  스페이스바   시뮬레이션 시작/멈춤\n#  Backspace    처음으로 되돌리기\n#  오른쪽 패널  Control → 바퀴·팔 슬라이더',
+    cmd: '$ cd ~/airlab/models\n$ python3 -m mujoco.viewer --mjcf=scene.xml\n\n# 창이 뜨면\n#  스페이스바   시뮬레이션 시작/멈춤\n#  Backspace    처음으로 되돌리기\n#  오른쪽 패널  Control → 바퀴·팔 슬라이더',
     cmdH: 3.0,
     explain: ['python3 -m mujoco.viewer: MuJoCo에 들어 있는 3D 뷰어', '--mjcf=scene.xml: 방 + 로봇이 들어 있는 월드 파일', '슬라이더로 바퀴를 돌리면 로봇이 움직인다'],
     ok: 'MuJoCo 창에 방과 분홍색 로봇이 보이고, 바퀴 슬라이더를 움직이면 로봇이 굴러간다.\n\n✅ 체크포인트 1-1',
@@ -118,7 +118,7 @@ module.exports = function build() {
 
   s = content('실습 3. 브리지 실행하고 토픽 확인', TAG, 'sim.launch.py는 브리지 + robot_state_publisher + RViz를 함께 켭니다. 터미널 2에서 토픽을 확인합니다. 체크포인트 1-2: /clock 약 250 Hz, /scan 약 10 Hz.');
   lab(s, {
-    cmd: '# 터미널 1 (켜 두기)\n$ ros2 launch unbolt_mujoco_bridge sim.launch.py\n\n# 터미널 2\n$ ros2 node list\n$ ros2 topic list\n$ ros2 topic hz /clock\n$ ros2 topic hz /scan\n$ ros2 topic echo /joint_states --once',
+    cmd: '# 터미널 1 (켜 두기)\n$ ros2 launch airlab_mujoco_bridge sim.launch.py\n\n# 터미널 2\n$ ros2 node list\n$ ros2 topic list\n$ ros2 topic hz /clock\n$ ros2 topic hz /scan\n$ ros2 topic echo /joint_states --once',
     cmdH: 3.6,
     explain: ['ros2 topic hz: 1초에 몇 번 오는지 (Ctrl+C로 멈춤)', 'echo --once: 메시지 하나만 출력'],
     ok: 'MuJoCo 창 + RViz 창이 뜬다.\n/clock 평균 약 250, /scan 약 10.\n\n✅ 체크포인트 1-2',
@@ -142,13 +142,13 @@ module.exports = function build() {
   callout(s, 'why', 8.8, 4.2, 3.9, 2.5, '카메라가 본 상자 위치(camera 기준)를 팔이 쓰려면 base 기준으로 바꿔야 한다. TF가 자동으로 계산한다.');
 
   s = content('실습 4. TF 트리와 RViz 보기', TAG, 'view_frames는 TF 나무를 PDF로 그려 줍니다. 홈 폴더에 frames_날짜.pdf가 생깁니다. RViz에서 TF 표시를 켜고, 관절 명령을 보내 MuJoCo와 RViz의 팔이 똑같이 움직이는지 확인시킵니다. 체크포인트 1-3.');
-  code(s, '$ cd ~ && ros2 run tf2_tools view_frames \\\n    --ros-args -p use_sim_time:=true\n$ explorer.exe .          # frames_<날짜>.pdf 열기\n\n# 팔 관절 하나 움직이기\n$ ros2 topic pub --once /joint_commands \\\n    sensor_msgs/msg/JointState \\\n    "{name: [openarm_left_joint1], position: [-0.8]}"\n\n# 10초 팔 데모, 원위치\n$ ros2 run unbolt_mujoco_bridge arm_demo \\\n    --ros-args -p use_sim_time:=true\n$ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger', 0.6, 1.5, 6.8, 5.2, 13);
+  code(s, '$ cd ~ && ros2 run tf2_tools view_frames \\\n    --ros-args -p use_sim_time:=true\n$ explorer.exe .          # frames_<날짜>.pdf 열기\n\n# 팔 관절 하나 움직이기\n$ ros2 topic pub --once /joint_commands \\\n    sensor_msgs/msg/JointState \\\n    "{name: [openarm_left_joint1], position: [-0.8]}"\n\n# 10초 팔 데모, 원위치\n$ ros2 run airlab_mujoco_bridge arm_demo \\\n    --ros-args -p use_sim_time:=true\n$ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger', 0.6, 1.5, 6.8, 5.2, 13);
   img(s, 'step2_rviz.jpg', 7.7, 1.5, 5.0, 3.2, 'RViz: 로봇 모델, LiDAR 점, TF 좌표축');
   callout(s, 'ok', 7.7, 4.9, 5.0, 1.8, 'PDF에 odom → base_footprint → base_link … 나무. MuJoCo와 RViz의 팔이 똑같이 움직인다. ✅ 1-3');
 
   s = content('로봇은 두 벌로 기술한다: MJCF와 URDF', TAG, '같은 로봇이 두 파일에 있습니다. RViz의 팔과 MuJoCo의 팔이 똑같이 움직이면 두 모델이 일치하는 것입니다. 개발 때 FK 비교 스크립트로 정확히 일치함을 확인했습니다. 치수를 바꿀 때는 꼭 둘 다 고쳐야 합니다.');
-  card(s, { x: 0.6, y: 1.5, w: 5.6, h: 2.3, head: 'MJCF: models/unbolt_robot.xml', body: 'MuJoCo 물리용: 질량, 관성, 충돌, 모터. 팔은 OpenArm 공식 MJCF를 <attach>로 붙인다.', iconName: 'FaCube', accent: C.accent3, headSize: 17 });
-  card(s, { x: 0.6, y: 4.0, w: 5.6, h: 2.3, head: 'URDF: unbolt.urdf.xacro', body: 'ROS용: TF, RViz, MoveIt, Nav2. 팔은 OpenArm xacro 매크로 + preset 파일.', iconName: 'FaSitemap', accent: C.accent2, headSize: 17 });
+  card(s, { x: 0.6, y: 1.5, w: 5.6, h: 2.3, head: 'MJCF: models/airlab_robot.xml', body: 'MuJoCo 물리용: 질량, 관성, 충돌, 모터. 팔은 OpenArm 공식 MJCF를 <attach>로 붙인다.', iconName: 'FaCube', accent: C.accent3, headSize: 17 });
+  card(s, { x: 0.6, y: 4.0, w: 5.6, h: 2.3, head: 'URDF: airlab.urdf.xacro', body: 'ROS용: TF, RViz, MoveIt, Nav2. 팔은 OpenArm xacro 매크로 + preset 파일.', iconName: 'FaSitemap', accent: C.accent2, headSize: 17 });
   img(s, 'robot_front.png', 6.5, 1.5, 6.2, 3.5, '주행형 양팔로봇 앞모습');
   text(s, '치수를 바꾸면 양쪽을 같이 고친다', { x: 6.5, y: 5.15, w: 6.2, h: 0.4, fontSize: 16, bold: true });
   ['바퀴 r 0.08', '간격 0.45', 'LiDAR (0.22, 0, 0.13)', '받침대 (-0.05, 0, 0.11)'].forEach((t, i) => pill(s, t, 6.5 + (i % 2) * 3.15, 5.65 + Math.floor(i / 2) * 0.48, 3.0, C.background2, C.text1, 13));
@@ -227,10 +227,10 @@ module.exports = function build() {
   ], '답은 발표자 노트에 있습니다. 옆 사람과 먼저 이야기해 보세요.');
 
   s = content('모듈 1 과제', TAG, '기본 과제 A의 my_scene.xml은 모듈 2 실습(지도에 없는 장애물)에서도 씁니다. group="3"을 주면 LiDAR에 안 보이는 이유도 질문해 보세요(LiDAR는 그룹 0, 1만 봄).');
-  card(s, { x: 0.6, y: 1.5, w: 6.0, h: 2.55, head: '기본 A. 장애물 추가하기', iconName: 'FaCube', accent: C.accent3, body: 'scene.xml을 my_scene.xml로 복사하고 상자 하나 추가\n→ sim.launch.py model_path:=$UNBOLT_ROOT/models/my_scene.xml\n→ LiDAR에 보이는지 확인. group="3"이면?', bodySize: 14 });
+  card(s, { x: 0.6, y: 1.5, w: 6.0, h: 2.55, head: '기본 A. 장애물 추가하기', iconName: 'FaCube', accent: C.accent3, body: 'scene.xml을 my_scene.xml로 복사하고 상자 하나 추가\n→ sim.launch.py model_path:=$AIRLAB_ROOT/models/my_scene.xml\n→ LiDAR에 보이는지 확인. group="3"이면?', bodySize: 14 });
   code(s, '<geom name="my_box" type="box" size="0.2 0.2 0.3"\n      pos="1.5 1.0 0.3" rgba="0.2 0.6 0.2 1"/>', 6.75, 1.5, 5.95, 1.2, 13);
   card(s, { x: 6.75, y: 2.85, w: 5.95, h: 1.2, head: '기본 B. LiDAR 파라미터 바꾸기', bodySize: 14, headSize: 16 });
-  code(s, '$ ros2 run unbolt_mujoco_bridge mujoco_bridge --ros-args \\\n    -p model_path:=$UNBOLT_ROOT/models/scene.xml \\\n    -p lidar_samples:=720 -p lidar_noise_std:=0.05\n$ ros2 topic echo /scan --once --field angle_increment', 0.6, 4.3, 7.4, 1.6, 13);
+  code(s, '$ ros2 run airlab_mujoco_bridge mujoco_bridge --ros-args \\\n    -p model_path:=$AIRLAB_ROOT/models/scene.xml \\\n    -p lidar_samples:=720 -p lidar_noise_std:=0.05\n$ ros2 topic echo /scan --once --field angle_increment', 0.6, 4.3, 7.4, 1.6, 13);
   text(s, '빔 간격이 0.01745(360빔) → 0.00873(720빔)으로 바뀌는지, 노이즈 5 cm에서 점이 어떻게 보이는지 캡처', { x: 0.6, y: 6.0, w: 7.4, h: 0.7, fontSize: 14, color: C.text2 });
   card(s, { x: 8.3, y: 4.3, w: 4.4, h: 2.4, head: '도전. 범퍼 센서', iconName: 'FaBolt', accent: C.accent1, body: '섀시가 벽에 닿으면 /bumper (Bool)를 True로 50 Hz 발행. 힌트: d.contact, m.geom_bodyid', bodySize: 14, fill: C.text1, headColor: C.background1, bodyColor: C.accent5 });
 };

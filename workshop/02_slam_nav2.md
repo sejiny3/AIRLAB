@@ -62,7 +62,7 @@ LiDAR 스캔을 이어 붙여 지도를 만드는 그래프 기반 SLAM입니다
   AMCL: 저장된 지도 + LiDAR + 오도메트리 ──▶ map → odom
 ```
 
-이 로봇의 설정 (`unbolt_navigation/config/nav2_params.yaml`):
+이 로봇의 설정 (`airlab_navigation/config/nav2_params.yaml`):
 
 | 항목 | 값 | 이유 |
 |---|---|---|
@@ -79,7 +79,7 @@ LiDAR 스캔을 이어 붙여 지도를 만드는 그래프 기반 SLAM입니다
 터미널 1:
 
 ```bash
-$ ros2 launch unbolt_navigation slam.launch.py
+$ ros2 launch airlab_navigation slam.launch.py
 ```
 
 RViz에서 회색 지도가 조금씩 생깁니다. 터미널 2에서 키보드로 방을 돌아다니세요:
@@ -95,7 +95,7 @@ $ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 시간이 부족하면 자동 탐색 (약 3분):
 
 ```bash
-$ ros2 run unbolt_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
+$ ros2 run airlab_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
 ```
 
 > `explore_waypoints.py`는 실제 위치(`/ground_truth/odom`)로 정해진 경로를 도는 **지도 작성 도우미**입니다.
@@ -126,10 +126,10 @@ $ explorer.exe ~/maps  # Windows에서 그림 보기 (pgm은 GIMP 등으로)
 
 ## 실습 3. 저장된 지도로 주행
 
-미리 만들어 둔 지도(`unbolt_room`)로 시작합니다:
+미리 만들어 둔 지도(`airlab_room`)로 시작합니다:
 
 ```bash
-$ ros2 launch unbolt_navigation navigation.launch.py
+$ ros2 launch airlab_navigation navigation.launch.py
 ```
 
 ![Nav2 in RViz](../docs/step3_nav_rviz.jpg)
@@ -148,13 +148,13 @@ $ ros2 launch unbolt_navigation navigation.launch.py
 ## 실습 4. 내 지도로 주행 + 위치 오차 재기
 
 ```bash
-$ ros2 launch unbolt_navigation navigation.launch.py map:=$HOME/maps/my_room.yaml
+$ ros2 launch airlab_navigation navigation.launch.py map:=$HOME/maps/my_room.yaml
 ```
 
 다른 터미널에서 자동 시험 (목표 3개를 차례로 가고 실제 위치와 비교):
 
 ```bash
-$ ros2 run unbolt_navigation nav_goal_test.py --ros-args -p use_sim_time:=true
+$ ros2 run airlab_navigation nav_goal_test.py --ros-args -p use_sim_time:=true
 ```
 
 결과를 표로 적으세요:
@@ -172,9 +172,9 @@ $ ros2 run unbolt_navigation nav_goal_test.py --ros-args -p use_sim_time:=true
 설정 파일을 복사해서 고칩니다 (원본은 그대로 두기):
 
 ```bash
-$ cp $(ros2 pkg prefix unbolt_navigation)/share/unbolt_navigation/config/nav2_params.yaml ~/my_nav2.yaml
+$ cp $(ros2 pkg prefix airlab_navigation)/share/airlab_navigation/config/nav2_params.yaml ~/my_nav2.yaml
 $ code ~/my_nav2.yaml
-$ ros2 launch unbolt_navigation navigation.launch.py params_file:=$HOME/my_nav2.yaml
+$ ros2 launch airlab_navigation navigation.launch.py params_file:=$HOME/my_nav2.yaml
 ```
 
 하나씩 바꿔 보고 같은 목표로 비교하세요.
@@ -200,7 +200,7 @@ $ ros2 launch unbolt_navigation navigation.launch.py params_file:=$HOME/my_nav2.
 **옛 지도**(상자 없음)로 주행:
 
 ```bash
-$ ros2 launch unbolt_navigation navigation.launch.py model_path:=$UNBOLT_ROOT/models/my_scene.xml
+$ ros2 launch airlab_navigation navigation.launch.py model_path:=$AIRLAB_ROOT/models/my_scene.xml
 ```
 
 처음 위치(원점)에서 `(4.0, −2.4)` 쪽으로 목표를 주고, 상자가 없는 원래 월드(`model_path` 없이)와 비교하세요.
@@ -287,7 +287,7 @@ $ python3 ~/patrol.py --ros-args -p use_sim_time:=true
           Nav2 → /cmd_vel → 로봇
 ```
 
-코드는 `unbolt_navigation/scripts/frontier_explorer.py` 하나(약 350줄)입니다. 프론티어 찾기는 OpenCV 몇 줄입니다:
+코드는 `airlab_navigation/scripts/frontier_explorer.py` 하나(약 350줄)입니다. 프론티어 찾기는 OpenCV 몇 줄입니다:
 
 ```python
 free = (grid >= 0) & (grid < 25)          # 빈 칸
@@ -299,12 +299,12 @@ n, labels, stats, _ = cv2.connectedComponentsWithStats(frontier.astype(np.uint8)
 **대시보드로 하기** (런처 사용, [실습 5 웹 대시보드](04_llm_dashboard.md#실습-5-웹-대시보드) 참고):
 
 ```bash
-$ ros2 run unbolt_dashboard dashboard_launcher
+$ ros2 run airlab_dashboard dashboard_launcher
 ```
 
 1. 브라우저에서 <http://localhost:8080> → 모드 **지도 만들기 (SLAM + 자동 탐색)** → **연결**
 2. 20~40초 뒤 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 것, 하늘색 프론티어, 파란 탐색 목표를 보세요.
-3. 약 7분 뒤 **탐색 완료** (강사 노트북: 목표 19개, 실패 1번, 84 m²) → 지도가 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장됩니다.
+3. 약 7분 뒤 **탐색 완료** (강사 노트북: 목표 19개, 실패 1번, 84 m²) → 지도가 `~/maps/airlab_explored_<날짜>_<시간>.yaml`로 저장됩니다.
 4. 이제 **키보드 조종**: 브라우저 창을 클릭하고 `W A S D` 또는 방향키 (스페이스 = 정지).
    누르고 있는 동안만 움직이고, 장애물이 가까우면 그쪽으로는 가지 않습니다. 몰고 다니는 동안에도 SLAM이 지도를 계속 고치니,
    빈 곳이 남았으면 직접 가서 채우고 **지도 저장**을 다시 누르세요.
@@ -313,10 +313,10 @@ $ ros2 run unbolt_dashboard dashboard_launcher
 **터미널로 하기** (대시보드 없이, RViz로 보기):
 
 ```bash
-$ ros2 launch unbolt_navigation explore.launch.py
+$ ros2 launch airlab_navigation explore.launch.py
 $ ros2 topic echo /explore/status --field data            # 상태 (JSON)
 $ ros2 topic pub --once /explore/control std_msgs/msg/String "{data: stop}"    # start / stop / save
-$ ros2 launch unbolt_navigation navigation.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
+$ ros2 launch airlab_navigation navigation.launch.py map:=$HOME/maps/airlab_explored_<...>.yaml
 ```
 
 ✅ **체크포인트 2-7**: 자동 탐색이 끝나고 `~/maps`에 지도가 저장됐다. 키보드로 로봇을 몰 수 있다.
@@ -367,9 +367,9 @@ ros2 launch  →  MuJoCo 물리  →  브리지(/scan, /odom, /clock)  →  SLAM
 
 | 파일 | 내용 |
 |---|---|
-| `unbolt_navigation/config/slam_toolbox.yaml` | SLAM 설정 (해상도 0.05, 루프 클로저) |
-| `unbolt_navigation/config/nav2_params.yaml` | Nav2 설정 (맨 위 주석에 공식 파일과 다른 점) |
-| `unbolt_navigation/scripts/nav_goal_test.py` | BasicNavigator 사용 예 + 실제 위치 비교 |
-| `unbolt_navigation/scripts/frontier_explorer.py` | 프론티어 자동 탐색 (실습 8) |
-| `unbolt_navigation/launch/explore.launch.py` | 시뮬레이터 + SLAM + Nav2(지도 없이) + 자동 탐색 |
+| `airlab_navigation/config/slam_toolbox.yaml` | SLAM 설정 (해상도 0.05, 루프 클로저) |
+| `airlab_navigation/config/nav2_params.yaml` | Nav2 설정 (맨 위 주석에 공식 파일과 다른 점) |
+| `airlab_navigation/scripts/nav_goal_test.py` | BasicNavigator 사용 예 + 실제 위치 비교 |
+| `airlab_navigation/scripts/frontier_explorer.py` | 프론티어 자동 탐색 (실습 8) |
+| `airlab_navigation/launch/explore.launch.py` | 시뮬레이터 + SLAM + Nav2(지도 없이) + 자동 탐색 |
 | Nav2 문서 | <https://docs.nav2.org/> (Humble 버전 선택) |

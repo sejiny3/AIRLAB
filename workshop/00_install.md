@@ -166,14 +166,14 @@ $ xeyes
 
 ## 3. 실습 코드 받기 (5분)
 
-코드는 **Ubuntu 홈 폴더의 `~/unbolt`** 에 둡니다.
+코드는 **Ubuntu 홈 폴더의 `~/airlab`** 에 둡니다.
 Windows 폴더(`/mnt/c/...`)에 두면 빌드와 실행이 몇 배 느려지니 피하세요.
 
 **방법 A. git clone (권장)**
 
 ```bash
 $ sudo apt install -y git
-$ git clone <강사가 안내한 저장소 주소> ~/unbolt
+$ git clone <강사가 안내한 저장소 주소> ~/airlab
 ```
 
 **방법 B. ZIP 파일**
@@ -181,8 +181,8 @@ $ git clone <강사가 안내한 저장소 주소> ~/unbolt
 강사가 준 ZIP(또는 GitHub의 **Code → Download ZIP**)을 Windows `다운로드` 폴더에 풀었다면:
 
 ```bash
-$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<압축을-푼-폴더> ~/unbolt
-$ ls ~/unbolt
+$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<압축을-푼-폴더> ~/airlab
+$ ls ~/airlab
 README.md  docs  models  ros2_ws  workshop
 ```
 
@@ -193,7 +193,7 @@ README.md  docs  models  ros2_ws  workshop
 ## 4. 설치 스크립트 실행 (10~60분)
 
 ```bash
-$ bash ~/unbolt/workshop/setup/install_unbolt.sh
+$ bash ~/airlab/workshop/setup/install_airlab.sh
 ```
 
 처음에 **sudo 비밀번호**(2-2에서 만든 것)를 한 번 묻습니다. 그다음은 기다리면 됩니다.
@@ -244,7 +244,7 @@ sudo apt install -y ros-humble-desktop ros-dev-tools \
 pip3 install --user "mujoco==3.12.0" "anthropic==2.3.0" "Brotli>=1.1" "numpy<2"
 
 # 5. OpenArm 모델
-cd ~/unbolt
+cd ~/airlab
 git clone https://github.com/enactic/openarm_mujoco.git third_party/openarm_mujoco
 git -C third_party/openarm_mujoco checkout a3c8a57ec15d385e3c1dbd3fd090ee486b7f258c
 git clone https://github.com/enactic/openarm_description.git third_party/openarm_description
@@ -253,13 +253,13 @@ ln -sfn ../../third_party/openarm_description ros2_ws/src/openarm_description
 
 # 6. 빌드, 환경 설정
 source /opt/ros/humble/setup.bash
-cd ~/unbolt/ros2_ws && colcon build --symlink-install
+cd ~/airlab/ros2_ws && colcon build --symlink-install
 cat >> ~/.bashrc <<'EOF'
-# >>> unbolt >>>
+# >>> airlab >>>
 source /opt/ros/humble/setup.bash
-source ~/unbolt/ros2_ws/install/setup.bash
-export UNBOLT_ROOT=~/unbolt
-# <<< unbolt <<<
+source ~/airlab/ros2_ws/install/setup.bash
+export AIRLAB_ROOT=~/airlab
+# <<< airlab <<<
 EOF
 ```
 
@@ -282,45 +282,45 @@ EOF
 | 불러오는 것 | 그러면 생기는 것 | 없으면 |
 |---|---|---|
 | `source /opt/ros/humble/setup.bash` | `ros2` 명령, ROS 기본 패키지 (Nav2, MoveIt, RViz) | `ros2: command not found` |
-| `source ~/unbolt/ros2_ws/install/setup.bash` | 우리가 빌드한 패키지 (`unbolt_dashboard` 등) | `Package 'unbolt_…' not found` |
-| `export UNBOLT_ROOT=~/unbolt` | 모델 파일(`models/`) 위치 | 로봇 모델을 못 찾음 |
+| `source ~/airlab/ros2_ws/install/setup.bash` | 우리가 빌드한 패키지 (`airlab_dashboard` 등) | `Package 'airlab_…' not found` |
+| `export AIRLAB_ROOT=~/airlab` | 모델 파일(`models/`) 위치 | 로봇 모델을 못 찾음 |
 
 `~/.bashrc`는 새 터미널이 열릴 때마다 자동으로 실행되는 파일입니다. 설치 스크립트가 이 줄들을
-`# >>> unbolt >>>` 와 `# <<< unbolt <<<` 사이에 넣어 두므로, 새 터미널은 바로 실습 명령을 쓸 수 있습니다.
+`# >>> airlab >>>` 와 `# <<< airlab <<<` 사이에 넣어 두므로, 새 터미널은 바로 실습 명령을 쓸 수 있습니다.
 
 **확인** (새 터미널에서):
 
 ```bash
-$ grep -A5 ">>> unbolt" ~/.bashrc
-$ ros2 pkg prefix unbolt_dashboard
-/home/student/unbolt/ros2_ws/install/unbolt_dashboard
-$ echo $UNBOLT_ROOT
-/home/student/unbolt
+$ grep -A5 ">>> airlab" ~/.bashrc
+$ ros2 pkg prefix airlab_dashboard
+/home/student/airlab/ros2_ws/install/airlab_dashboard
+$ echo $AIRLAB_ROOT
+/home/student/airlab
 ```
 
-**블록이 없거나, 코드를 `~/unbolt`가 아닌 곳에 두었다면** 직접 넣습니다. `REPO`에 실제 코드 위치를 쓰세요.
+**블록이 없거나, 코드를 `~/airlab`가 아닌 곳에 두었다면** 직접 넣습니다. `REPO`에 실제 코드 위치를 쓰세요.
 가장 쉬운 방법은 설치 스크립트를 다시 실행하는 것입니다 (블록을 새로 써 주고, 두 번 들어가지 않습니다).
 
 ```bash
-$ REPO=~/unbolt          # 실제 코드 위치로 바꾸기
+$ REPO=~/airlab          # 실제 코드 위치로 바꾸기
 $ cat >> ~/.bashrc <<EOF
-# >>> unbolt >>>
+# >>> airlab >>>
 source /opt/ros/humble/setup.bash
 source $REPO/ros2_ws/install/setup.bash
-export UNBOLT_ROOT=$REPO
-# <<< unbolt <<<
+export AIRLAB_ROOT=$REPO
+# <<< airlab <<<
 EOF
 $ source ~/.bashrc       # 지금 열린 터미널에도 적용
 ```
 
 > **이미 열려 있던 터미널은 `.bashrc`를 다시 읽지 않습니다.** 설정을 바꾼 뒤에는 `source ~/.bashrc`를 하거나
-> 새 터미널을 여세요. `Package 'unbolt_dashboard' not found`는 대부분 이 경우입니다.
+> 새 터미널을 여세요. `Package 'airlab_dashboard' not found`는 대부분 이 경우입니다.
 
 **다시 빌드해야 할 때**: `--symlink-install` 덕분에 기존 Python·launch·설정·웹 파일을 고치면 바로 반영됩니다.
 새 파일(노드, launch)이나 `setup.py`의 실행 이름을 추가했을 때만 다시 빌드하고 `source`합니다.
 
 ```bash
-$ cd ~/unbolt/ros2_ws && colcon build --symlink-install && source install/setup.bash
+$ cd ~/airlab/ros2_ws && colcon build --symlink-install && source install/setup.bash
 ```
 
 ---
@@ -330,7 +330,7 @@ $ cd ~/unbolt/ros2_ws && colcon build --symlink-install && source install/setup.
 **새 터미널**을 열고 (또는 `source ~/.bashrc`):
 
 ```bash
-$ bash ~/unbolt/workshop/setup/check_env.sh
+$ bash ~/airlab/workshop/setup/check_env.sh
 ```
 
 모든 줄이 `✔`(또는 `!`)이고 마지막 줄이 `0 실패`면 됩니다. 결과 예:
@@ -341,7 +341,7 @@ $ bash ~/unbolt/workshop/setup/check_env.sh
   ✔ WSL2 커널 5.15.167.4-microsoft-standard-WSL2
   ✔ CPU 8코어
   ✔ WSL 메모리 16GB
-  ✔ 코드 위치 /home/student/unbolt
+  ✔ 코드 위치 /home/student/airlab
 
 화면 (WSLg)
   ✔ WSLg DISPLAY=:0
@@ -359,7 +359,7 @@ Python
   ✔ anthropic 2.3.0
   ✔ Brotli 1.2.1
 
-UNBOLT 코드
+AIRLAB 코드
   ✔ third_party/openarm_mujoco @ a3c8a57
   ✔ third_party/openarm_description @ 206eb8a
   ✔ 워크스페이스 빌드됨
@@ -383,7 +383,7 @@ LLM (모듈 4, 선택)
 ## 6. 첫 실행 (5분)
 
 ```bash
-$ ros2 launch unbolt_mujoco_bridge sim.launch.py
+$ ros2 launch airlab_mujoco_bridge sim.launch.py
 ```
 
 창이 두 개 뜹니다.
@@ -410,14 +410,14 @@ MuJoCo 뷰어의 로봇이 움직이고 RViz의 LiDAR 점이 따라 바뀌면 �
 모듈 4에서 쓰는 웹 대시보드도 미리 열어 볼 수 있습니다. Ubuntu 터미널에서 런처를 켜 두고 (이 터미널은 끄지 않기):
 
 ```bash
-$ ros2 run unbolt_dashboard dashboard_launcher
+$ ros2 run airlab_dashboard dashboard_launcher
 ```
 
 Windows 브라우저(Chrome, Edge)에서 <http://localhost:8080> → "ROS가 꺼져 있습니다" 화면에서 옵션을 고르고
 **연결 (시스템 시작)**. 25~60초 뒤 "ROS 연결됨"이 뜹니다. API 키가 없으면 LLM을 대역(scripted)으로 고르세요.
 끌 때는 오른쪽 위 **시스템 종료**, 런처까지 끄려면 런처 터미널에서 `Ctrl + C`.
 
-`Package 'unbolt_dashboard' not found`가 나오면 [4-1. 환경 설정](#4-1-환경-설정-bashrc가-하는-일)을 보세요.
+`Package 'airlab_dashboard' not found`가 나오면 [4-1. 환경 설정](#4-1-환경-설정-bashrc가-하는-일)을 보세요.
 
 ---
 
@@ -432,9 +432,9 @@ Windows 브라우저(Chrome, Edge)에서 <http://localhost:8080> → "ROS가 꺼
 4. Ubuntu에서:
 
 ```bash
-$ bash ~/unbolt/workshop/setup/setup_api_key.sh
+$ bash ~/airlab/workshop/setup/setup_api_key.sh
 API 키:                                 ← 붙여넣기(Ctrl+Shift+V) 후 Enter. 화면에 안 보이는 게 정상
-✔ ~/.unbolt_key 에 저장 (108자, 본인만 읽기 가능)
+✔ ~/.airlab_key 에 저장 (108자, 본인만 읽기 가능)
 ✔ API 연결 확인: claude-...
 ```
 
@@ -448,8 +448,8 @@ API 키:                                 ← 붙여넣기(Ctrl+Shift+V) 후 Ente
 ## 8. 있으면 편한 것 (선택)
 
 - **VS Code + WSL 확장**: Windows에 VS Code를 깔고 확장 마켓에서 **WSL**을 설치한 뒤, Ubuntu에서
-  `$ code ~/unbolt` 를 실행하면 Ubuntu 안의 파일을 Windows의 VS Code로 편집합니다.
-- **Ubuntu 파일을 Windows 탐색기에서**: 주소창에 `\\wsl$\Ubuntu-22.04\home\<리눅스사용자>\unbolt`
+  `$ code ~/airlab` 를 실행하면 Ubuntu 안의 파일을 Windows의 VS Code로 편집합니다.
+- **Ubuntu 파일을 Windows 탐색기에서**: 주소창에 `\\wsl$\Ubuntu-22.04\home\<리눅스사용자>\airlab`
 
 ---
 
@@ -479,7 +479,7 @@ API 키:                                 ← 붙여넣기(Ctrl+Shift+V) 후 Ente
 ## 부록 B. 강습회가 끝난 뒤 지우기
 
 Ubuntu 안의 모든 파일(실습 코드, 지도, API 키)이 **영구 삭제**됩니다. 필요한 파일은 먼저 Windows로 복사하세요
-(`$ cp -r ~/unbolt /mnt/c/Users/<윈도우사용자>/Documents/`).
+(`$ cp -r ~/airlab /mnt/c/Users/<윈도우사용자>/Documents/`).
 
 ```powershell
 PS> wsl --unregister Ubuntu-22.04

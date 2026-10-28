@@ -21,14 +21,14 @@
 
 ### 저장소 만들기
 
-이 폴더(`UNBOLT/`) 전체가 학생이 받는 저장소입니다. `third_party/`(OpenArm 모델, 약 280 MB)는 **넣지 않습니다**.
+이 폴더(`AIRLAB/`) 전체가 학생이 받는 저장소입니다. `third_party/`(OpenArm 모델, 약 280 MB)는 **넣지 않습니다**.
 설치 스크립트가 고정 커밋으로 받습니다.
 
 ```bash
-$ cd ~/unbolt     # 또는 강사가 작업한 폴더
+$ cd ~/airlab     # 또는 강사가 작업한 폴더
 $ git init -b main
-$ git add -A && git commit -m "UNBOLT workshop materials"
-$ git remote add origin https://github.com/<계정>/unbolt.git
+$ git add -A && git commit -m "AIRLAB workshop materials"
+$ git remote add origin https://github.com/<계정>/airlab.git
 $ git push -u origin main
 $ git tag workshop-2026 && git push origin workshop-2026     # 강습회 당일 버전 고정
 ```
@@ -45,13 +45,13 @@ $ git tag workshop-2026 && git push origin workshop-2026     # 강습회 당일 
 | 구성 | 고정 방법 |
 |---|---|
 | ROS 2 패키지 | apt (Humble은 2027년 5월까지 지원). 강습회 직전 `apt upgrade`로 깨지는 경우가 드물게 있으니 D-1에 강사 노트북도 `upgrade` 후 리허설 |
-| MuJoCo, anthropic | `install_unbolt.sh`의 pip 버전 (`mujoco==3.12.0`, `anthropic==2.3.0`) |
-| OpenArm 모델 | `install_unbolt.sh`의 `OPENARM_*_COMMIT` |
+| MuJoCo, anthropic | `install_airlab.sh`의 pip 버전 (`mujoco==3.12.0`, `anthropic==2.3.0`) |
+| OpenArm 모델 | `install_airlab.sh`의 `OPENARM_*_COMMIT` |
 | Claude 모델 | `task_planner_core.py`의 `MODEL = 'claude-opus-5-5'` |
 
 ## 3. 참가자 공지 문안
 
-> **[UNBOLT 강습회] 사전 설치 안내 (D-10까지 꼭 완료해 주세요)**
+> **[AIRLAB 강습회] 사전 설치 안내 (D-10까지 꼭 완료해 주세요)**
 >
 > 안녕하세요. ○월 ○일~○일 강습회 "ROS 2 + MuJoCo로 만드는 주행형 양팔로봇"에 신청해 주셔서 감사합니다.
 > 실습은 각자의 **Windows 노트북**에서 진행합니다. 당일 강의실 인터넷으로는 설치가 몇 시간 걸릴 수 있어
@@ -113,7 +113,7 @@ B의 키 배포: 종이 쪽지나 개별 DM. 단체 채팅방에 올리지 마�
 ### 강사 시연 팁
 
 - 시연 전에 대시보드의 **초기화** 버튼(두 번 눌러 확인)으로 로봇·상자·위치 추정을 처음 상태로
-- 시연용으로 `ros2 run unbolt_dashboard dashboard_launcher`를 켜 두면 브라우저만으로 **연결**(시스템 시작)과
+- 시연용으로 `ros2 run airlab_dashboard dashboard_launcher`를 켜 두면 브라우저만으로 **연결**(시스템 시작)과
   **시스템 종료**를 할 수 있어 터미널을 화면에 띄울 필요가 없습니다
 - 모듈 2 실습 8(자동 탐색)은 시간이 모자라면 런처의 **지도 만들기** 모드로 시연만 해도 됩니다 (약 7분).
   지도가 자라고 하늘색 프론티어가 줄어드는 모습을 보여 준 뒤, 끝나면 키보드로 몰아 보이고, 저장한 지도로 **작업** 모드를 켜서
@@ -121,7 +121,7 @@ B의 키 배포: 종이 쪽지나 개별 DM. 단체 채팅방에 올리지 마�
 - 최종 미션은 약 80초. 그동안 대시보드의 타임라인을 짚으며 "지금 Claude가 무엇을 골랐는지" 설명
 - 실패도 좋은 교재입니다: 실패 메시지를 Claude가 읽고 다음 계획을 바꾸는 장면을 보여 주기
 - 심화 모듈 5(VLA, 선택)는 녹화 약 40분 + 학습 약 65분이 걸립니다 (8코어 기준, 학습 중에 ROS를 같이 돌리면 더 걸림). 강의 전에 강사 노트북에서
-  `record` → `train`을 끝내 `~/unbolt_vla/policy.pt`를 만들어 두고, 학생들은 녹화·학습을 걸어 둔 채 개념을 듣게 하면
+  `record` → `train`을 끝내 `~/airlab_vla/policy.pt`를 만들어 두고, 학생들은 녹화·학습을 걸어 둔 채 개념을 듣게 하면
   시간이 맞습니다. 학습이 끝나지 않은 학생에게는 강사의 `policy.pt`(약 2.5 MB)를 나눠 주면 실습 4~5를 바로 할 수 있습니다
 
 ## 6. 비상 대응
@@ -130,22 +130,22 @@ B의 키 배포: 종이 쪽지나 개별 DM. 단체 채팅방에 올리지 마�
 
 **오프라인 설치본**: 설치가 끝난 Ubuntu를 통째로 내보내 USB로 나눠 줄 수 있습니다.
 
-강사 PC에서 (미리, 깨끗한 배포판으로 `install_unbolt.sh`를 끝낸 상태에서):
+강사 PC에서 (미리, 깨끗한 배포판으로 `install_airlab.sh`를 끝낸 상태에서):
 
 ```powershell
 PS> wsl --shutdown
-PS> wsl --export Ubuntu-22.04 D:\unbolt-wsl.tar        # 약 10 GB
+PS> wsl --export Ubuntu-22.04 D:\airlab-wsl.tar        # 약 10 GB
 ```
 
 학생 PC에서 (WSL 자체는 설치되어 있어야 함 — `wsl --install --no-distribution` 후 재부팅):
 
 ```powershell
-PS> wsl --import Ubuntu-22.04 C:\WSL\Ubuntu-22.04 E:\unbolt-wsl.tar
+PS> wsl --import Ubuntu-22.04 C:\WSL\Ubuntu-22.04 E:\airlab-wsl.tar
 PS> wsl -d Ubuntu-22.04 -u root -- bash -c "printf '[user]\ndefault=student\n' >> /etc/wsl.conf"
 PS> wsl --terminate Ubuntu-22.04
 ```
 
-(`student`는 강사 PC에서 만든 리눅스 사용자 이름. 내보낸 파일에 강사의 API 키(`~/.unbolt_key`)가 들어가지 않게
+(`student`는 강사 PC에서 만든 리눅스 사용자 이름. 내보낸 파일에 강사의 API 키(`~/.airlab_key`)가 들어가지 않게
 **내보내기 전에 삭제**하세요.)
 
 ### 그 밖에

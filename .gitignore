@@ -3,7 +3,7 @@ ros2_ws/build/
 ros2_ws/install/
 ros2_ws/log/
 
-# fetched by workshop/setup/install_unbolt.sh at pinned commits
+# fetched by workshop/setup/install_airlab.sh at pinned commits
 third_party/
 
 __pycache__/

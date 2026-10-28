@@ -3,7 +3,7 @@ const path = require('path');
 const L = require('./lib');
 
 const SECTIONS = ['./s0_intro', './s0b_install', './s1_bridge', './s2_nav', './s3_manip', './s4_llm', './s4b_vla', './s5_end'];
-const OUT = process.argv[2] || path.join(__dirname, '..', 'UNBOLT_workshop.pptx');
+const OUT = process.argv[2] || path.join(__dirname, '..', 'AIRLAB_workshop.pptx');
 
 (async () => {
   await L.loadAssets();

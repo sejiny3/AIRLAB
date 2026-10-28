@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-UNBOLT world: a 10 m x 8.5 m room with a partition wall and obstacles for LiDAR/SLAM,
+AIRLAB world: a 10 m x 8.5 m room with a partition wall and obstacles for LiDAR/SLAM,
 three supply tables that each start with one coloured box (red, green, blue), a work
-table with three place spots, and the UNBOLT robot at the origin.
+table with three place spots, and the AIRLAB robot at the origin.
 All static world geoms are in group 0, so the bridge's LiDAR (which only sees
 groups 0-1) ignores the robot's own body (groups 2-3).
 
@@ -15,7 +15,7 @@ Every place spot is a 10 cm pad with its own ArUco marker (DICT_4X4_50):
 The front legs sit well back from the working edge: the robot's chassis passes under the
 table top by a few centimetres when it lines up with a spot near either end.
 -->
-<mujoco model="unbolt_scene">
+<mujoco model="airlab_scene">
   <compiler angle="radian"/>
   <option timestep="0.001" integrator="implicitfast" cone="elliptic" impratio="10"/>
   <statistic center="1.5 0 0.6" extent="3.0" meansize="0.05"/>
@@ -75,7 +75,7 @@ table top by a few centimetres when it lines up with a spot near either end.
     <material name="aruco_22" texture="aruco_22"/>
     <material name="aruco_31" texture="aruco_31"/>
     <material name="aruco_32" texture="aruco_32"/>
-    <model name="unbolt_robot" file="unbolt_robot.xml"/>
+    <model name="airlab_robot" file="airlab_robot.xml"/>
   </asset>
 
   <worldbody>
@@ -84,7 +84,7 @@ table top by a few centimetres when it lines up with a spot near either end.
     <camera name="overview" pos="7.5 -6.5 5.5" xyaxes="0.735 0.678 0 -0.358 0.388 0.849" fovy="60"/>
     <camera name="top" pos="1.5 0 11.0" xyaxes="1 0 0 0 1 0" fovy="45"/>
 
-    <attach model="unbolt_robot" prefix=""/>
+    <attach model="airlab_robot" prefix=""/>
 
     <!-- room: x in [-3.5, 6.5], y in [-4.25, 4.25], walls 1 m high -->
     <body name="room">

@@ -3,7 +3,7 @@ const L = require('./lib');
 const { C, HEX, MONO, text, box, circleIcon, pill, card, callout, code, bullets, arrow, img, table, step, flow, lab, quiz, summary, content } = L;
 const TAG = '심화 · VLA';
 
-// closed-loop evaluation on 100 unseen setups, all four tables (ros2 run unbolt_vla evaluate --episodes 100)
+// closed-loop evaluation on 100 unseen setups, all four tables (ros2 run airlab_vla evaluate --episodes 100)
 const EVAL = { policy: '100%', expert: '100%', note: '이 저장소의 정책(시연 1,155개, 20000단계)은 네 테이블 모두 100%, 옆에 다른 색 상자가 있던 43번도 모두 맞는 상자를 집었습니다.' };
 
 module.exports = function build() {
@@ -85,7 +85,7 @@ module.exports = function build() {
   code(s, '이미지 ─ 합성곱 4층 ─ 공간 소프트맥스 ─▶ 키포인트 64개 (x, y) = 128\n  (머리 72×128, 손목 96×96 각각)\n\n명령 ── 단어 해시 (512칸) ── 단어 벡터 평균 ─▶ 32\n\n관절각 8 ── 정규화 ─────────────────────────▶ 8\n\n이어 붙이기 (296) ─ MLP 512 ─ MLP 512 ─▶ 10단계 × 8 관절 목표\n                                        + "끝" 확률 1', 0.6, 1.5, 12.1, 3.0, 14);
   table(s, [['선택', '이유'], ['공간 소프트맥스', '집기에 필요한 것은 "어디에"다. 위치를 직접 숫자로 뽑는다'], ['카메라 두 대', '멀리서는 머리 카메라, 마지막 몇 cm는 손목 카메라'], ['영상 흔들기 · 밝기 바꾸기', '렌더링이 조금 달라도(ROS 영상 축소 방식 등) 버티게'], ['단어 해시', 'LLM이 보낸 어떤 문장도 들어갈 수 있다 (실험해 보니 지금 정책은 색 낱말보다 정렬 위치를 본다 → "언어 확인 실험")']], 0.6, 4.7, 12.1, [3.4, 8.7], 13);
 
-  s = content('층별 모양과 매개변수 (PyTorch)', TAG, 'nn.Sequential로 쌓은 인코더 두 개(머리, 손목은 가중치를 따로 가짐), 단어 임베딩 표, MLP입니다. 매개변수 대부분(76%)은 MLP에 있습니다. 직접 확인: python3 -c "from unbolt_vla.model import PickPolicy; print(PickPolicy())"');
+  s = content('층별 모양과 매개변수 (PyTorch)', TAG, 'nn.Sequential로 쌓은 인코더 두 개(머리, 손목은 가중치를 따로 가짐), 단어 임베딩 표, MLP입니다. 매개변수 대부분(76%)은 MLP에 있습니다. 직접 확인: python3 -c "from airlab_vla.model import PickPolicy; print(PickPolicy())"');
   table(s, [['층', '머리 카메라', '손목 카메라'], ['입력 (0~1 → −0.5~0.5)', '3 × 72 × 128', '3 × 96 × 96'], ['Conv 5×5 보폭 2, 32 + GroupNorm + ReLU', '32 × 36 × 64', '32 × 48 × 48'], ['Conv 3×3 보폭 2, 64 + GN + ReLU', '64 × 18 × 32', '64 × 24 × 24'], ['Conv 3×3 보폭 1, 64 + GN + ReLU', '64 × 18 × 32', '64 × 24 × 24'], ['Conv 1×1, 64 (키포인트 지도)', '64 × 18 × 32', '64 × 24 × 24'], ['공간 소프트맥스', '128', '128']], 0.6, 1.5, 7.6, [3.6, 2.0, 2.0], 13);
   table(s, [['부분', '매개변수'], ['머리 인코더', '62,336'], ['손목 인코더', '62,336'], ['단어 표 512 × 32', '16,384'], ['MLP 296 → 512 → 512 → 81', '456,273'], ['합계', '597,329']], 8.5, 1.5, 4.2, [2.6, 1.6], 13);
   code(s, 'def forward(self, head, wrist, words, offsets, state):\n    z = torch.cat([self.head_enc(head - 0.5), self.wrist_enc(wrist - 0.5),\n                   self.words(words, offsets),\n                   (state - self.mean) / self.std], dim=1)   # (n, 296)\n    out = self.trunk(z)                                      # (n, 81)\n    return out[:, :-1].view(-1, 10, 8), out[:, -1]           # 묶음, "끝" 로짓', 0.6, 4.7, 12.1, 2.0, 13);
@@ -131,7 +131,7 @@ module.exports = function build() {
 
   s = content('따라 하기: 시연 녹화와 학습', TAG, '녹화는 MuJoCo만 쓰고 ROS는 필요 없습니다. 8코어 노트북에서 녹화 약 40분, 학습 약 65분입니다(학습 중에 ROS를 같이 돌리면 더 걸림). 학습을 걸어 두고 앞의 개념 슬라이드와 model.py를 읽으면 시간이 맞습니다. 검증 오차가 가장 낮을 때마다 policy.pt를 덮어씁니다.');
   lab(s, {
-    cmd: '# 시연 1200개, 테이블 넷 × 상자 셋 (약 40분, ~/unbolt_vla/demos)\n$ ros2 run unbolt_vla record --episodes 1200\n1155/1200 episodes kept in ~/unbolt_vla/demos\n\n# 학습 (약 65분, ~/unbolt_vla/policy.pt)\n$ ros2 run unbolt_vla train\n1040 training episodes (80080 steps), 115 validation\nstep    500  train 0.1300  val 0.1263  done 0.094\n...\nstep  20000  train 0.0365  val 0.0385  done 0.045',
+    cmd: '# 시연 1200개, 테이블 넷 × 상자 셋 (약 40분, ~/airlab_vla/demos)\n$ ros2 run airlab_vla record --episodes 1200\n1155/1200 episodes kept in ~/airlab_vla/demos\n\n# 학습 (약 65분, ~/airlab_vla/policy.pt)\n$ ros2 run airlab_vla train\n1040 training episodes (80080 steps), 115 validation\nstep    500  train 0.1300  val 0.1263  done 0.094\n...\nstep  20000  train 0.0365  val 0.0385  done 0.045',
     cmdH: 3.9, cmdSize: 13,
     explain: ['val = 학습에 안 쓴 시연 115개에서의 오차 (작을수록 좋음)', 'done = "다 집었다" 판단의 오차'],
     ok: 'val이 처음보다 크게 줄고 policy.pt가 생긴다.\n\n✅ 체크포인트 5-2',
@@ -145,12 +145,12 @@ module.exports = function build() {
     text(s, v, { x, y: 1.6, w: 3.0, h: 1.3, fontSize: 48, bold: true, color: f, align: 'center', valign: 'middle' });
     text(s, k, { x, y: 2.95, w: 3.0, h: 0.8, fontSize: 15, color: C.text2, align: 'center', valign: 'middle' });
   });
-  code(s, '$ ros2 run unbolt_vla evaluate --episodes 100\nsupply_1  15/15   supply_2  33/33   supply_3  23/23\nwork_table 29/29  옆 상자 있음 43/43  없음 57/57', 0.6, 4.1, 6.2, 1.2, 13);
+  code(s, '$ ros2 run airlab_vla evaluate --episodes 100\nsupply_1  15/15   supply_2  33/33   supply_3  23/23\nwork_table 29/29  옆 상자 있음 43/43  없음 57/57', 0.6, 4.1, 6.2, 1.2, 13);
   callout(s, 'tip', 0.6, 5.5, 6.2, 1.2, '--video ~/vla.gif: 처음 3편을 GIF로. --table supply_1 등: 한 테이블만.', '영상으로 확인');
   callout(s, 'why', 7.1, 1.5, 5.6, 5.2, '100%가 나와도 끝이 아니다.\n\n• 정책이 무엇을 보고 맞혔나? 색 낱말인가, 다른 단서인가 (다음 장)\n• 평가 배치는 학습과 같은 범위에서 뽑았다. 정렬이 더 틀어지면? (도전 과제)\n• 시뮬레이터 렌더링만 봤다. 실제 카메라, 조명, 다른 상자는?\n• 데이터가 한쪽에만 있으면? (그다음 장)');
 
   s = content('언어 확인 실험: 정책은 지름길을 배웠다', TAG, '100/100은 틀린 숫자가 아니지만 "색 낱말을 읽고 골랐다"는 증거는 아닙니다. evaluate --ask-other는 두 상자가 있는 배치에서 로봇을 한 상자에 정렬하고, 명령으로는 옆 상자의 색을 말합니다. 정책은 20번 모두 정렬한 상자를 집었습니다. 시연에서는 늘 "오른손 앞에 정렬된 상자 = 집으라는 상자"였기 때문에, 더 쉬운 단서(정렬 위치)를 배운 것입니다. 이것을 shortcut learning이라고 합니다. 실제 작업에서는 작업 관리자가 집을 상자의 마커로 정렬하므로 이 지름길로도 맞게 동작합니다.');
-  code(s, '$ ros2 run unbolt_vla evaluate --ask-other --episodes 20\nepisode   0  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box\nepisode   1  supply_2   lined up with green, asked for blue  -> lifted the lined-up box\n...\nnamed box: 0/20, lined-up box: 20/20, nothing: 0/20', 0.6, 1.5, 12.1, 1.8, 13);
+  code(s, '$ ros2 run airlab_vla evaluate --ask-other --episodes 20\nepisode   0  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box\nepisode   1  supply_2   lined up with green, asked for blue  -> lifted the lined-up box\n...\nnamed box: 0/20, lined-up box: 20/20, nothing: 0/20', 0.6, 1.5, 12.1, 1.8, 13);
   card(s, { x: 0.6, y: 3.55, w: 5.95, h: 3.15, head: '왜 이렇게 배웠나', iconName: 'FaRoute', accent: C.accent6, bodySize: 14,
     body: '모든 시연에서 집을 상자는 오른손 앞 (0.38, −0.15) m 근처에 있었다.\n"오른손 앞의 상자"만 보면 정답 행동을 낼 수 있으니, 신경망은 색 낱말을 쓸 이유가 없었다.\n데이터가 허락하는 가장 쉬운 규칙을 배운다.' });
   card(s, { x: 6.75, y: 3.55, w: 5.95, h: 3.15, head: '언어가 꼭 필요하게 하려면 (과제 3)', iconName: 'FaComments', accent: C.accent3, bodySize: 14,
@@ -166,7 +166,7 @@ module.exports = function build() {
   s = content('ROS에 끼우기: vla_pick 노드', TAG, 'pick:=vla로 켜면 브리지가 손목 카메라를 켜고 머리 카메라를 10 Hz로 올립니다(정책은 매 단계 새 영상으로 학습). 작업 관리자는 정렬까지 한 뒤 /vla/pick에 명령 문장을 보내고 /vla/result를 기다립니다. 성공하면 MoveIt으로 팔을 접는 것부터는 기존과 같습니다.');
   flow(s, [['pick_object\n(작업 관리자)', C.accent3, C.background1], ['정렬\nservo_to_marker', C.background2, C.text1], ['/vla/pick\n"pick up the red box"', C.accent4, C.background1], ['vla_pick 노드\n10 Hz', C.accent1, C.background1], ['/vla/result\n{ok, steps}', C.accent2, C.background1]], 0.6, 1.5, 12.1, 1.2, 0.35, 14);
   table(s, [['방향', '토픽', '내용'], ['sub', '/camera/image_raw → 128×72', '머리 카메라 (INTER_AREA로 줄임)'], ['sub', '/wrist_camera/image_raw', '손목 카메라 96×96 (브리지 wrist_camera_rate)'], ['sub', '/joint_states', '오른팔 7 + 손가락'], ['pub', '/joint_commands', '0.1초마다 관절 목표 (브리지가 actuator 목표로)'], ['pub', '/vla/status', '단계, "끝" 확률 (대시보드 카드)']], 0.6, 3.0, 7.6, [0.9, 3.3, 3.4], 13);
-  code(s, '# 터미널에서\n$ ros2 launch unbolt_manipulation \\\n    bringup.launch.py planner:=true \\\n    dashboard:=true pick:=vla\n\n# 대시보드 런처: 모드\n# "VLA 집기" → 연결', 8.5, 3.0, 4.2, 3.7, 13);
+  code(s, '# 터미널에서\n$ ros2 launch airlab_manipulation \\\n    bringup.launch.py planner:=true \\\n    dashboard:=true pick:=vla\n\n# 대시보드 런처: 모드\n# "VLA 집기" → 연결', 8.5, 3.0, 4.2, 3.7, 13);
 
   s = content('대시보드: VLA 집기 모드', TAG, '1번 공급 테이블에서 정책이 빨간 상자를 집은 직후입니다. 아래 카드에 손목 카메라(정책이 보는 96×96), 단계 수, "다 집었다" 확률, 마지막 결과가 나옵니다. vla_pick은 정책의 "다 집었다"를 그대로 믿지 않고, 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고합니다. 처음에는 손가락 각도만 봐서, 벌린 손도 성공으로 잘못 보고된 적이 있습니다.');
   img(s, 'dashboard_vla.jpg', 0.6, 1.4, 6.2, 5.45, '대시보드 VLA 집기 모드: 헤드 카메라에 상자를 쥔 손, 아래 VLA 카드에 손목 카메라와 성공 91단계');

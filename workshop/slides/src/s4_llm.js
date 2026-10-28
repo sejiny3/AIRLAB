@@ -54,7 +54,7 @@ module.exports = function build() {
   callout(s, 'why', 0.6, 5.55, 12.1, 1.15, '좌표 같은 숫자 대신 이름만 받는다. Claude가 "x=3.7" 같은 엉뚱한 숫자를 만들 수 없고, 이름 → 좌표 변환은 우리가 검증한 표(LOCATIONS)에서 한다.');
 
   s = content('시스템 프롬프트: Claude에게 주는 업무 지침', TAG, 'SYSTEM_PROMPT 발췌입니다(실제는 영어). 로봇의 규칙, 실패했을 때 행동, 모르는 요청 처리, 한국어 별칭, 답하는 방식을 적습니다. 실습 6에서 여기에 규칙을 하나 추가합니다.');
-  code(s, 'You are the task planner of UNBOLT, a mobile robot\nwith two arms ... call the tools, one at a time ...\n\n- It can only pick an object or place it while standing\n  at the table where that happens.\n- If a tool fails, read its message. Retry once when it\n  could work again; otherwise stop and explain.\n- If the command asks for something the robot cannot do,\n  do not improvise: say what is possible instead.\n\n"작업대" means work_table; "1번/2번/3번 공급 테이블"\nmean supply_1/2/3; "원래 자리" of a box is its start spot.', 0.6, 1.5, 7.0, 5.2, 13);
+  code(s, 'You are the task planner of AIRLAB, a mobile robot\nwith two arms ... call the tools, one at a time ...\n\n- It can only pick an object or place it while standing\n  at the table where that happens.\n- If a tool fails, read its message. Retry once when it\n  could work again; otherwise stop and explain.\n- If the command asks for something the robot cannot do,\n  do not improvise: say what is possible instead.\n\n"작업대" means work_table; "1번/2번/3번 공급 테이블"\nmean supply_1/2/3; "원래 자리" of a box is its start spot.', 0.6, 1.5, 7.0, 5.2, 13);
   [['로봇의 규칙', '테이블 앞에 서 있어야 집고 놓을 수 있다'], ['실패하면', '메시지를 읽고 한 번 재시도, 아니면 멈추고 설명'], ['모르는 요청', '지어내지 말고 가능한 일을 안내'], ['한국어 별칭', '"작업대", "원래 자리"가 무엇인지'], ['답하는 방식', '사용자 언어로 한두 문장']].forEach(([h, b], i) => {
     const y = 1.5 + i * 1.05;
     box(s, 7.9, y, 4.8, 0.9, C.background2);
@@ -103,7 +103,7 @@ module.exports = function build() {
 
   s = content('실습 1. 대역(scripted)으로 파이프라인 확인', TAG, 'ScriptedLLM은 명령의 키워드로 정해진 도구 순서를 재생하는 시험용 대역입니다(계획은 하지 않음). API 비용 없이 로봇 쪽 전체가 동작하는지 먼저 확인합니다. 체크포인트 4-1.');
   lab(s, {
-    cmd: '# 터미널 1\n$ ros2 launch unbolt_manipulation bringup.launch.py \\\n    planner:=true llm:=scripted\n\n# 터미널 2\n$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n>> 빨간 상자를 작업대로 옮겨줘\n  -> get_world_state({})\n  -> navigate_to({"location": "supply_1"})\n     OK (13 s) arrived at supply_1\n  -> pick_object({"object": "red_box"})\n     OK (24 s) picked red_box from the right spot of supply_1 ...\n  ...\n== done in 80 s: 빨간 상자를 작업대로 옮겼습니다. (scripted)',
+    cmd: '# 터미널 1\n$ ros2 launch airlab_manipulation bringup.launch.py \\\n    planner:=true llm:=scripted\n\n# 터미널 2\n$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n>> 빨간 상자를 작업대로 옮겨줘\n  -> get_world_state({})\n  -> navigate_to({"location": "supply_1"})\n     OK (13 s) arrived at supply_1\n  -> pick_object({"object": "red_box"})\n     OK (24 s) picked red_box from the right spot of supply_1 ...\n  ...\n== done in 80 s: 빨간 상자를 작업대로 옮겼습니다. (scripted)',
     cmdH: 5.2, cmdSize: 12,
     ok: '"done in … s" 로 끝나고 MuJoCo에서 상자가 작업대 위에 있다.\n\n✅ 체크포인트 4-1',
     fail: 'ask가 기다리기만 하면 planner:=true를 빠뜨렸다. ros2 node list에 /task_planner가 있는지',
@@ -115,7 +115,7 @@ module.exports = function build() {
   callout(s, 'why', 8.9, 5.0, 3.8, 1.7, 'JSON으로 내면 터미널, 대시보드, 로그 저장 등 누구든 같은 정보를 쓸 수 있다.');
 
   s = content('실습 2. 실제 Claude로 계획', TAG, '같은 명령도 실행할 때마다 계획이 조금 다를 수 있습니다(예: get_world_state를 먼저 부르는지). 결과가 같으면 정상입니다. 체크포인트 4-2: 모르는 물건(노란 공)은 도구를 부르지 않고 안내만.');
-  code(s, '$ ros2 launch unbolt_manipulation bringup.launch.py planner:=true\n\n$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n$ ros2 run unbolt_manipulation ask "노란 공 좀 가져다 줄래?"\n$ ros2 run unbolt_manipulation ask "이제 빨간 상자를 원래 자리에 다시 갖다 놔"\n$ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 돌아와"', 0.6, 1.5, 12.1, 2.3, 13);
+  code(s, '$ ros2 launch airlab_manipulation bringup.launch.py planner:=true\n\n$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n$ ros2 run airlab_manipulation ask "노란 공 좀 가져다 줄래?"\n$ ros2 run airlab_manipulation ask "이제 빨간 상자를 원래 자리에 다시 갖다 놔"\n$ ros2 run airlab_manipulation ask "작업대 앞에 갔다가 처음 위치로 돌아와"', 0.6, 1.5, 12.1, 2.3, 13);
   table(s, [['명령', 'Claude가 고른 도구 순서', '결과', '토큰 / 비용'], ['빨간 상자를 작업대로', '', '', ''], ['노란 공', '', '', ''], ['원래 자리에', '', '', ''], ['작업대 갔다가 돌아와', '', '', '']], 0.6, 4.05, 8.6, [2.6, 3.0, 1.4, 1.6], 14);
   callout(s, 'ok', 9.5, 4.05, 3.2, 2.65, '노란 공은 도구 없이 "할 수 없어요 + 가능한 일" 안내 ✅ 4-2');
 
@@ -133,7 +133,7 @@ module.exports = function build() {
 
   s = content('실습 4. 실패 복구와 취소', TAG, '월드 검증 → 계획 수정 흐름과 취소를 직접 경험합니다. 취소 뒤에 같은 명령을 다시 보내면 Claude가 get_world_state로 현재 상태(위치를 모름 / 이미 공급 테이블 앞 등)를 확인하고 이어서 계획하는지 보세요. 체크포인트 4-3.');
   lab(s, {
-    cmd: '# 1) 들고 있지 않은데 놓으라고 하기\n$ ros2 run unbolt_manipulation ask "작업대에 들고 있는 걸 내려놔"\n\n# 2) 긴 명령을 보내고, 주행이 시작되면 다른 터미널에서 취소\n$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n$ ros2 topic pub --once /task_cancel std_msgs/msg/Empty\n\n# 3) 같은 명령을 다시\n$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"',
+    cmd: '# 1) 들고 있지 않은데 놓으라고 하기\n$ ros2 run airlab_manipulation ask "작업대에 들고 있는 걸 내려놔"\n\n# 2) 긴 명령을 보내고, 주행이 시작되면 다른 터미널에서 취소\n$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"\n$ ros2 topic pub --once /task_cancel std_msgs/msg/Empty\n\n# 3) 같은 명령을 다시\n$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"',
     cmdH: 3.8, cmdSize: 12,
     explain: ['1) Claude가 "not holding anything" 오류를 읽고 어떻게 답하나?', '2) 로봇이 바로 멈추고 "작업을 취소했습니다"'],
     ok: '취소 후 다시 보낸 명령이 성공한다.\n\n✅ 체크포인트 4-3',
@@ -147,7 +147,7 @@ module.exports = function build() {
 
   s = content('실습 4-B. 조건과 순서가 있는 명령', TAG, '조건은 LLM이 판단합니다. 시스템 프롬프트의 규칙: 순서는 사람이 말한 대로, 조건은 행동 전에 상태를 보고 판단(평소에는 기억 get_world_state, "가서 봐/확인해"라고 하거나 실패 직후처럼 기억이 틀렸을 수 있으면 check_table), 조건이 거짓이면 그 부분을 건너뛰고 답에서 알린다. 체크포인트 4-3B. 명령 하나에 2~4분 걸리는 것도 있으니 차례로 보내세요.');
   lab(s, {
-    cmd: '$ ros2 run unbolt_manipulation ask \\\n  "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"\n$ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 없으면 가져다 놔"\n$ ros2 run unbolt_manipulation ask "작업대에 뭐가 있는지 가서 확인해 줘"\n$ ros2 run unbolt_manipulation ask \\\n  "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"\n$ ros2 run unbolt_manipulation ask \\\n  "상자를 모두 원래 자리에 돌려놓고 원위치로 와"',
+    cmd: '$ ros2 run airlab_manipulation ask \\\n  "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"\n$ ros2 run airlab_manipulation ask "작업대에 빨간 상자가 없으면 가져다 놔"\n$ ros2 run airlab_manipulation ask "작업대에 뭐가 있는지 가서 확인해 줘"\n$ ros2 run airlab_manipulation ask \\\n  "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"\n$ ros2 run airlab_manipulation ask \\\n  "상자를 모두 원래 자리에 돌려놓고 원위치로 와"',
     cmdH: 3.8, cmdSize: 12,
     explain: ['조건을 무엇으로 판단했나? 기억(get_world_state)인가, 카메라(check_table)인가', '조건이 거짓인 쪽은 건너뛰고 답에서 알리는가'],
     ok: '조건에 맞는 쪽만 실행하고, 판단 근거를 답에 밝힌다.\n\n✅ 체크포인트 4-3B',
@@ -172,7 +172,7 @@ module.exports = function build() {
 
   s = content('브라우저에서 켜고 끄기: 연결 버튼', TAG, '런처(dashboard_launcher)를 한 번 켜 두면 ROS가 꺼져 있어도 페이지가 뜨고, "연결"로 bringup 전체를 켭니다. 런처는 페이지를 보여 주고 bringup을 대신 실행해 주는 작은 프로그램입니다. 끌 때는 시스템 종료, 다시 켤 때는 다시 연결. 강사 시연 때 터미널을 띄울 필요가 없어 편합니다. 강사 노트북 기준으로 연결 후 13초에 rosbridge 연결, 25초에 플래너 준비가 끝났습니다.');
   img(s, 'dashboard_off.png', 0.6, 1.5, 6.9, 4.3, 'ROS가 꺼져 있을 때의 대시보드: 연결 버튼과 시작 옵션');
-  code(s, '# 한 번만 켜 두기 (터미널 하나)\n$ ros2 run unbolt_dashboard dashboard_launcher', 0.6, 6.0, 6.9, 0.75, 13);
+  code(s, '# 한 번만 켜 두기 (터미널 하나)\n$ ros2 run airlab_dashboard dashboard_launcher', 0.6, 6.0, 6.9, 0.75, 13);
   step(s, 1, 'http://localhost:8080 열기', '"ROS가 꺼져 있습니다" 화면이 뜬다', 7.8, 1.6, 4.9, 0.6);
   step(s, 2, '모드·옵션 고르고 연결', '작업(지도·LLM), VLA 집기(모듈 5) 또는 지도 만들기, MuJoCo 창, RViz', 7.8, 2.7, 4.9, 0.6);
   step(s, 3, '25~60초 기다리기', '켜지는 동안 진행 상황과 로그가 보인다. 중간에 시작 취소 가능', 7.8, 3.8, 4.9, 0.8);
@@ -180,7 +180,7 @@ module.exports = function build() {
 
   s = content('실습 5. 웹 대시보드로 명령하기', TAG, 'WSL이 localhost를 Windows로 연결해 주므로 Windows의 Chrome/Edge에서 바로 열립니다. F12 → Network → WS에서 오가는 JSON을 직접 보게 하세요. 체크포인트 4-4.');
   lab(s, {
-    cmd: '$ ros2 launch unbolt_manipulation bringup.launch.py \\\n    planner:=true dashboard:=true\n\n# Windows 브라우저 (Chrome / Edge)\nhttp://localhost:8080\n\n# 대시보드에서\n#  1) "빨간 상자를 작업대로 옮겨줘" 버튼\n#  2) 작업 진행이 단계별로 쌓이는 것 보기\n#  3) 초기화 → 다시',
+    cmd: '$ ros2 launch airlab_manipulation bringup.launch.py \\\n    planner:=true dashboard:=true\n\n# Windows 브라우저 (Chrome / Edge)\nhttp://localhost:8080\n\n# 대시보드에서\n#  1) "빨간 상자를 작업대로 옮겨줘" 버튼\n#  2) 작업 진행이 단계별로 쌓이는 것 보기\n#  3) 초기화 → 다시',
     cmdH: 3.6,
     explain: ['F12 → Network → WS: 브라우저와 rosbridge가 주고받는 JSON', '휴대폰은 같은 와이파이에서 http://<노트북 IP>:8080 (안 될 수도 있음)'],
     ok: '상단 "ROS 연결됨", 명령을 보내면 작업 진행이 단계별로 표시된다.\n\n✅ 체크포인트 4-4',

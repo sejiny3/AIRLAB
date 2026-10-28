@@ -26,7 +26,7 @@
 $ python3 -c "import torch; print(torch.__version__)" || pip install --user torch --index-url https://download.pytorch.org/whl/cpu
 ```
 
-- 디스크 약 150 MB (`~/unbolt_vla/`에 시연과 정책이 저장됨)
+- 디스크 약 150 MB (`~/airlab_vla/`에 시연과 정책이 저장됨)
 
 ---
 
@@ -145,7 +145,7 @@ RT-2, OpenVLA, π0 같은 큰 VLA는 수십억 개의 매개변수와 GPU가 필
 
 ```
  ┌───────────── ROS 없이 (MuJoCo + NumPy + PyTorch) ─────────────┐        ┌──────── ROS 2 ────────┐
- sim.py + expert.py ──record.py──▶ ~/unbolt_vla/demos/*.npz ──train.py──▶ policy.pt ──▶ vla_pick_node.py
+ sim.py + expert.py ──record.py──▶ ~/airlab_vla/demos/*.npz ──train.py──▶ policy.pt ──▶ vla_pick_node.py
  (장면 + 전문가)      (40분, 1155개)  (시연 1개 = 77단계)        (65분)    (2.4 MB)      (10 Hz, /joint_commands)
                                                                       └──evaluate.py (sim에서 성공률)
 ```
@@ -277,7 +277,7 @@ def forward(self, head, wrist, words, offsets, state):
 | 최적화 | `AdamW`, 학습률 1e-3, weight decay 1e-4, `OneCycleLR` (처음 5% 동안 올렸다가 끝까지 천천히 내림) |
 | 배치, 단계 | 64, 20,000단계 (= 약 16 에포크), CPU 8스레드, 한 단계 약 0.19초 → 약 65분 (다른 일을 같이 하면 더 걸림) |
 | 데이터 증강 | 영상: 상하좌우 ±4픽셀 무작위 이동(가장자리 복제), 밝기·대비 ±10%. 관절각: N(0, 0.01 rad) 잡음 |
-| 저장 | 500단계마다 검증, 검증 L1이 가장 낮으면 `~/unbolt_vla/policy.pt` (`state_dict` + 정규화 통계 + 단계 + 검증 L1, 2.4 MB) |
+| 저장 | 500단계마다 검증, 검증 L1이 가장 낮으면 `~/airlab_vla/policy.pt` (`state_dict` + 정규화 통계 + 단계 + 검증 L1, 2.4 MB) |
 
 ```python
 # train.py의 학습 한 단계
@@ -344,13 +344,13 @@ k단계 전에 만든 묶음의 k번째 값 = 지금에 대한 그때의 예측 
 ### 직접 확인해 보기
 
 ```bash
-$ cd ~/unbolt/ros2_ws/src/unbolt_vla
+$ cd ~/airlab/ros2_ws/src/airlab_vla
 $ python3 -c "
-from unbolt_vla.model import PickPolicy
+from airlab_vla.model import PickPolicy
 p = PickPolicy(); print(p)
 print(sum(x.numel() for x in p.parameters()), 'parameters')"
 $ python3 -c "
-from unbolt_vla.model import tokenize
+from airlab_vla.model import tokenize
 print(tokenize('pick up the red box'), tokenize('grab the red box'))"   # 같은 단어는 같은 번호
 ```
 
@@ -371,8 +371,8 @@ print(tokenize('pick up the red box'), tokenize('grab the red box'))"   # 같은
 ROS 없이 MuJoCo만으로 돌아갑니다.
 
 ```bash
-$ cd ~/unbolt/ros2_ws/src/unbolt_vla
-$ python3 -m unbolt_vla.record --episodes 4 --workers 1 --out /tmp/vla_try
+$ cd ~/airlab/ros2_ws/src/airlab_vla
+$ python3 -m airlab_vla.record --episodes 4 --workers 1 --out /tmp/vla_try
 4/4 episodes kept in /tmp/vla_try (14 s)
 ```
 
@@ -402,8 +402,8 @@ table, color, distractor    supply_2, green, True (옆자리에 다른 색 상�
 ## 실습 2. 시연 1200개 녹화
 
 ```bash
-$ ros2 run unbolt_vla record --episodes 1200
-1155/1200 episodes kept in /home/<you>/unbolt_vla/demos (2356 s)
+$ ros2 run airlab_vla record --episodes 1200
+1155/1200 episodes kept in /home/<you>/airlab_vla/demos (2356 s)
 ```
 
 8코어 노트북에서 약 40분. 시연마다 테이블 넷 중 하나, 그 테이블의 자리 하나, 상자 색 하나를 고릅니다
@@ -418,20 +418,20 @@ $ ros2 run unbolt_vla record --episodes 1200
 ## 실습 3. 학습
 
 ```bash
-$ ros2 run unbolt_vla train
+$ ros2 run airlab_vla train
 1040 training episodes (80080 steps), 115 validation episodes
 step    500  train 0.1300  val 0.1263  done 0.094  365 s
 step   1000  train 0.1128  val 0.0982  done 0.079  522 s
 ...
 step  20000  train 0.0365  val 0.0385  done 0.045  5272 s
-best validation L1 0.0385, saved /home/<you>/unbolt_vla/policy.pt
+best validation L1 0.0385, saved /home/<you>/airlab_vla/policy.pt
 ```
 
 (강사 노트북에서는 학습하는 동안 ROS 시험을 같이 돌려서 88분 걸렸습니다. 학습만 하면 약 65분입니다.)
 
 - `val`: 학습에 쓰지 않은 시연 115개(네 테이블에서 고루)에서의 오차 (정규화한 관절 단위, 작을수록 좋음)
 - `done`: "다 집었다" 판단의 오차
-- 검증 오차가 가장 낮을 때마다 `~/unbolt_vla/policy.pt`에 저장
+- 검증 오차가 가장 낮을 때마다 `~/airlab_vla/policy.pt`에 저장
 
 기다리는 동안 `model.py`, `train.py`의 `shift()` · `jitter()`(영상 흔들기, 밝기 바꾸기)를 읽어 보세요.
 
@@ -442,7 +442,7 @@ best validation L1 0.0385, saved /home/<you>/unbolt_vla/policy.pt
 학습에 쓰지 않은 무작위 배치 100개(테이블 · 자리 · 색 · 옆 상자 모두 무작위)에서 정책과 전문가를 똑같이 시켜 봅니다:
 
 ```bash
-$ ros2 run unbolt_vla evaluate --episodes 100 --video ~/vla.gif
+$ ros2 run airlab_vla evaluate --episodes 100 --video ~/vla.gif
 episode   0  supply_1   blue  with 2nd box  policy lifted in  74 steps   expert lifted
 ...
 alone         policy 57/57 (100%)   expert 57/57 (100%)
@@ -460,7 +460,7 @@ policy 100/100 (100%)   expert 100/100 (100%)   978 s
 **언어 확인 실험.** 이제 일부러 단서를 어긋나게 합니다. 두 상자가 있는 배치에서 로봇은 한 상자에 정렬하고, 명령은 **옆 상자**의 색을 말합니다:
 
 ```bash
-$ ros2 run unbolt_vla evaluate --ask-other --episodes 20
+$ ros2 run airlab_vla evaluate --ask-other --episodes 20
 episode   0  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box
 ...
 named box: 0/20, lined-up box: 20/20, nothing: 0/20
@@ -486,13 +486,13 @@ named box: 0/20, lined-up box: 20/20, nothing: 0/20
 ## 실습 5. 대시보드 VLA 집기 모드
 
 ```bash
-$ ros2 run unbolt_dashboard dashboard_launcher
+$ ros2 run airlab_dashboard dashboard_launcher
 ```
 
 http://localhost:8080 → 모드 **VLA 집기 (작업 + 학습된 집기 정책)** → 연결. 터미널에서 직접 켜려면:
 
 ```bash
-$ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
+$ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
 ```
 
 `pick:=vla`가 하는 일:
@@ -554,13 +554,13 @@ $ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=tru
 
 | 파일 | 내용 |
 |---|---|
-| `unbolt_vla/sim.py` | 집기 전용 장면: 무작위 배치, 카메라 렌더링, 성공 판정 |
-| `unbolt_vla/expert.py` | 스크립트 전문가 (감쇠 최소제곱 IK, `pick()`과 같은 경유점) |
-| `unbolt_vla/record.py` | 시연 녹화 (병렬, DART 잡음) |
-| `unbolt_vla/model.py`, `train.py` | 정책 구조, 학습 |
-| `unbolt_vla/runner.py` | 묶음 예측의 시간 평균(temporal ensembling) |
-| `unbolt_vla/evaluate.py` | 닫힌 루프 평가, GIF |
-| `unbolt_vla/vla_pick_node.py` | ROS 노드 |
+| `airlab_vla/sim.py` | 집기 전용 장면: 무작위 배치, 카메라 렌더링, 성공 판정 |
+| `airlab_vla/expert.py` | 스크립트 전문가 (감쇠 최소제곱 IK, `pick()`과 같은 경유점) |
+| `airlab_vla/record.py` | 시연 녹화 (병렬, DART 잡음) |
+| `airlab_vla/model.py`, `train.py` | 정책 구조, 학습 |
+| `airlab_vla/runner.py` | 묶음 예측의 시간 평균(temporal ensembling) |
+| `airlab_vla/evaluate.py` | 닫힌 루프 평가, GIF |
+| `airlab_vla/vla_pick_node.py` | ROS 노드 |
 | ACT (action chunking) | Zhao et al., *Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware*, RSS 2023 |
 | DART | Laskey et al., *DART: Noise Injection for Robust Imitation Learning*, CoRL 2017 |
 | 공간 소프트맥스 | Levine et al., *End-to-End Training of Deep Visuomotor Policies*, JMLR 2016 |

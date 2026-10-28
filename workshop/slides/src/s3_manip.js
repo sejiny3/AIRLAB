@@ -65,7 +65,7 @@ module.exports = function build() {
 
   s = content('실습 1. RViz MotionPlanning', TAG, 'MuJoCo 뷰어의 팔이 RViz 계획과 똑같이 움직이는지 보게 합니다. 손이 닿지 않는 곳으로 끌면 계획이 실패하는 것도 일부러 경험하게 하세요(IK 해 없음). 체크포인트 3-1.');
   img(s, 'step4_moveit_rviz.jpg', 0.6, 1.5, 6.6, 4.4, 'RViz MotionPlanning 패널과 양팔 로봇');
-  code(s, '$ ros2 launch unbolt_moveit_config moveit.launch.py', 0.6, 6.05, 6.6, 0.65, 13);
+  code(s, '$ ros2 launch airlab_moveit_config moveit.launch.py', 0.6, 6.05, 6.6, 0.65, 13);
   step(s, 1, 'right_arm → tuck → home', 'Planning Group 고르고 Goal State → Plan → Execute', 7.5, 1.6, 5.2);
   step(s, 2, '손 끝 마커 끌기', '화살표·고리를 드래그 → Plan & Execute', 7.5, 2.85, 5.2);
   step(s, 3, '닿지 않는 곳으로', '계획 실패를 일부러 경험 (IK 해 없음)', 7.5, 4.1, 5.2);
@@ -73,7 +73,7 @@ module.exports = function build() {
 
   s = content('실습 2. 자동 테스트와 궤적 흐름 보기', TAG, '같은 launch를 켜 둔 채 다른 터미널에서 실행합니다. 6개 동작(관절 목표, 자세 목표, 그리퍼)을 계획·실행하고 목표와 실제 관절 각도 오차를 출력합니다. 체크포인트 3-2.');
   lab(s, {
-    cmd: '$ ros2 run unbolt_moveit_config moveit_test.py \\\n    --ros-args -p use_sim_time:=true\n\n# 실행되는 동안 다른 터미널에서\n$ ros2 action list\n$ ros2 topic echo /joint_states --field position --once',
+    cmd: '$ ros2 run airlab_moveit_config moveit_test.py \\\n    --ros-args -p use_sim_time:=true\n\n# 실행되는 동안 다른 터미널에서\n$ ros2 action list\n$ ros2 topic echo /joint_states --field position --once',
     cmdH: 2.6,
     explain: ['ros2 action list: /right_arm_controller/follow_joint_trajectory 등 4개가 보인다', '이 액션 서버들은 브리지 안에 있다 (trajectory_server.py)'],
     ok: '6/6 성공, 관절 오차가 아주 작다 (0.01 rad 안팎).\n\n✅ 체크포인트 3-2',
@@ -94,7 +94,7 @@ module.exports = function build() {
   table(s, [['', 'move_to_pose', 'move_linear'], ['주는 것', '목표 자세 하나', '지금 위치에서 얼마나 (dx, dy, dz)'], ['경로', 'OMPL이 찾음', '직선 (GetCartesianPath)'], ['쓰는 곳', '멀리 이동 (pre-grasp까지)', '접근, 들기, 내리기, 빠지기']], 0.6, 4.75, 12.1, [2.0, 4.6, 5.5], 15);
 
   s = content('실습 3. Python으로 팔 움직이기', TAG, 'arm_play.py(교재 03 실습 3)의 핵심입니다. bringup.launch.py는 주행·카메라·MoveIt을 한 번에 켭니다. z를 0.70, 0.60으로 낮춰 보고 어디서부터 실패하는지, 이유가 도달 범위인지 섀시 충돌인지 토론합니다. 체크포인트 3-3.');
-  code(s, '$ ros2 launch unbolt_manipulation bringup.launch.py   # 터미널 1\n\n# ~/arm_play.py\ns = RobotSkills(); s.wait_ready()\ns.move_arms(\'home\')                              # 이름 붙은 자세\ns.set_gripper(\'right\', -0.6)                     # 열기 (오른쪽은 음수)\ns.move_to_pose(\'right\', (0.38, -0.15, 0.80),\n               grasp_rotation(0.0), \'pose\')       # 자세 목표\nfor dz in (-0.05, +0.05):\n    s.move_linear(\'right\', (0, 0, dz), \'linear\')  # 직선 5 cm\ns.set_gripper(\'right\', 0.0); s.move_arms(\'tuck\')\n\n$ python3 ~/arm_play.py --ros-args -p use_sim_time:=true', 0.6, 1.5, 7.6, 5.2, 13);
+  code(s, '$ ros2 launch airlab_manipulation bringup.launch.py   # 터미널 1\n\n# ~/arm_play.py\ns = RobotSkills(); s.wait_ready()\ns.move_arms(\'home\')                              # 이름 붙은 자세\ns.set_gripper(\'right\', -0.6)                     # 열기 (오른쪽은 음수)\ns.move_to_pose(\'right\', (0.38, -0.15, 0.80),\n               grasp_rotation(0.0), \'pose\')       # 자세 목표\nfor dz in (-0.05, +0.05):\n    s.move_linear(\'right\', (0, 0, dz), \'linear\')  # 직선 5 cm\ns.set_gripper(\'right\', 0.0); s.move_arms(\'tuck\')\n\n$ python3 ~/arm_play.py --ros-args -p use_sim_time:=true', 0.6, 1.5, 7.6, 5.2, 13);
   callout(s, 'ok', 8.5, 1.5, 4.2, 1.9, '팔이 home → 앞으로 뻗기 → 5 cm 내렸다 올리기 → tuck. 오류 없이 끝 ✅ 3-3');
   callout(s, 'tip', 8.5, 3.6, 4.2, 1.5, '좌표는 base_footprint 기준 (앞 +x, 왼쪽 +y, 위 +z) [m]', '좌표 읽는 법');
   callout(s, 'why', 8.5, 5.3, 4.2, 1.4, 'z를 0.60으로 내리면? 손이 섀시에 가까워져 실패. 왜인지 토론');
@@ -191,7 +191,7 @@ module.exports = function build() {
 
   s = content('실습 5. Pick & Place 전체 실행', TAG, '실습 4에서 로봇을 몰았다면 시뮬레이터 리셋 후 AMCL에 원점을 다시 알려 줘야 합니다(/initialpose). 마지막 로그의 "N cm from the pad centre"를 적게 하세요. 새로 설치한 환경에서 0.8 cm로 성공했습니다. 체크포인트 3-5.');
   lab(s, {
-    cmd: '# 월드 리셋 + AMCL에 원점 알려 주기\n$ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger\n$ ros2 topic pub --once /initialpose \\\n    geometry_msgs/msg/PoseWithCovarianceStamped \\\n    "{header: {frame_id: map}, pose: {pose: {orientation: {w: 1.0}}}}"\n\n# 데모 (약 1분)\n$ ros2 run unbolt_manipulation pick_place_demo \\\n    --ros-args -p use_sim_time:=true',
+    cmd: '# 월드 리셋 + AMCL에 원점 알려 주기\n$ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger\n$ ros2 topic pub --once /initialpose \\\n    geometry_msgs/msg/PoseWithCovarianceStamped \\\n    "{header: {frame_id: map}, pose: {pose: {orientation: {w: 1.0}}}}"\n\n# 데모 (약 1분)\n$ ros2 run airlab_manipulation pick_place_demo \\\n    --ros-args -p use_sim_time:=true',
     cmdH: 3.6, cmdSize: 12,
     explain: ['리셋은 로봇을 원점에 옮기지만 AMCL은 모른다 → /initialpose', '로그에 단계마다 OK / FAILED가 찍힌다'],
     ok: 'demo SUCCEEDED, "red box ends … N cm from the pad centre" (3 cm 이내)\n\n✅ 체크포인트 3-5',

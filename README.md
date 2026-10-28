@@ -1,9 +1,9 @@
-# UNBOLT — ROS 2 + MuJoCo 주행형 양팔로봇
+# AIRLAB — ROS 2 + MuJoCo 주행형 양팔로봇
 
 PinkLAB 영상(ROS 2 + MuJoCo 양팔로봇)을 참고해 오픈소스로 재구성하는 프로젝트.
 
 > **강습회 자료**: [workshop/](workshop/README.md) — 2일 과정 실습 교재, WSL이 없는 Windows 노트북부터 시작하는
-> [설치 가이드](workshop/00_install.md)와 일괄 설치 스크립트(`workshop/setup/install_unbolt.sh`).
+> [설치 가이드](workshop/00_install.md)와 일괄 설치 스크립트(`workshop/setup/install_airlab.sh`).
 
 - 환경: WSL2 Ubuntu 22.04, ROS 2 Humble, MuJoCo 3.12 (Python)
 - 로봇: 차동구동 베이스 + 기둥 + [OpenArm v2](https://github.com/enactic/openarm_mujoco) 양팔 (7DoF x 2 + 그리퍼)
@@ -12,67 +12,67 @@ PinkLAB 영상(ROS 2 + MuJoCo 양팔로봇)을 참고해 오픈소스로 재구�
 
 ```
 models/
-  unbolt_robot.xml   로봇 (차동구동 베이스 + OpenArm 받침대 + 양팔 attach)
+  airlab_robot.xml   로봇 (차동구동 베이스 + OpenArm 받침대 + 양팔 attach)
   scene.xml          월드 (10x8.5 m 방, 칸막이벽, 장애물, 공급 테이블 3개, 작업대, 빨강·초록·파랑 상자, 마커 1-3/7-9/11-32)
 third_party/
   openarm_mujoco/        OpenArm 공식 MJCF (git clone)
   openarm_description/   OpenArm 공식 URDF/xacro (git clone, ros2_ws/src에 심볼릭 링크)
 ros2_ws/src/
-  unbolt_mujoco_bridge/
+  airlab_mujoco_bridge/
     mujoco_bridge_node.py   MuJoCo <-> ROS 2 브리지 (+ 2D LiDAR)
     arm_demo.py             팔/그리퍼 동작 확인용 데모
     launch/bridge.launch.py 시뮬레이터만
     launch/sim.launch.py    시뮬레이터 + robot_state_publisher + RViz
-  unbolt_navigation/
+  airlab_navigation/
     config/slam_toolbox.yaml     slam_toolbox (online async) 설정
     config/nav2_params.yaml      Nav2 (Humble 공식 파일 기반, RPP 컨트롤러, 직사각형 footprint)
-    maps/unbolt_room.yaml/.pgm   SLAM으로 만든 지도
+    maps/airlab_room.yaml/.pgm   SLAM으로 만든 지도
     scripts/explore_waypoints.py 지도 작성용 자동 탐색 (ground truth 기반 웨이포인트 주행)
     scripts/nav_goal_test.py     Nav2 목표 3개 연속 주행 + 실제 위치 오차 측정
     scripts/frontier_explorer.py 프론티어 기반 능동 탐색 (SLAM 지도만 사용, Nav2로 주행, 끝나면 ~/maps에 저장)
     launch/slam.launch.py, navigation.launch.py
     launch/explore.launch.py     시뮬레이터 + slam_toolbox + Nav2(지도 없이) + frontier_explorer
-  unbolt_moveit_config/
-    config/unbolt.srdf.base      그룹(left_arm/right_arm/both_arms/그리퍼), 자세(home/ready/open/closed)
-    config/unbolt.srdf           = base + 자기충돌 행렬 (scripts/generate_srdf.sh로 생성)
+  airlab_moveit_config/
+    config/airlab.srdf.base      그룹(left_arm/right_arm/both_arms/그리퍼), 자세(home/ready/open/closed)
+    config/airlab.srdf           = base + 자기충돌 행렬 (scripts/generate_srdf.sh로 생성)
     config/kinematics.yaml, joint_limits.yaml, moveit_controllers.yaml, moveit.rviz
     scripts/generate_collision_matrix.py  MuJoCo로 자기충돌 행렬 계산
     scripts/moveit_test.py       계획+실행 6개 동작 자동 테스트
     launch/moveit.launch.py
-  unbolt_manipulation/
+  airlab_manipulation/
     aruco_detector.py            카메라 영상 -> ArUco(DICT_4X4_50) -> TF aruco_<id>
     skills.py                    navigate / servo_to_marker / pick / place 스킬
     pick_place_demo.py           빨간 상자를 1번 공급 테이블 -> 작업대 가운데 자리로 옮기는 데모
     task_planner_core.py         Claude 도구 호출 루프 + 스킬을 감싼 도구 + 장소/물체 지식
     task_planner.py, ask.py      ROS 노드(/task_command -> /task_status), 명령 CLI
     launch/bringup.launch.py     sim + Nav2 + move_group + 마커 검출 한 번에
-  unbolt_dashboard/
+  airlab_dashboard/
     web/index.html               대시보드 (외부 라이브러리 없음, rosbridge v2 프로토콜 직접 구현)
     dashboard_server.py          웹 서버(:8080) + 지도 PNG/config + /dashboard/robot_pose(TF map->base)
     launcher.py                  dashboard_launcher: ROS가 꺼져 있어도 페이지를 띄우고 작업/VLA 집기/지도 만들기 모드를 켜고 끔
     launch/dashboard.launch.py   rosbridge_websocket(:9090) + 웹 서버
     launch/mapping.launch.py     explore.launch.py + 대시보드 (지도 만들기 모드)
-  unbolt_vla/                    VLA 집기 정책 (ROS 없이 학습·평가, PyTorch CPU)
+  airlab_vla/                    VLA 집기 정책 (ROS 없이 학습·평가, PyTorch CPU)
     sim.py                       집기 전용 MuJoCo 장면 (테이블 앞 로봇, 상자 위치·각도 무작위)
     expert.py                    스크립트 전문가: MuJoCo IK로 집기 시연 (MoveIt 대신)
-    record.py, train.py          시연 녹화 → 정책 학습 (~/unbolt_vla/demos, ~/unbolt_vla/policy.pt)
+    record.py, train.py          시연 녹화 → 정책 학습 (~/airlab_vla/demos, ~/airlab_vla/policy.pt)
     model.py, runner.py          정책 (카메라 2대 + 명령 문장 + 관절 → 관절 목표 10개 묶음), 실행기
     evaluate.py                  처음 보는 배치에서 정책과 전문가의 성공률 비교
     vla_pick_node.py             ROS 노드: /vla/pick 명령 → /joint_commands 10 Hz → /vla/result
-  unbolt_description/
-    urdf/unbolt.urdf.xacro      베이스 + OpenArm xacro 매크로 (MJCF와 동일 기구학)
+  airlab_description/
+    urdf/airlab.urdf.xacro      베이스 + OpenArm xacro 매크로 (MJCF와 동일 기구학)
     config/openarm_preset.yaml  OpenArm preset (root를 베이스 위 openarm_body_mount로)
-    rviz/unbolt.rviz
+    rviz/airlab.rviz
     launch/rsp.launch.py, display.launch.py
 ```
 
-로봇 모델은 MJCF(`models/unbolt_robot.xml`)와 URDF(`unbolt.urdf.xacro`) 두 벌이다.
+로봇 모델은 MJCF(`models/airlab_robot.xml`)와 URDF(`airlab.urdf.xacro`) 두 벌이다.
 치수를 바꿀 때는 양쪽을 같이 고쳐야 한다 (주요 값: 바퀴 반지름 0.08, 바퀴 간격 0.45,
 받침대 장착 위치 base_link 기준 (-0.05, 0, 0.11), LiDAR (0.22, 0, 0.13)).
 
 ## 빌드
 
-처음 설치는 `bash workshop/setup/install_unbolt.sh` (ROS 2, 의존 패키지, OpenArm 모델, 빌드, `~/.bashrc`까지).
+처음 설치는 `bash workshop/setup/install_airlab.sh` (ROS 2, 의존 패키지, OpenArm 모델, 빌드, `~/.bashrc`까지).
 코드를 고친 뒤 다시 빌드할 때:
 
 ```bash
@@ -82,16 +82,16 @@ colcon build --symlink-install
 source install/local_setup.bash
 ```
 
-시뮬레이터는 월드 파일을 `$UNBOLT_ROOT/models/scene.xml`에서 찾는다. `UNBOLT_ROOT`가 없으면
+시뮬레이터는 월드 파일을 `$AIRLAB_ROOT/models/scene.xml`에서 찾는다. `AIRLAB_ROOT`가 없으면
 `--symlink-install` 링크를 따라 저장소 위치를 알아낸다.
 
 ## 실행
 
 ```bash
-ros2 launch unbolt_mujoco_bridge sim.launch.py               # MuJoCo 뷰어 + RViz (권장)
-ros2 launch unbolt_mujoco_bridge sim.launch.py use_viewer:=false rviz:=false
-ros2 launch unbolt_mujoco_bridge bridge.launch.py            # 시뮬레이터만
-ros2 launch unbolt_description display.launch.py             # 시뮬레이터 없이 URDF만 (관절 슬라이더)
+ros2 launch airlab_mujoco_bridge sim.launch.py               # MuJoCo 뷰어 + RViz (권장)
+ros2 launch airlab_mujoco_bridge sim.launch.py use_viewer:=false rviz:=false
+ros2 launch airlab_mujoco_bridge bridge.launch.py            # 시뮬레이터만
+ros2 launch airlab_description display.launch.py             # 시뮬레이터 없이 URDF만 (관절 슬라이더)
 ```
 
 ![RViz](docs/step2_rviz.jpg)
@@ -107,26 +107,26 @@ sudo apt-get install -y ros-humble-slam-toolbox ros-humble-navigation2 ros-humbl
 지도 만들기:
 
 ```bash
-ros2 launch unbolt_navigation slam.launch.py
+ros2 launch airlab_navigation slam.launch.py
 # 다른 터미널: 키보드로 돌아다니거나 자동 탐색 (약 3분)
-ros2 run unbolt_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
+ros2 run airlab_navigation explore_waypoints.py --ros-args -p use_sim_time:=true
 # 지도 저장 (src 쪽에 저장한 뒤 colcon build 다시)
-ros2 run nav2_map_server map_saver_cli -f $UNBOLT_ROOT/ros2_ws/src/unbolt_navigation/maps/unbolt_room --ros-args -p use_sim_time:=true
+ros2 run nav2_map_server map_saver_cli -f $AIRLAB_ROOT/ros2_ws/src/airlab_navigation/maps/airlab_room --ros-args -p use_sim_time:=true
 ```
 
-실제 위치를 쓰지 않는 자동 탐색 (프론티어 탐색, 끝나면 `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장):
+실제 위치를 쓰지 않는 자동 탐색 (프론티어 탐색, 끝나면 `~/maps/airlab_explored_<날짜>_<시간>.yaml`로 저장):
 
 ```bash
-ros2 launch unbolt_navigation explore.launch.py
+ros2 launch airlab_navigation explore.launch.py
 ros2 topic echo /explore/status --field data       # 상태 JSON
-ros2 launch unbolt_navigation navigation.launch.py map:=$HOME/maps/unbolt_explored_<...>.yaml
+ros2 launch airlab_navigation navigation.launch.py map:=$HOME/maps/airlab_explored_<...>.yaml
 ```
 
 저장된 지도로 주행 (RViz의 "2D Goal Pose"로 목표 지정):
 
 ```bash
-ros2 launch unbolt_navigation navigation.launch.py
-ros2 run unbolt_navigation nav_goal_test.py --ros-args -p use_sim_time:=true   # 자동 테스트
+ros2 launch airlab_navigation navigation.launch.py
+ros2 run airlab_navigation nav_goal_test.py --ros-args -p use_sim_time:=true   # 자동 테스트
 ```
 
 ![Nav2](docs/step3_nav_rviz.jpg)
@@ -138,8 +138,8 @@ sudo apt-get install -y ros-humble-moveit ros-humble-moveit-configs-utils ros-hu
 ```
 
 ```bash
-ros2 launch unbolt_moveit_config moveit.launch.py      # MuJoCo + move_group + RViz MotionPlanning
-ros2 run unbolt_moveit_config moveit_test.py --ros-args -p use_sim_time:=true   # 자동 테스트
+ros2 launch airlab_moveit_config moveit.launch.py      # MuJoCo + move_group + RViz MotionPlanning
+ros2 run airlab_moveit_config moveit_test.py --ros-args -p use_sim_time:=true   # 자동 테스트
 ```
 
 - MoveIt은 브리지의 `FollowJointTrajectory` 액션 서버 4개(`left_arm_controller`,
@@ -150,7 +150,7 @@ ros2 run unbolt_moveit_config moveit_test.py --ros-args -p use_sim_time:=true   
 - 끝점(tip)은 손가락 끝의 `openarm_{left,right}_grasp_frame`.
 - 그리퍼: `finger_joint1` 0 = 닫힘(끝 간격 3.6 cm), 왼쪽 +0.6 / 오른쪽 −0.6 = 열림(11.5 cm).
 - URDF나 SRDF 그룹을 바꾸면 자기충돌 행렬을 다시 만든다:
-  `bash src/unbolt_moveit_config/scripts/generate_srdf.sh` 후 `colcon build`.
+  `bash src/airlab_moveit_config/scripts/generate_srdf.sh` 후 `colcon build`.
   (MoveIt Setup Assistant의 `collisions_updater`는 이 로봇에서 멈춰서 MuJoCo로 계산한다.)
 
 ![MoveIt](docs/step4_moveit_rviz.jpg)
@@ -158,8 +158,8 @@ ros2 run unbolt_moveit_config moveit_test.py --ros-args -p use_sim_time:=true   
 ### 마커 기반 Pick & Place (5단계)
 
 ```bash
-ros2 launch unbolt_manipulation bringup.launch.py
-ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
+ros2 launch airlab_manipulation bringup.launch.py
+ros2 run airlab_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 ```
 
 흐름: 팔 `tuck` → Nav2로 1번 공급 테이블 앞 → 마커 7(상자 윗면)로 정밀 접근 → 집기 → 후진 →
@@ -184,11 +184,11 @@ Nav2로 작업대 앞 → 마커 2(가운데 놓을 자리)로 정밀 접근 →
 준비 (WSL, sudo 불필요):
 
 ```bash
-pip3 install --user anthropic Brotli          # install_unbolt.sh가 이미 설치함
-bash workshop/setup/setup_api_key.sh          # 키를 ~/.unbolt_key 에 저장 (~/.bashrc가 읽음), 연결 확인
+pip3 install --user anthropic Brotli          # install_airlab.sh가 이미 설치함
+bash workshop/setup/setup_api_key.sh          # 키를 ~/.airlab_key 에 저장 (~/.bashrc가 읽음), 연결 확인
 ```
 
-비대화형 셸(스크립트, `bash -c`)에서는 `~/.bashrc`가 앞부분에서 빠져나가므로 `source ~/.unbolt_key`를 직접 하거나
+비대화형 셸(스크립트, `bash -c`)에서는 `~/.bashrc`가 앞부분에서 빠져나가므로 `source ~/.airlab_key`를 직접 하거나
 `~/.profile`에 키를 넣는다.
 
 `Brotli`를 함께 올려야 한다: Ubuntu 22.04 기본 `python3-brotli` 1.0.9는 SDK의 HTTP 라이브러리(httpx2)와 맞지 않아
@@ -197,10 +197,10 @@ bash workshop/setup/setup_api_key.sh          # 키를 ~/.unbolt_key 에 저장 
 실행:
 
 ```bash
-ros2 launch unbolt_manipulation bringup.launch.py planner:=true
-ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
-ros2 run unbolt_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
-ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
+ros2 launch airlab_manipulation bringup.launch.py planner:=true
+ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"
+ros2 run airlab_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
+ros2 run airlab_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
 ```
 
 - 도구: `get_world_state`, `navigate_to(location)`, `pick_object(object)`, `place_object(location, spot)`,
@@ -233,7 +233,7 @@ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 있으면 원래
 ### 웹 대시보드 (7단계)
 
 ```bash
-ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
+ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true
 # 브라우저(Windows에서도 가능): http://localhost:8080/
 ```
 
@@ -241,20 +241,20 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 - 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG).
 - 명령: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소(`/task_cancel` — 주행·정밀 접근은 즉시 멈추고,
   진행 중인 팔 동작은 마친 뒤 다음 단계를 시작하지 않는다).
-- 연결(시스템 시작): `ros2 run unbolt_dashboard dashboard_launcher`를 켜 두면 ROS가 꺼져 있어도 http://localhost:8080 이
+- 연결(시스템 시작): `ros2 run airlab_dashboard dashboard_launcher`를 켜 두면 ROS가 꺼져 있어도 http://localhost:8080 이
   열리고 "ROS가 꺼져 있습니다" 화면의 **연결** 버튼(LLM Claude/대역, MuJoCo 창, RViz 선택)으로 bringup 전체를 켠다.
   런처가 페이지와 시작/종료 API(`/api/stack`)를 맡고, launch 안의 dashboard_server는 8080이 차 있으면 ROS 쪽 일만 한다.
   시작·종료 요청은 이 컴퓨터에서만 받는다(`--allow-remote`로 해제). 터미널에서 켠 스택이 있거나 이전 스택이 아직 꺼지는 중이면
-  시작을 거절한다. 런처의 Ctrl+C는 자기가 켠 스택도 함께 끈다. 로그: `~/.ros/unbolt_launcher.log`
+  시작을 거절한다. 런처의 Ctrl+C는 자기가 켠 스택도 함께 끈다. 로그: `~/.ros/airlab_launcher.log`
   모드는 둘: **작업**(bringup, 지도는 기본 지도 또는 `~/maps`의 저장 지도 중 선택 → `bringup.launch.py map:=...`)과
-  **지도 만들기**(`unbolt_dashboard mapping.launch.py`).
+  **지도 만들기**(`airlab_dashboard mapping.launch.py`).
 - 지도 만들기 모드: 빈 지도에서 slam_toolbox + Nav2(map_server/AMCL 없이) + `frontier_explorer.py`가 프론티어
   (아는 빈 칸과 미지의 경계)를 따라 스스로 탐색하고, 갈 수 있는 프론티어가 없으면 지도를
-  `~/maps/unbolt_explored_<날짜>_<시간>.yaml`로 저장한다. 페이지는 `/map`을 실시간으로 그리고(프론티어는 하늘색,
+  `~/maps/airlab_explored_<날짜>_<시간>.yaml`로 저장한다. 페이지는 `/map`을 실시간으로 그리고(프론티어는 하늘색,
   탐색 목표는 파란 원), 탐색 시작/멈춤/지도 저장(`/explore/control`)과 상태(`/explore/status`)를 보여 준다.
   탐색이 끝나거나 멈추면(작업 모드에서는 작업이 없을 때) **키보드 조종**(W A S D/방향키, 누르는 동안만 `/cmd_vel` 10 Hz, LiDAR로 앞뒤 장애물이 가까우면
   그 방향은 막음)을 쓸 수 있고, 그동안에도 SLAM이 지도를 고친다. 작업 모드에서 몰면 페이지가 `/task_manual_drive`를 보내고 플래너가
-  로봇 위치를 "알 수 없음"으로 바꿔, 다음 명령은 주행부터 한다(엉뚱한 자리에서 집거나 놓지 않게). 터미널만으로는 `ros2 launch unbolt_navigation explore.launch.py`.
+  로봇 위치를 "알 수 없음"으로 바꿔, 다음 명령은 주행부터 한다(엉뚱한 자리에서 집거나 놓지 않게). 터미널만으로는 `ros2 launch airlab_navigation explore.launch.py`.
   탐색 모드의 Nav2 설정은 작업 모드와 다르다(`explore.launch.py`의 `_nav2()`, 작업 모드는 테이블에 붙어야 해서 그대로):
   로봇을 직사각형 대신 반지름 0.44 m 원으로 보고(제자리 회전 때 모서리가 쓸고 지나가는 0.40 m + 여유), footprint clearing을 끄고,
   전역 costmap은 지도 크기를 따라가지 않는 20 × 20 m 이동 창이며, LiDAR는 720개 광선, 회전 0.5 rad/s·직진 0.25 m/s로 천천히 간다.
@@ -288,7 +288,7 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 # 팔/그리퍼 데모 (10초)
-ros2 run unbolt_mujoco_bridge arm_demo --ros-args -p use_sim_time:=true
+ros2 run airlab_mujoco_bridge arm_demo --ros-args -p use_sim_time:=true
 
 # 관절 하나 직접 명령
 ros2 topic pub --once /joint_commands sensor_msgs/msg/JointState \
@@ -310,11 +310,11 @@ Nav2·AMCL·MoveIt이 상태를 잃기 때문이다.
 관절 목표를 낸다 (합성곱 + 공간 소프트맥스 + MLP, 60만 매개변수, CPU 추론 4 ms). PyTorch(CPU판)가 필요하다.
 
 ```bash
-ros2 run unbolt_vla record --episodes 1200  # MuJoCo만으로 스크립트 전문가 시연 녹화 (~40분, ~/unbolt_vla/demos)
-ros2 run unbolt_vla train                   # CPU 학습 (20000단계 ~65분, ~/unbolt_vla/policy.pt)
-ros2 run unbolt_vla evaluate --episodes 100 # 처음 보는 배치에서 정책 vs 전문가
-ros2 run unbolt_vla evaluate --ask-other --episodes 20   # 언어 확인: 옆 상자의 색을 말하면?
-ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
+ros2 run airlab_vla record --episodes 1200  # MuJoCo만으로 스크립트 전문가 시연 녹화 (~40분, ~/airlab_vla/demos)
+ros2 run airlab_vla train                   # CPU 학습 (20000단계 ~65분, ~/airlab_vla/policy.pt)
+ros2 run airlab_vla evaluate --episodes 100 # 처음 보는 배치에서 정책 vs 전문가
+ros2 run airlab_vla evaluate --ask-other --episodes 20   # 언어 확인: 옆 상자의 색을 말하면?
+ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true pick:=vla
 ```
 
 - 전문가(`expert.py`)는 시뮬레이터가 아는 상자의 실제 위치로 감쇠 최소제곱 IK를 풀어 `pick()`과 같은 경유점(벌리며 다가가기 →
@@ -324,7 +324,7 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true 
 - `pick:=vla`: 브리지 헤드 카메라 10 Hz + 손목 카메라 `/wrist_camera/image_raw` 켜기, `vla_pick` 노드 시작,
   플래너 `pick_mode:=vla`(오른팔 기준으로 정렬한 뒤 `/vla/pick`에 문장을 보내고 `/vla/result`를 기다림).
   `vla_pick`은 정책이 "끝"이라고 해도 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고한다.
-- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/unbolt_vla/policy.pt`가 없으면 시작을 거절). 카드에 손목 카메라와 "끝" 확률.
+- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/airlab_vla/policy.pt`가 없으면 시작을 거절). 카드에 손목 카메라와 "끝" 확률.
 - 결과(10 × 8.5 m 방, 시연 1155개, 20000단계, CPU 약 65분, 검증 L1 0.0385): 처음 보는 배치 100개에서 정책 100/100
   (네 테이블 모두 100%, 옆에 다른 색 상자가 있던 43번 포함, 다른 상자를 든 적 없음), 전문가 100/100.
   그러나 `evaluate --ask-other`(정렬한 상자가 아닌 옆 상자의 색을 말함)에서는 20/20 정렬한 상자를 집었다. 정책은 색 낱말이 아니라
@@ -363,4 +363,4 @@ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true 
 - [x] 5단계: 마커 기반 Pick & Place
 - [x] 6단계: LLM 작업 계획
 - [x] 7단계: 웹 대시보드
-- [x] 심화: VLA 집기 정책 (`unbolt_vla`, 대시보드 **VLA 집기** 모드)
+- [x] 심화: VLA 집기 정책 (`airlab_vla`, 대시보드 **VLA 집기** 모드)

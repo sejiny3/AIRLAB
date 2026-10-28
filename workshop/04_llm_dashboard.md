@@ -22,7 +22,7 @@
 
 ## 준비
 
-- API 키를 넣었는지: `bash ~/unbolt/workshop/setup/check_env.sh` 마지막 부분 (없으면 [설치 가이드 7](00_install.md#7-claude-api-키-모듈-4-전까지-선택))
+- API 키를 넣었는지: `bash ~/airlab/workshop/setup/check_env.sh` 마지막 부분 (없으면 [설치 가이드 7](00_install.md#7-claude-api-키-모듈-4-전까지-선택))
 - 키가 없으면 실습 1, 3, 4(일부), 5는 `llm:=scripted`로 그대로 할 수 있습니다.
 
 ---
@@ -93,13 +93,13 @@ LLM 없이 **로봇 쪽 전체**가 동작하는지 먼저 봅니다. `ScriptedL
 재생하는 시험용 대역입니다 (계획을 하지는 않습니다).
 
 ```bash
-$ ros2 launch unbolt_manipulation bringup.launch.py planner:=true llm:=scripted
+$ ros2 launch airlab_manipulation bringup.launch.py planner:=true llm:=scripted
 ```
 
 다른 터미널:
 
 ```bash
-$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
+$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"
 ```
 
 ```
@@ -130,16 +130,16 @@ $ ros2 topic echo /task_status --field data
 bringup을 끄고 (`Ctrl + C`) LLM을 켜서 다시 실행합니다 (다시 켜면 월드도 처음 상태로 시작합니다):
 
 ```bash
-$ ros2 launch unbolt_manipulation bringup.launch.py planner:=true
+$ ros2 launch airlab_manipulation bringup.launch.py planner:=true
 ```
 
 아래 명령을 차례로 보내고, Claude가 고른 도구 순서와 답을 표에 적으세요.
 
 ```bash
-$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
-$ ros2 run unbolt_manipulation ask "노란 공 좀 가져다 줄래?"
-$ ros2 run unbolt_manipulation ask "이제 빨간 상자를 원래 자리에 다시 갖다 놔"
-$ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 돌아와"
+$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"
+$ ros2 run airlab_manipulation ask "노란 공 좀 가져다 줄래?"
+$ ros2 run airlab_manipulation ask "이제 빨간 상자를 원래 자리에 다시 갖다 놔"
+$ ros2 run airlab_manipulation ask "작업대 앞에 갔다가 처음 위치로 돌아와"
 ```
 
 | 명령 | Claude의 도구 순서 | 결과 | 토큰 / 비용 |
@@ -158,7 +158,7 @@ $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 
 
 ## 실습 3. 코드 읽기
 
-`ros2_ws/src/unbolt_manipulation/unbolt_manipulation/task_planner_core.py`를 열고 찾아보세요.
+`ros2_ws/src/airlab_manipulation/airlab_manipulation/task_planner_core.py`를 열고 찾아보세요.
 
 | 찾을 것 | 질문 |
 |---|---|
@@ -179,7 +179,7 @@ $ ros2 run unbolt_manipulation ask "작업대 앞에 갔다가 처음 위치로 
 **월드 검증 → 계획 수정**: 상자가 공급 테이블에 있을 때
 
 ```bash
-$ ros2 run unbolt_manipulation ask "작업대에 들고 있는 걸 내려놔"
+$ ros2 run airlab_manipulation ask "작업대에 들고 있는 걸 내려놔"
 ```
 
 들고 있는 게 없으므로 `place_object`는 `not holding anything` 오류를 돌려줍니다 (Claude가 부른다면).
@@ -188,7 +188,7 @@ Claude가 그 오류를 읽고 어떻게 답하는지 보세요.
 **중단**: 긴 명령을 보내고 주행 중에 취소합니다.
 
 ```bash
-$ ros2 run unbolt_manipulation ask "빨간 상자를 작업대로 옮겨줘"
+$ ros2 run airlab_manipulation ask "빨간 상자를 작업대로 옮겨줘"
 # 로봇이 주행을 시작하면 다른 터미널에서:
 $ ros2 topic pub --once /task_cancel std_msgs/msg/Empty
 ```
@@ -229,11 +229,11 @@ costmap을 비움 → 플래너가 기억하는 상태(위치, 들고 있는 것
 실패 직후처럼 기억이 틀렸을 수 있으면 `check_table`), **조건이 거짓이면 그 부분을 건너뛰고 답에서 알린다**.
 
 ```bash
-$ ros2 run unbolt_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
-$ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 없으면 가져다 놔"
-$ ros2 run unbolt_manipulation ask "작업대에 뭐가 있는지 가서 확인해 줘"
-$ ros2 run unbolt_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
-$ ros2 run unbolt_manipulation ask "상자를 모두 원래 자리에 돌려놓고 원위치로 와"
+$ ros2 run airlab_manipulation ask "초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘"
+$ ros2 run airlab_manipulation ask "작업대에 빨간 상자가 없으면 가져다 놔"
+$ ros2 run airlab_manipulation ask "작업대에 뭐가 있는지 가서 확인해 줘"
+$ ros2 run airlab_manipulation ask "작업대에 빨간 상자가 있으면 원래 자리로 돌려놓고, 없으면 그냥 원위치로 와"
+$ ros2 run airlab_manipulation ask "상자를 모두 원래 자리에 돌려놓고 원위치로 와"
 ```
 
 | 명령 | Claude가 조건을 무엇으로 판단했나 (기억 / 카메라) | 도구 순서 | 결과 |
@@ -268,7 +268,7 @@ $ ros2 run unbolt_manipulation ask "상자를 모두 원래 자리에 돌려놓�
 ## 실습 5. 웹 대시보드
 
 ```bash
-$ ros2 launch unbolt_manipulation bringup.launch.py planner:=true dashboard:=true
+$ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true
 ```
 
 Windows의 Chrome/Edge에서 **<http://localhost:8080>** 을 엽니다 (WSL이 localhost를 Windows로 연결해 줍니다).
@@ -291,7 +291,7 @@ Windows의 Chrome/Edge에서 **<http://localhost:8080>** 을 엽니다 (WSL이 l
 런처를 한 번만 켜 두세요:
 
 ```bash
-$ ros2 run unbolt_dashboard dashboard_launcher
+$ ros2 run airlab_dashboard dashboard_launcher
 ```
 
 http://localhost:8080 을 열면 ROS가 꺼져 있어도 페이지가 뜨고 **"ROS가 꺼져 있습니다"** 화면이 나옵니다.
@@ -302,12 +302,12 @@ http://localhost:8080 을 열면 ROS가 꺼져 있어도 페이지가 뜨고 **"
 |---|---|---|
 | **작업** (LLM 명령, 저장된 지도) | bringup 전체: 시뮬레이터, Nav2(AMCL), MoveIt, 마커 검출, 플래너 | 지도 (기본 지도 또는 `~/maps`에 저장한 지도), LLM (Claude / 대역) |
 | **지도 만들기** (SLAM + 자동 탐색) | 시뮬레이터, slam_toolbox, Nav2(지도 없이), 프론티어 탐색 | 없음. 로봇이 스스로 탐색한 뒤 키보드로 조종 ([모듈 2 실습 8](02_slam_nav2.md#실습-8-자동-탐색으로-지도-만들기-대시보드)) |
-| **VLA 집기** (작업 + 학습된 집기 정책) | 작업 모드 전체 + 손목 카메라 + `vla_pick` 노드 (`pick:=vla`) | 작업 모드와 같음. 학습한 정책(`~/unbolt_vla/policy.pt`)이 있어야 켜짐 ([심화 모듈 5](05_vla.md)) |
+| **VLA 집기** (작업 + 학습된 집기 정책) | 작업 모드 전체 + 손목 카메라 + `vla_pick` 노드 (`pick:=vla`) | 작업 모드와 같음. 학습한 정책(`~/airlab_vla/policy.pt`)이 있어야 켜짐 ([심화 모듈 5](05_vla.md)) |
 
 세 모드 모두 MuJoCo 창과 RViz를 켤지 고를 수 있습니다. 지도 만들기로 만든 지도를 **작업** 모드의 지도 목록에서 고르면,
 그 지도로 상자 옮기기를 할 수 있습니다 (로봇이 같은 자리에서 출발하므로 장소 좌표가 그대로 맞습니다).
 
-- 런처는 페이지만 보여 주고 bringup을 대신 실행해 주는 작은 프로그램입니다 (로그: `~/.ros/unbolt_launcher.log`).
+- 런처는 페이지만 보여 주고 bringup을 대신 실행해 주는 작은 프로그램입니다 (로그: `~/.ros/airlab_launcher.log`).
 - 켜는 도중에 **시작 취소**를 누를 수 있습니다. 런처 터미널에서 `Ctrl + C`를 누르면 런처가 켠 시스템도 함께 꺼집니다.
 - 다른 터미널에서 켠 시스템이 있으면 그것에 연결만 하고, 새로 켜지는 않습니다.
 
@@ -400,9 +400,9 @@ Claude가 어떻게 반응했는지 `/task_status` 로그와 함께 제출.
 
 | 파일 | 내용 |
 |---|---|
-| `unbolt_manipulation/task_planner_core.py` | `SYSTEM_PROMPT`, `TOOLS`, `TaskExecutor`, `TaskPlanner`, `ScriptedLLM` |
-| `unbolt_manipulation/task_planner.py` | ROS 노드: `/task_command` → `/task_status`, `/task_cancel`, `/task_world`, `/task_reset` |
-| `unbolt_manipulation/ask.py` | 명령 CLI |
-| `unbolt_dashboard/web/index.html` | 대시보드 (외부 라이브러리 없이 rosbridge 프로토콜 직접 구현) |
-| `unbolt_dashboard/dashboard_server.py` | 웹 서버, 지도 PNG, 로봇 위치 TF 재발행 |
+| `airlab_manipulation/task_planner_core.py` | `SYSTEM_PROMPT`, `TOOLS`, `TaskExecutor`, `TaskPlanner`, `ScriptedLLM` |
+| `airlab_manipulation/task_planner.py` | ROS 노드: `/task_command` → `/task_status`, `/task_cancel`, `/task_world`, `/task_reset` |
+| `airlab_manipulation/ask.py` | 명령 CLI |
+| `airlab_dashboard/web/index.html` | 대시보드 (외부 라이브러리 없이 rosbridge 프로토콜 직접 구현) |
+| `airlab_dashboard/dashboard_server.py` | 웹 서버, 지도 PNG, 로봇 위치 TF 재발행 |
 | Claude API 문서 – Tool use | <https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview> |

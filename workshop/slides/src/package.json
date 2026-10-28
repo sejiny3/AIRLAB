@@ -1,7 +1,7 @@
 {
-  "name": "unbolt-workshop-slides",
+  "name": "airlab-workshop-slides",
   "private": true,
-  "description": "Generates workshop/slides/UNBOLT_workshop.pptx",
+  "description": "Generates workshop/slides/AIRLAB_workshop.pptx",
   "scripts": {
     "build": "node build.js"
   },

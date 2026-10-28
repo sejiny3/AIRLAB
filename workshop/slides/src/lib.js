@@ -1,4 +1,4 @@
-// Shared theme, layouts and slide helpers for the UNBOLT lecture deck (pptxgenjs).
+// Shared theme, layouts and slide helpers for the AIRLAB lecture deck (pptxgenjs).
 const fs = require('fs');
 const path = require('path');
 const pptxgen = require('pptxgenjs');
@@ -12,7 +12,7 @@ const REPO = path.resolve(__dirname, '..', '..', '..');
 const IMG_DIRS = [path.join(REPO, 'docs'), path.join(__dirname, 'assets')];
 
 const THEME = {
-  name: 'UNBOLT Workshop',
+  name: 'AIRLAB Workshop',
   font: 'Malgun Gothic',
   colors: {
     dk1: '1B2430', lt1: 'FFFFFF', dk2: '4A5668', lt2: 'F1F3F6',
@@ -25,8 +25,8 @@ const MONO = 'Consolas';
 
 const pres = new pptxgen();
 pres.layout = 'LAYOUT_WIDE'; // 13.33 x 7.5 in
-pres.title = 'UNBOLT 강습회: ROS 2 + MuJoCo로 만드는 주행형 양팔로봇';
-pres.author = 'UNBOLT';
+pres.title = 'AIRLAB 강습회: ROS 2 + MuJoCo로 만드는 주행형 양팔로봇';
+pres.author = 'AIRLAB';
 pres.theme = { headFontFace: THEME.font, bodyFontFace: THEME.font };
 const C = pres.SchemeColor;
 const S = pres.shapes;
@@ -55,7 +55,7 @@ pres.defineSlideMaster({
   background: { color: C.background1 },
   objects: [
     { placeholder: { options: { name: 'title', type: 'title', x: 0.6, y: 0.35, w: 10.0, h: 0.85, fontSize: 30, bold: true, color: C.text1, valign: 'middle', align: 'left', margin: 0 }, text: '' } },
-    { text: { text: 'UNBOLT 강습회', options: { x: 0.6, y: 6.95, w: 4.0, h: 0.3, fontSize: 10, color: C.text2, margin: 0 } } },
+    { text: { text: 'AIRLAB 강습회', options: { x: 0.6, y: 6.95, w: 4.0, h: 0.3, fontSize: 10, color: C.text2, margin: 0 } } },
   ],
   slideNumber: { x: 12.2, y: 6.95, w: 0.6, h: 0.3, fontSize: 10, color: C.text2, align: 'right' },
 });

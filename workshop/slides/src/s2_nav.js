@@ -65,7 +65,7 @@ module.exports = function build() {
 
   s = content('실습 1. SLAM으로 지도 만들기', TAG, '칸막이벽의 문(x −1.2 m, y −0.6~1.0 m)을 지나 3번 공급 테이블이 있는 서쪽 방까지 다녀오게 합니다. 시간이 부족한 학생은 explore_waypoints.py를 쓰게 하세요. 이것은 실제 위치(/ground_truth)로 정해진 경로를 도는 지도 작성 도우미이지 Nav2가 아닙니다. 체크포인트 2-1.');
   lab(s, {
-    cmd: '# 터미널 1\n$ ros2 launch unbolt_navigation slam.launch.py\n\n# 터미널 2: 키보드로 천천히 (x 키로 감속)\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n\n# 시간이 부족하면 자동 탐색 (약 3분)\n$ ros2 run unbolt_navigation explore_waypoints.py \\\n    --ros-args -p use_sim_time:=true',
+    cmd: '# 터미널 1\n$ ros2 launch airlab_navigation slam.launch.py\n\n# 터미널 2: 키보드로 천천히 (x 키로 감속)\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n\n# 시간이 부족하면 자동 탐색 (약 3분)\n$ ros2 run airlab_navigation explore_waypoints.py \\\n    --ros-args -p use_sim_time:=true',
     cmdH: 3.5,
     explain: ['RViz에 회색 지도가 조금씩 생긴다', '문을 지나 서쪽 방까지 갔다가 처음 자리로 돌아오기'],
     ok: '벽이 이중으로 겹치지 않은 방 전체 지도가 보인다.\n\n✅ 체크포인트 2-1',
@@ -151,25 +151,25 @@ module.exports = function build() {
 
   s = content('이 로봇의 Nav2 설정', TAG, 'Humble 공식 nav2_params.yaml에서 출발해 바꾼 점만 정리했습니다. 실습 5에서 이 중 inflation과 속도를 바꿔 봅니다.');
   table(s, [['항목', '값', '이유'], ['footprint', '0.60 × 0.54 m 직사각형', '섀시 + 바퀴. 원보다 문 통과가 정확'], ['controller', 'Regulated Pure Pursuit, 0.35 m/s', '차동구동, 제자리 회전 가능'], ['inflation_radius', '0.6 m', '벽에서 여유'], ['local costmap', '4 × 4 m, 0.05 m', 'LiDAR 장애물만'], ['goal tolerance', 'xy 0.15 m, yaw 0.2 rad', '이만큼 가까우면 도착으로 판정'], ['AMCL 시작 위치', '지도 원점 (0, 0, 0)', '로봇이 원점에서 시작']], 0.6, 1.5, 12.1, [2.6, 4.3, 5.2], 16);
-  text(s, '파일: unbolt_navigation/config/nav2_params.yaml (맨 위 주석에 공식 파일과 다른 점)', { x: 0.6, y: 6.1, w: 12.1, h: 0.5, fontSize: 14, color: C.text2 });
+  text(s, '파일: airlab_navigation/config/nav2_params.yaml (맨 위 주석에 공식 파일과 다른 점)', { x: 0.6, y: 6.1, w: 12.1, h: 0.5, fontSize: 14, color: C.text2 });
 
   s = content('실습 3. 저장된 지도로 목표점 주행', TAG, '체크포인트 2-3은 동쪽 방, 서쪽 방 목표 연속 도착입니다. 칸막이 문을 통과하는 모습을 보게 하세요.');
   img(s, 'step3_nav_rviz.jpg', 0.6, 1.5, 6.6, 4.5, 'RViz의 Nav2: 지도, costmap, 전역 경로');
-  code(s, '$ ros2 launch unbolt_navigation navigation.launch.py', 0.6, 6.15, 6.6, 0.6, 13);
+  code(s, '$ ros2 launch airlab_navigation navigation.launch.py', 0.6, 6.15, 6.6, 0.6, 13);
   step(s, 1, '위치 확인', '초록 파티클이 로봇 주변에 모였나? 아니면 2D Pose Estimate', 7.5, 1.6, 5.2);
   step(s, 2, '목표 찍기', '2D Goal Pose로 드래그 (화살표 = 도착 방향)', 7.5, 2.85, 5.2);
   step(s, 3, '보이는 것', '초록·분홍 선 = 경로, 색 사각형 = local costmap, 하늘색 띠 = inflation', 7.5, 4.1, 5.2);
   step(s, 4, '서쪽 방도', '칸막이 문을 지나가는지 확인 ✅ 2-3', 7.5, 5.35, 5.2);
 
   s = content('실습 4. 내 지도로 주행하고 오차 재기', TAG, 'nav_goal_test.py는 목표 3개를 차례로 가고, 시뮬레이터의 진짜 위치와 비교해 오차를 출력합니다. 표를 채우게 하세요. 체크포인트 2-4: 3/3 도착, 위치 오차 15 cm 이내.');
-  code(s, '$ ros2 launch unbolt_navigation navigation.launch.py \\\n    map:=$HOME/maps/my_room.yaml\n\n# 다른 터미널: 목표 3개 자동 주행 + 오차 출력\n$ ros2 run unbolt_navigation nav_goal_test.py \\\n    --ros-args -p use_sim_time:=true', 0.6, 1.5, 6.6, 2.6, 13);
+  code(s, '$ ros2 launch airlab_navigation navigation.launch.py \\\n    map:=$HOME/maps/my_room.yaml\n\n# 다른 터미널: 목표 3개 자동 주행 + 오차 출력\n$ ros2 run airlab_navigation nav_goal_test.py \\\n    --ros-args -p use_sim_time:=true', 0.6, 1.5, 6.6, 2.6, 13);
   table(s, [['목표', '걸린 시간', '위치 오차 (cm)', '방향 오차 (°)'], ['(4.0, −2.4)', '', '', ''], ['(−2.0, 1.2)', '', '', ''], ['(0.0, 0.0)', '', '', '']], 0.6, 4.35, 6.6, [1.8, 1.4, 1.8, 1.6], 15);
   callout(s, 'ok', 7.5, 1.5, 5.2, 2.5, '3/3 도착, 위치 오차 15 cm 이내\n\n✅ 체크포인트 2-4');
   callout(s, 'why', 7.5, 4.2, 5.2, 2.5, '오차가 tolerance(15 cm)보다 작은 이유: Nav2는 15 cm 안에 들어오면 "도착"이라 멈추지만, 보통은 더 가까이 와서 멈춘다.');
 
   s = content('실습 5. 파라미터 바꿔 보기', TAG, 'A와 B는 global, local 두 costmap 모두 바꿔야 합니다. 일부 파라미터는 ros2 param set으로 실행 중에도 바뀝니다. 기본 과제는 이 중 두 개의 결과 제출입니다.');
   table(s, [['실험', '바꿀 곳', '예상'], ['A', 'inflation_radius 0.6 → 0.25 (둘 다)', '벽에 바짝 붙는 경로'], ['B', 'inflation_radius 0.6 → 1.2', '문을 통과하지 못할 수도'], ['C', 'desired_linear_vel 0.35 → 0.6', '빨라지지만 코너에서?'], ['D', 'xy_goal_tolerance 0.15 → 0.05', '도착 판정이 엄격해져 오래 걸림']], 0.6, 1.5, 12.1, [1.2, 5.6, 5.3], 16);
-  code(s, '$ cp $(ros2 pkg prefix unbolt_navigation)/share/unbolt_navigation/config/nav2_params.yaml ~/my_nav2.yaml\n$ code ~/my_nav2.yaml        # VS Code로 열어 고치기\n$ ros2 launch unbolt_navigation navigation.launch.py params_file:=$HOME/my_nav2.yaml', 0.6, 4.15, 12.1, 1.3, 13);
+  code(s, '$ cp $(ros2 pkg prefix airlab_navigation)/share/airlab_navigation/config/nav2_params.yaml ~/my_nav2.yaml\n$ code ~/my_nav2.yaml        # VS Code로 열어 고치기\n$ ros2 launch airlab_navigation navigation.launch.py params_file:=$HOME/my_nav2.yaml', 0.6, 4.15, 12.1, 1.3, 13);
   callout(s, 'tip', 0.6, 5.65, 12.1, 1.05, '원본은 그대로 두고 복사본을 고친다. 하나씩 바꾸고 같은 목표로 비교한다.', '팁');
 
   s = content('실습 6. 지도에 없는 장애물', TAG, '상자 위치는 (2.0, −0.1). 원점에서 (4.0, −2.4)로 가는 원래 경로가 수납장 북쪽으로 곧장 동쪽으로 가다가 내려가는데, 정확히 그 자리를 지나기 때문에 우회가 분명하게 보입니다. 옛 지도(상자 없음)를 쓰는 것이 핵심입니다.');
@@ -179,7 +179,7 @@ module.exports = function build() {
   box(s, 6.8, 1.5, 5.9, 2.4, C.text1);
   text(s, '22초', { x: 7.1, y: 1.6, w: 5.3, h: 1.1, fontSize: 54, bold: true, color: C.accent1 });
   text(s, '상자 있음: LiDAR가 상자를 보고 돌아서 감', { x: 7.1, y: 2.8, w: 5.3, h: 0.9, fontSize: 16, color: C.background1 });
-  code(s, '<geom name="surprise" type="box" size="0.2 0.2 0.3" pos="2.0 -0.1 0.3"/>   # my_scene.xml에 추가\n$ ros2 launch unbolt_navigation navigation.launch.py \\\n    model_path:=$UNBOLT_ROOT/models/my_scene.xml       # 지도는 옛 지도 그대로', 0.6, 4.15, 12.1, 1.15, 13);
+  code(s, '<geom name="surprise" type="box" size="0.2 0.2 0.3" pos="2.0 -0.1 0.3"/>   # my_scene.xml에 추가\n$ ros2 launch airlab_navigation navigation.launch.py \\\n    model_path:=$AIRLAB_ROOT/models/my_scene.xml       # 지도는 옛 지도 그대로', 0.6, 4.15, 12.1, 1.15, 13);
   bullets(s, ['obstacle layer가 LiDAR로 본 상자를 costmap에 표시 → planner가 경로를 다시 계산', '너무 늦게 보이면 controller가 멈추고 복구 동작 (로그에서 Running spin / backup 찾기)'], 0.6, 5.5, 9.6, 1.2, 15);
   text(s, '원점 → (4.0, −2.4)\n강사 노트북 실측 ✅ 2-5', { x: 10.3, y: 5.5, w: 2.4, h: 1.0, fontSize: 12, color: C.text2, align: 'right' });
 
@@ -200,14 +200,14 @@ module.exports = function build() {
   });
   callout(s, 'analogy', 7.8, 5.5, 4.9, 1.2, '불 꺼진 집을 손전등으로: 빛이 닿는 끝까지 걸어가기를 반복하면 집 전체가 보인다');
 
-  s = content('frontier_explorer가 1초마다 하는 일', TAG, 'unbolt_navigation/scripts/frontier_explorer.py입니다. ①②는 OpenCV 몇 줄(오른쪽 코드), ③이 핵심입니다. 설 자리는 costmap 비용이 낮고(벽에서 약 0.55 m 이상), 로봇이 갈 수 있고, 프론티어에서 빈 공간을 따라 1 m 안이어야 합니다. "빈 공간을 따라"가 중요합니다: 직선 거리로 재면 칸막이 벽 반대편이 뽑혀서 그 너머를 못 봅니다. 그래도 못 보면 다른 자리에서 한 번 더, 두 번 실패하면 그 프론티어는 포기합니다(벽에 붙은 좁은 틈 등). 탐색 모드의 Nav2는 로봇을 반지름 0.44 m 원으로 봅니다(회전 때 모서리가 쓰는 0.40 m + 여유). 실제로 겪은 문제: 처음에는 실행 절반 정도에서 지도가 비스듬히 두 번 그려졌는데, 추적해 보니 로봇이 공급 테이블 다리에 걸려 바퀴만 헛돌았고(오도메트리 틀어짐), 근본 원인은 브리지의 LiDAR가 쓰던 mj_multiRay가 테이블 다리 두 개를 건너뛴 것이었습니다(지금은 광선마다 mj_ray). 고친 뒤 6번 연속 성공. 방을 넓힌 뒤 강사 노트북에서 약 7분, 목표 19개, 실패 1번, 알아낸 넓이 84 m²였습니다.');
+  s = content('frontier_explorer가 1초마다 하는 일', TAG, 'airlab_navigation/scripts/frontier_explorer.py입니다. ①②는 OpenCV 몇 줄(오른쪽 코드), ③이 핵심입니다. 설 자리는 costmap 비용이 낮고(벽에서 약 0.55 m 이상), 로봇이 갈 수 있고, 프론티어에서 빈 공간을 따라 1 m 안이어야 합니다. "빈 공간을 따라"가 중요합니다: 직선 거리로 재면 칸막이 벽 반대편이 뽑혀서 그 너머를 못 봅니다. 그래도 못 보면 다른 자리에서 한 번 더, 두 번 실패하면 그 프론티어는 포기합니다(벽에 붙은 좁은 틈 등). 탐색 모드의 Nav2는 로봇을 반지름 0.44 m 원으로 봅니다(회전 때 모서리가 쓰는 0.40 m + 여유). 실제로 겪은 문제: 처음에는 실행 절반 정도에서 지도가 비스듬히 두 번 그려졌는데, 추적해 보니 로봇이 공급 테이블 다리에 걸려 바퀴만 헛돌았고(오도메트리 틀어짐), 근본 원인은 브리지의 LiDAR가 쓰던 mj_multiRay가 테이블 다리 두 개를 건너뛴 것이었습니다(지금은 광선마다 mj_ray). 고친 뒤 6번 연속 성공. 방을 넓힌 뒤 강사 노트북에서 약 7분, 목표 19개, 실패 1번, 알아낸 넓이 84 m²였습니다.');
   [['프론티어 칸 찾기', '빈 칸 중 옆이 미지인 칸 (/map)'], ['묶기', '붙어 있는 칸끼리 한 묶음, 0.3 m 미만은 무시'], ['설 자리 고르기', 'costmap이 낮고 · 갈 수 있고 · 빈 공간을 따라 1 m 안'], ['점수로 하나 고르기', '가는 거리 − 프론티어 길이 보너스'], ['Nav2로 가기', 'NavigateToPose. 가는 도중 프론티어가 지워지면 바로 다음으로'], ['끝', '갈 수 있는 프론티어가 없으면 지도 저장 (~/maps)']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6, 1.5 + i * 0.86, 6.4, 0.4));
   code(s, '# ① 프론티어 칸\nfree = (grid >= 0) & (grid < 25)\nunknown = grid < 0\nfrontier = free & (cv2.dilate(\n    unknown.astype(np.uint8), cross) > 0)\n\n# ② 붙어 있는 칸끼리 묶기\nn, labels, stats, _ = \\\n  cv2.connectedComponentsWithStats(\n    frontier.astype(np.uint8),\n    connectivity=8)', 7.3, 1.5, 5.4, 3.5, 12);
   callout(s, 'why', 7.3, 5.2, 5.4, 1.5, '거리는 빈 공간을 따라 잰다: 직선으로 재면 벽 반대편에 서서 아무것도 못 본다');
 
-  s = content('실습 8. 대시보드로 자동 지도 만들기', TAG, '런처의 "지도 만들기" 모드는 시뮬레이터 + slam_toolbox + Nav2(저장된 지도·AMCL 없이) + frontier_explorer + 대시보드를 켭니다(unbolt_dashboard mapping.launch.py). 준비되면 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 모습과 목표가 바뀌는 순간을 같이 보세요. 터미널로만 하려면 ros2 launch unbolt_navigation explore.launch.py (RViz로 보기). 체크포인트 2-7.');
+  s = content('실습 8. 대시보드로 자동 지도 만들기', TAG, '런처의 "지도 만들기" 모드는 시뮬레이터 + slam_toolbox + Nav2(저장된 지도·AMCL 없이) + frontier_explorer + 대시보드를 켭니다(airlab_dashboard mapping.launch.py). 준비되면 탐색이 저절로 시작됩니다. 지도 카드에서 지도가 자라는 모습과 목표가 바뀌는 순간을 같이 보세요. 터미널로만 하려면 ros2 launch airlab_navigation explore.launch.py (RViz로 보기). 체크포인트 2-7.');
   img(s, 'dashboard_explored.png', 0.6, 1.5, 6.9, 5.2, '탐색이 끝난 지도 만들기 화면: 완성된 지도, 저장 경로, 키보드 조종');
-  code(s, '$ ros2 run unbolt_dashboard \\\n      dashboard_launcher\n# 브라우저: http://localhost:8080', 7.8, 1.5, 4.9, 1.2, 13);
+  code(s, '$ ros2 run airlab_dashboard \\\n      dashboard_launcher\n# 브라우저: http://localhost:8080', 7.8, 1.5, 4.9, 1.2, 13);
   [['모드: 지도 만들기 → 연결', '20~40초 뒤 탐색이 저절로 시작'], ['지켜보기', '지도가 자라고, 하늘색 프론티어가 줄어든다'], ['탐색 완료 (3~4분)', '~/maps에 지도 자동 저장']].forEach(([h, b], i) => step(s, i + 1, h, b, 7.8, 2.9 + i * 0.9, 4.9, 0.4));
   callout(s, 'ok', 7.8, 5.6, 4.9, 1.1, '"탐색 완료" + 저장 경로 ✅ 2-7');
 

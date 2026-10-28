@@ -1,7 +1,7 @@
 #!/bin/bash
-# UNBOLT 실습 환경 점검. 모든 줄이 ✔ 또는 ! 이면 실습 가능, ✘ 가 있으면 문제 해결 문서를 보세요.
-#   bash ~/unbolt/workshop/setup/check_env.sh
-REPO="${UNBOLT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+# AIRLAB 실습 환경 점검. 모든 줄이 ✔ 또는 ! 이면 실습 가능, ✘ 가 있으면 문제 해결 문서를 보세요.
+#   bash ~/airlab/workshop/setup/check_env.sh
+REPO="${AIRLAB_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 P=0; W=0; F=0
 pass() { printf '  \033[32m✔\033[0m %s\n' "$1"; P=$((P+1)); }
 warn() { printf '  \033[33m!\033[0m %s\n' "$1"; W=$((W+1)); }
@@ -15,7 +15,7 @@ grep -qi microsoft /proc/version && pass "WSL2 커널 $(uname -r)" || warn "WSL�
 n=$(nproc); [ "$n" -ge 4 ] && pass "CPU ${n}코어" || warn "CPU ${n}코어 (4코어 이상 권장)"
 mem=$(awk '/MemTotal/{printf "%d", $2/1024/1024+0.5}' /proc/meminfo)
 [ "$mem" -ge 7 ] && pass "WSL 메모리 ${mem}GB" || warn "WSL 메모리 ${mem}GB (8GB 이상 권장, 설치 가이드의 .wslconfig 참고)"
-case "$REPO" in /mnt/*) warn "코드가 Windows 드라이브에 있음 ($REPO) → ~/unbolt 권장" ;; *) pass "코드 위치 $REPO" ;; esac
+case "$REPO" in /mnt/*) warn "코드가 Windows 드라이브에 있음 ($REPO) → ~/airlab 권장" ;; *) pass "코드 위치 $REPO" ;; esac
 # ROS Humble is built for the system Python 3.10; scripts with "#!/usr/bin/env python3"
 # (rosbridge, several Nav2/MoveIt tools) die if conda or a venv puts another python3 first.
 py3=$(command -v python3)
@@ -40,10 +40,10 @@ if [ -f /opt/ros/humble/setup.bash ]; then
   set +u; source /opt/ros/humble/setup.bash
   [ -f "$REPO/ros2_ws/install/setup.bash" ] && source "$REPO/ros2_ws/install/setup.bash"
   for p in rviz2 slam_toolbox nav2_bringup moveit_ros_move_group moveit_configs_utils rosbridge_server xacro teleop_twist_keyboard cv_bridge; do
-    ros2 pkg prefix "$p" >/dev/null 2>&1 && pass "$p" || fail "$p 없음 (install_unbolt.sh 다시 실행)"
+    ros2 pkg prefix "$p" >/dev/null 2>&1 && pass "$p" || fail "$p 없음 (install_airlab.sh 다시 실행)"
   done
 else
-  fail "/opt/ros/humble 없음 (install_unbolt.sh 실행)"
+  fail "/opt/ros/humble 없음 (install_airlab.sh 실행)"
 fi
 
 sec "Python"
@@ -55,12 +55,12 @@ v=$(py 'import anthropic; print(anthropic.__version__)'); [ -n "$v" ] && pass "a
 v=$(py 'import brotli; print(brotli.__version__)'); case "$v" in 1.0.*|"") fail "Brotli ${v:-없음} → pip3 install --user --upgrade Brotli" ;; *) pass "Brotli $v" ;; esac
 v=$(py 'import torch; print(torch.__version__)'); [ -n "$v" ] && pass "torch $v (심화 모듈 5)" || warn "torch 없음 (심화 모듈 5 VLA에만 필요: pip3 install --user torch --index-url https://download.pytorch.org/whl/cpu)"
 
-sec "UNBOLT 코드"
+sec "AIRLAB 코드"
 for d in openarm_mujoco openarm_description; do
   [ -d "$REPO/third_party/$d/.git" ] && pass "third_party/$d @ $(git -C "$REPO/third_party/$d" rev-parse --short HEAD)" || fail "third_party/$d 없음"
 done
-if ros2 pkg prefix unbolt_mujoco_bridge >/dev/null 2>&1; then pass "워크스페이스 빌드됨"; else fail "워크스페이스 미빌드 (cd $REPO/ros2_ws && colcon build --symlink-install)"; fi
-grep -q '# >>> unbolt >>>' ~/.bashrc && pass "~/.bashrc 설정" || warn "~/.bashrc 설정 없음"
+if ros2 pkg prefix airlab_mujoco_bridge >/dev/null 2>&1; then pass "워크스페이스 빌드됨"; else fail "워크스페이스 미빌드 (cd $REPO/ros2_ws && colcon build --symlink-install)"; fi
+grep -q '# >>> airlab >>>' ~/.bashrc && pass "~/.bashrc 설정" || warn "~/.bashrc 설정 없음"
 out=$(cd /tmp && timeout 60 python3 - "$REPO/models/scene.xml" 2>&1 <<'EOF'
 import sys, time, mujoco
 m = mujoco.MjModel.from_xml_path(sys.argv[1]); d = mujoco.MjData(m)
@@ -75,7 +75,7 @@ case "$out" in
 esac
 
 sec "LLM (모듈 4, 선택)"
-if [ -f ~/.unbolt_key ]; then source ~/.unbolt_key; fi
+if [ -f ~/.airlab_key ]; then source ~/.airlab_key; fi
 k="${ANTHROPIC_API_KEY:-}"
 if [ -z "$k" ]; then warn "ANTHROPIC_API_KEY 없음 → llm:=scripted 모드로 실습 가능 (setup_api_key.sh)"
 elif [[ "$k" == sk-ant-* ]]; then pass "ANTHROPIC_API_KEY 설정됨 (${#k}자)"

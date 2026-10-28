@@ -50,8 +50,8 @@
 | `NO_PUBKEY F42ED6FBAB17C654` 또는 `EXPKEYSIG` | 옛날 방식으로 등록한 ROS 저장소 키 만료 | `sudo rm /etc/apt/sources.list.d/ros2.list /usr/share/keyrings/ros-archive-keyring.gpg` 후 스크립트 다시 실행 |
 | `최신 버전 조회 실패 (… GitHub API 제한 …)` | 같은 IP에서 GitHub API를 많이 부름 (강의실) | 경고일 뿐, 고정 버전으로 계속 진행됨 |
 | `Temporary failure resolving 'archive.ubuntu.com'` | WSL DNS 문제 | `wsl --shutdown` 후 재시도. VPN을 끄기. 계속되면 아래 "DNS 고정" |
-| `$'\r': command not found`, `/bin/bash^M: bad interpreter` | 스크립트 줄바꿈이 Windows(CRLF) 형식 (ZIP을 Windows 도구로 풀었거나 git `autocrlf`) | `sudo apt install -y dos2unix && find ~/unbolt -name '*.sh' -exec dos2unix {} +` |
-| `코드가 Windows 드라이브(/mnt/c/...)에 있습니다` 경고 | 코드가 C: 드라이브에 있음 | `cp -r <그 폴더> ~/unbolt` 후 `~/unbolt`에서 다시 실행 |
+| `$'\r': command not found`, `/bin/bash^M: bad interpreter` | 스크립트 줄바꿈이 Windows(CRLF) 형식 (ZIP을 Windows 도구로 풀었거나 git `autocrlf`) | `sudo apt install -y dos2unix && find ~/airlab -name '*.sh' -exec dos2unix {} +` |
+| `코드가 Windows 드라이브(/mnt/c/...)에 있습니다` 경고 | 코드가 C: 드라이브에 있음 | `cp -r <그 폴더> ~/airlab` 후 `~/airlab`에서 다시 실행 |
 | colcon: `Package 'openarm_description' not found` | ZIP으로 받아 심볼릭 링크가 깨짐 | 스크립트를 다시 실행 (5단계가 링크를 다시 만듦) |
 | pip가 `numpy 2.x`를 깔았다 / `cv_bridge` import 오류 `numpy.core.multiarray failed to import` | pip numpy가 시스템 numpy를 가림 | `pip3 uninstall -y numpy` 후 `pip3 install --user "numpy<2"` |
 | `module 'cv2' has no attribute 'aruco'` | pip의 `opencv-python`이 Ubuntu OpenCV를 가림 | `pip3 uninstall -y opencv-python opencv-contrib-python` |
@@ -74,12 +74,12 @@ PowerShell에서 `wsl --shutdown` 후 다시 엽니다.
 | 증상 | 원인 | 해결 |
 |---|---|---|
 | `ros2: command not found` | 설치 전에 연 터미널 | 새 터미널을 열거나 `source ~/.bashrc` |
-| `Package 'unbolt_mujoco_bridge' not found` (`unbolt_dashboard` 등도 같음) | 워크스페이스 환경 미적용: `~/.bashrc`에 unbolt 블록이 없거나, 블록을 넣기 전에 연 터미널 | `grep ">>> unbolt" ~/.bashrc`로 확인. 있으면 `source ~/.bashrc`, 없으면 설치 스크립트를 다시 실행하거나 [설치 가이드 4-1](00_install.md#4-1-환경-설정-bashrc가-하는-일)대로 직접 넣기 (코드를 `~/unbolt`가 아닌 곳에 두었을 때도) |
-| 새로 만든 파일(노드, launch)이 안 보임 | `--symlink-install`이어도 **새 파일**은 빌드 필요 | `cd ~/unbolt/ros2_ws && colcon build --symlink-install` |
+| `Package 'airlab_mujoco_bridge' not found` (`airlab_dashboard` 등도 같음) | 워크스페이스 환경 미적용: `~/.bashrc`에 airlab 블록이 없거나, 블록을 넣기 전에 연 터미널 | `grep ">>> airlab" ~/.bashrc`로 확인. 있으면 `source ~/.bashrc`, 없으면 설치 스크립트를 다시 실행하거나 [설치 가이드 4-1](00_install.md#4-1-환경-설정-bashrc가-하는-일)대로 직접 넣기 (코드를 `~/airlab`가 아닌 곳에 두었을 때도) |
+| 새로 만든 파일(노드, launch)이 안 보임 | `--symlink-install`이어도 **새 파일**은 빌드 필요 | `cd ~/airlab/ros2_ws && colcon build --symlink-install` |
 | `Lookup would require extrapolation into the future/past` | 그 노드가 시뮬레이션 시간을 안 씀 | `--ros-args -p use_sim_time:=true` 붙이기 |
 | `simulation is slower than real_time_factor` 경고 | 노트북이 물리 계산을 못 따라감 | 다른 프로그램 끄기, 전원 연결, `use_viewer:=false` (MuJoCo 창 끄기), RViz 표시 줄이기. 동작은 느려질 뿐 결과는 같음 |
 | 이전 실행이 안 꺼져서 이상하게 동작 (토픽 발행자가 2개, 로봇 두 대처럼) | `Ctrl + C` 뒤에도 남은 프로세스 | 아래 "깨끗하게 종료" |
-| 다른 사람 로봇의 토픽이 보임 | 같은 네트워크·같은 `ROS_DOMAIN_ID` (WSL 네트워크를 mirrored로 바꾼 경우) | 강사가 정한 번호로 `export ROS_DOMAIN_ID=<번호>` 를 `~/.bashrc`의 unbolt 블록에 |
+| 다른 사람 로봇의 토픽이 보임 | 같은 네트워크·같은 `ROS_DOMAIN_ID` (WSL 네트워크를 mirrored로 바꾼 경우) | 강사가 정한 번호로 `export ROS_DOMAIN_ID=<번호>` 를 `~/.bashrc`의 airlab 블록에 |
 
 **conda를 쓰는 노트북**: 프롬프트 앞에 `(base)`가 보이면 conda가 켜져 있는 것입니다. ROS 2 Humble은 Ubuntu의
 Python 3.10(`/usr/bin/python3`)용으로 만들어져 있어서, conda의 `python3`가 먼저 잡히면 `#!/usr/bin/env python3`로
@@ -131,7 +131,7 @@ $ ros2 daemon stop
 | `APIConnectionError` (다른 원인) | 인터넷 / 프록시 / 학교망 차단 | `curl -I https://api.anthropic.com` 로 확인. 휴대폰 핫스팟으로 시험 |
 | `the left spot of work_table is taken by red_box` | 그 자리에 이미 상자가 있다고 플래너가 기억함 (자리 하나에 상자 하나) | 다른 자리(`spot`)나 `auto`로. 실제로는 비어 있다면 "작업대 가서 확인해 줘"로 `check_table`을 불러 기억을 고친다 |
 | `where blue_box is is unknown; check_table ...` | `check_table`이 그 상자를 기억한 자리에서 못 봐서 "모름"으로 바꿈 | 상자가 있을 만한 테이블로 가서 확인하게 시키기, 또는 대시보드 **초기화** |
-| `AuthenticationError` / 401 | 키가 틀림 또는 삭제됨 | `bash ~/unbolt/workshop/setup/setup_api_key.sh` 다시 |
+| `AuthenticationError` / 401 | 키가 틀림 또는 삭제됨 | `bash ~/airlab/workshop/setup/setup_api_key.sh` 다시 |
 | `Could not resolve authentication method` / 키가 없다고 함 | 키를 넣기 **전에** 연 터미널에서 실행 | 새 터미널에서 bringup 다시. 확인: `echo ${#ANTHROPIC_API_KEY}` (길이만 나와야 정상) |
 | `credit balance is too low` | 크레딧 소진 | Console → Billing. 강의 중이면 `llm:=scripted`로 계속 |
 | `429` / `rate_limit_error` | 짧은 시간에 너무 많이 호출 | 잠시 후 다시. SDK가 자동 재시도함 |
@@ -141,11 +141,11 @@ $ ros2 daemon stop
 | 브라우저에서 `localhost:8080`이 안 열림 | `dashboard:=true` 빠짐, 또는 WSL localhost 전달 문제 | Ubuntu에서 `curl -I localhost:8080` 확인 → 되면 `wsl --shutdown` 후 다시. 그래도 안 되면 `hostname -I`의 IP로 `http://<IP>:8080` |
 | 대시보드에 "연결 끊김", 로그에 `rosbridge_websocket ... process has died ... exit code 1` | conda/venv가 켜져 있어 rosbridge가 ROS용이 아닌 Python으로 실행됨 (`No module named 'rclpy._rclpy_pybind11'`) | 아래 "conda를 쓰는 노트북" |
 | 대시보드에 "연결 끊김" (그 밖의 경우) | rosbridge(:9090) 안 뜸 | bringup 로그에서 `rosbridge_websocket` 오류 확인. 9090 포트를 다른 프로그램이 쓰는지 |
-| 대시보드에 **연결** 버튼이 없다 | 페이지를 런처가 아니라 bringup(dashboard_server)이 보여 주는 중 | `ros2 run unbolt_dashboard dashboard_launcher`를 켜고 페이지를 새로 고침 (bringup은 끈 상태에서) |
+| 대시보드에 **연결** 버튼이 없다 | 페이지를 런처가 아니라 bringup(dashboard_server)이 보여 주는 중 | `ros2 run airlab_dashboard dashboard_launcher`를 켜고 페이지를 새로 고침 (bringup은 끈 상태에서) |
 | 연결을 눌렀더니 "이전 프로그램이 아직 꺼지는 중입니다" | 방금 끈 시스템의 Nav2·MoveIt이 아직 종료 중 (최대 15초) | 10초쯤 뒤에 다시 연결 |
 | 연결을 눌렀더니 "다른 곳에서 켠 ROS가 이미 실행 중입니다" | 터미널에서 켠 bringup이 있음 | 그대로 쓰면 됨 (페이지가 이미 연결됨). 런처로 켜고 싶으면 그 터미널을 Ctrl+C |
-| "시스템이 멈췄습니다 (exit code …)" | 켜는 중 또는 실행 중에 launch가 종료됨 | 화면의 로그와 `~/.ros/unbolt_launcher.log`에서 `Traceback`, `has died` 찾기 |
-| 지도 만들기: 1분이 넘도록 "준비 중" (지도와 Nav2를 기다리는 중) | slam_toolbox가 아직 지도를 안 냈거나 Nav2가 안 뜸 | `~/.ros/unbolt_launcher.log`에서 `slam_toolbox`, `bt_navigator` 오류 찾기. 시스템 종료 후 다시 연결 |
+| "시스템이 멈췄습니다 (exit code …)" | 켜는 중 또는 실행 중에 launch가 종료됨 | 화면의 로그와 `~/.ros/airlab_launcher.log`에서 `Traceback`, `has died` 찾기 |
+| 지도 만들기: 1분이 넘도록 "준비 중" (지도와 Nav2를 기다리는 중) | slam_toolbox가 아직 지도를 안 냈거나 Nav2가 안 뜸 | `~/.ros/airlab_launcher.log`에서 `slam_toolbox`, `bt_navigator` 오류 찾기. 시스템 종료 후 다시 연결 |
 | 지도 만들기: "탐색 완료"인데 지도에 회색(미지)이 남음 | 장애물 뒤 그림자, 벽에 붙은 좁은 틈은 설 자리가 없어 포기함 (정상) | 키보드로 그쪽에 가서 보이게 한 뒤 **지도 저장**. 큰 방이 통째로 남았으면 **다시 탐색** |
 | 지도 만들기: 방이 비스듬히 두 번 겹쳐 그려짐 | 로봇이 어딘가에 걸려 바퀴만 헛돌았고(오도메트리가 틀어짐), SLAM이 틀린 각도로 스캔을 맞춤 | 그 지도는 버리고 **시스템 종료** → 다시 **연결**. `explore.launch.py`의 `_nav2()` 설정(원 반지름 0.44 m, 720개 광선 등)이나 브리지의 LiDAR 코드(`mj_ray`)를 `nav2_params.yaml`을 바꿨다면 되돌리기 |
 | 대시보드 키보드 조종이 안 먹음 | 탐색 중·작업 중이거나, 페이지가 키 입력을 못 받음(명령 입력창에 커서가 있으면 키가 입력창으로 감) | 지도 만들기는 **멈춤**, 작업은 끝나거나 **작업 취소** 뒤에. 페이지의 빈 곳을 한 번 클릭하고, 브라우저 페이지를 한 번 클릭한 뒤 W A S D. "앞에 장애물" 표시는 일부러 막은 것 |
@@ -159,9 +159,9 @@ $ ros2 daemon stop
 |---|---|---|
 | `No module named 'torch'` | PyTorch 미설치 (설치 스크립트는 넣지 않음) | `pip3 install --user torch --index-url https://download.pytorch.org/whl/cpu` |
 | `record`가 `EGLError` / 렌더링 오류 | `MUJOCO_GL=egl`이 설정돼 있음 (WSL에서는 EGL이 안 됨) | `unset MUJOCO_GL` 후 다시 (기본값이 WSLg의 GLFW를 씀) |
-| `no demos in ~/unbolt_vla/demos` | 녹화를 안 했거나 다른 사용자 홈 | `ros2 run unbolt_vla record --episodes 300` |
+| `no demos in ~/airlab_vla/demos` | 녹화를 안 했거나 다른 사용자 홈 | `ros2 run airlab_vla record --episodes 300` |
 | 학습이 아주 느림 (한 단계 0.5초 이상) | 다른 프로그램(시뮬레이터, 녹화)이 CPU를 씀 | 학습 중에는 bringup을 끄기. `--threads`로 코어 수 지정 |
-| VLA 집기 모드로 연결하면 "학습된 VLA 정책이 없습니다" | `~/unbolt_vla/policy.pt` 없음 | 실습 2~3 (녹화, 학습) 먼저 |
+| VLA 집기 모드로 연결하면 "학습된 VLA 정책이 없습니다" | `~/airlab_vla/policy.pt` 없음 | 실습 2~3 (녹화, 학습) 먼저 |
 | 집기에서 `no wrist camera` | 브리지가 손목 카메라를 안 냄 (`pick:=vla` 없이 켬) | `bringup.launch.py ... pick:=vla`, 확인: `ros2 topic hz /wrist_camera/image_raw` (10 Hz) |
 | 정책이 팔을 뻗다가 엉뚱한 곳에서 멈춤, `timeout` | 상자가 학습한 범위 밖(정렬이 크게 틀어짐) 또는 시뮬레이터가 실시간보다 많이 느림 | 대시보드 손목 카메라에 상자가 보이는지 확인. 다른 프로그램을 끄고 다시. MuJoCo 창(`use_viewer`)을 끄면 빨라짐 |
 

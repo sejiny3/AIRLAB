@@ -37,7 +37,7 @@
 ```
 
 - **ros2_control을 쓰지 않습니다.** 브리지가 `FollowJointTrajectory` 액션 서버 4개를 직접 제공합니다
-  (`unbolt_mujoco_bridge/trajectory_server.py`). MoveIt 입장에서는 실제 로봇 컨트롤러와 똑같이 보입니다.
+  (`airlab_mujoco_bridge/trajectory_server.py`). MoveIt 입장에서는 실제 로봇 컨트롤러와 똑같이 보입니다.
 - 팔은 MuJoCo의 **중력 보상**(`gravcomp`)을 켜서 위치 목표에 처짐 없이 도달합니다. 실제 로봇 팔의 중력 피드포워드와 같은 역할.
 
 | SRDF 그룹 | 관절 | 용도 |
@@ -60,7 +60,7 @@
 ## 실습 1. RViz MotionPlanning
 
 ```bash
-$ ros2 launch unbolt_moveit_config moveit.launch.py
+$ ros2 launch airlab_moveit_config moveit.launch.py
 ```
 
 ![MoveIt in RViz](../docs/step4_moveit_rviz.jpg)
@@ -78,7 +78,7 @@ $ ros2 launch unbolt_moveit_config moveit.launch.py
 같은 launch를 켜 둔 채 다른 터미널에서:
 
 ```bash
-$ ros2 run unbolt_moveit_config moveit_test.py --ros-args -p use_sim_time:=true
+$ ros2 run airlab_moveit_config moveit_test.py --ros-args -p use_sim_time:=true
 ```
 
 6개 동작(관절 목표, 자세 목표, 그리퍼)을 계획·실행하고 목표와 실제 관절 각도 오차를 출력합니다. 실행 중에:
@@ -92,11 +92,11 @@ $ ros2 topic echo /joint_states --field position --once
 
 ## 실습 3. Python으로 팔 움직이기
 
-`RobotSkills`(`unbolt_manipulation/skills.py`)는 MoveIt 호출을 감싼 클래스입니다.
+`RobotSkills`(`airlab_manipulation/skills.py`)는 MoveIt 호출을 감싼 클래스입니다.
 moveit.launch를 끄고, 주행·카메라까지 한 번에 켜는 bringup을 씁니다:
 
 ```bash
-$ ros2 launch unbolt_manipulation bringup.launch.py
+$ ros2 launch airlab_manipulation bringup.launch.py
 ```
 
 `~/arm_play.py`:
@@ -106,7 +106,7 @@ $ ros2 launch unbolt_manipulation bringup.launch.py
 import math, time
 import numpy as np
 import rclpy
-from unbolt_manipulation.skills import RobotSkills, grasp_rotation
+from airlab_manipulation.skills import RobotSkills, grasp_rotation
 
 rclpy.init()
 s = RobotSkills()
@@ -176,7 +176,7 @@ $ ros2 run tf2_ros tf2_echo base_footprint aruco_7 --ros-args -p use_sim_time:=t
 $ ros2 service call /mujoco_bridge/reset std_srvs/srv/Trigger
 $ ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
     "{header: {frame_id: map}, pose: {pose: {orientation: {w: 1.0}}}}"
-$ ros2 run unbolt_manipulation pick_place_demo --ros-args -p use_sim_time:=true
+$ ros2 run airlab_manipulation pick_place_demo --ros-args -p use_sim_time:=true
 ```
 
 > 시뮬레이터 리셋은 로봇을 원점으로 옮기지만 AMCL은 그 사실을 모릅니다. 실습 4에서 로봇을 몰았다면
@@ -236,11 +236,11 @@ MoveIt이 상자의 충돌을 모릅니다. 잡은 직후 상자를 `AttachedCol
 
 | 파일 | 내용 |
 |---|---|
-| `unbolt_moveit_config/config/unbolt.srdf.base` | 그룹, named state |
-| `unbolt_moveit_config/scripts/generate_collision_matrix.py` | MuJoCo로 자기충돌 행렬 계산 (Setup Assistant 대신) |
-| `unbolt_mujoco_bridge/trajectory_server.py` | `FollowJointTrajectory` → MuJoCo |
-| `unbolt_manipulation/skills.py` | `navigate`, `servo_to_marker`, `move_to_pose`, `move_linear`, `lower_until_contact`, `pick`, `place` |
-| `unbolt_manipulation/aruco_detector.py` | ArUco → TF |
+| `airlab_moveit_config/config/airlab.srdf.base` | 그룹, named state |
+| `airlab_moveit_config/scripts/generate_collision_matrix.py` | MuJoCo로 자기충돌 행렬 계산 (Setup Assistant 대신) |
+| `airlab_mujoco_bridge/trajectory_server.py` | `FollowJointTrajectory` → MuJoCo |
+| `airlab_manipulation/skills.py` | `navigate`, `servo_to_marker`, `move_to_pose`, `move_linear`, `lower_until_contact`, `pick`, `place` |
+| `airlab_manipulation/aruco_detector.py` | ArUco → TF |
 | MoveIt 2 문서 | <https://moveit.picknik.ai/humble/> |
 
 > 이 모듈의 `pick()`은 마커 좌표로 손 자세를 **계산**해서 집습니다. 같은 집기를 카메라 영상만 보고 **배워서** 하는 방법은

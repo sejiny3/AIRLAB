@@ -1,4 +1,4 @@
-# UNBOLT 강습회: ROS 2 + MuJoCo로 만드는 주행형 양팔로봇
+# AIRLAB 강습회: ROS 2 + MuJoCo로 만드는 주행형 양팔로봇
 
 **시뮬레이션 모델링부터 SLAM·Nav2 주행, MoveIt 양팔 조작, LLM 자연어 작업 계획까지 2일 완성**
 
@@ -98,9 +98,9 @@
 | [05_vla.md](05_vla.md) | 심화 모듈 5 (선택): VLA 집기 정책 시연 녹화 · CPU 학습 · 평가 · 대시보드 VLA 집기 모드 |
 | [troubleshooting.md](troubleshooting.md) | 증상별 문제 해결 |
 | [instructor_guide.md](instructor_guide.md) | 강사·조교용 운영 가이드 (사전 공지, 점검표, 시간 배분) |
-| [slides/UNBOLT_workshop.pptx](slides/UNBOLT_workshop.pptx) | 강의 슬라이드 184장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 심화 모듈 5(VLA), 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
+| [slides/AIRLAB_workshop.pptx](slides/AIRLAB_workshop.pptx) | 강의 슬라이드 184장: 설치 장(WSL·ROS 2 설치, ~/.bashrc 환경 설정, 첫 실행·대시보드), 모듈마다 비유·용어·따라 하기(성공 화면/안 되면)·요약·셀프 체크 퀴즈·과제, 심화 모듈 5(VLA), 부록(오류 TOP 8, 명령 모음). 슬라이드마다 발표자 노트(퀴즈 정답 포함). 생성 코드는 [slides/src](slides/src/README.md) |
 | `setup/check_windows.ps1` | Windows 사전 점검 (+ WSL 설치) |
-| `setup/install_unbolt.sh` | Ubuntu 안에서 ROS 2부터 빌드까지 한 번에 |
+| `setup/install_airlab.sh` | Ubuntu 안에서 ROS 2부터 빌드까지 한 번에 |
 | `setup/check_env.sh` | 설치 결과 점검 (✔/!/✘) |
 | `setup/setup_api_key.sh` | Claude API 키 저장 + 연결 확인 |
 

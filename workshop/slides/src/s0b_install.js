@@ -31,7 +31,7 @@ module.exports = function build() {
 
   s = content('WSL이란? Windows 안의 진짜 리눅스', TAG,
     'WSL2는 Windows 안에서 진짜 리눅스 커널을 돌립니다. 가상머신처럼 화면을 따로 띄우지 않고, 리눅스 프로그램의 창(MuJoCo, RViz)이 WSLg를 통해 Windows 창처럼 뜹니다. 두 세계는 파일(/mnt/c)과 네트워크(localhost)로 연결되어 있어서, Ubuntu에서 켠 대시보드를 Windows 브라우저로 볼 수 있습니다.');
-  [['ROS 2 · MuJoCo · UNBOLT 코드', C.accent1, C.background1], ['Ubuntu 22.04 (리눅스)', C.accent2, C.background1], ['WSL2: 진짜 리눅스 커널 + WSLg', C.accent3, C.background1], ['Windows 10 / 11', C.accent5, C.text1]].forEach(([t, f, col], i) => {
+  [['ROS 2 · MuJoCo · AIRLAB 코드', C.accent1, C.background1], ['Ubuntu 22.04 (리눅스)', C.accent2, C.background1], ['WSL2: 진짜 리눅스 커널 + WSLg', C.accent3, C.background1], ['Windows 10 / 11', C.accent5, C.text1]].forEach(([t, f, col], i) => {
     const y = 1.5 + i * 0.95;
     box(s, 0.6, y, 6.0, 0.78, f);
     text(s, t, { x: 0.85, y, w: 5.6, h: 0.78, fontSize: 17, bold: true, color: col, valign: 'middle' });
@@ -100,18 +100,18 @@ module.exports = function build() {
   });
 
   s = content('3단계. 실습 코드 받기 (5분)', TAG,
-    '코드 위치가 중요합니다. Windows 드라이브(/mnt/c)에 두면 리눅스와 Windows 파일 시스템을 오가느라 빌드와 실행이 몇 배 느려집니다. 교재의 모든 명령이 ~/unbolt를 쓰므로 이름도 그대로 맞추게 하세요.');
+    '코드 위치가 중요합니다. Windows 드라이브(/mnt/c)에 두면 리눅스와 Windows 파일 시스템을 오가느라 빌드와 실행이 몇 배 느려집니다. 교재의 모든 명령이 ~/airlab를 쓰므로 이름도 그대로 맞추게 하세요.');
   text(s, '방법 A. git clone (권장)', { x: 0.6, y: 1.45, w: 7.4, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ sudo apt install -y git\n$ git clone <강사가 안내한 저장소 주소> ~/unbolt', 0.6, 1.9, 7.4, 0.95, 13);
+  code(s, '$ sudo apt install -y git\n$ git clone <강사가 안내한 저장소 주소> ~/airlab', 0.6, 1.9, 7.4, 0.95, 13);
   text(s, '방법 B. ZIP 파일 (Windows 다운로드 폴더에 풀었다면)', { x: 0.6, y: 3.0, w: 7.4, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ ls /mnt/c/Users                  # 윈도우 사용자 이름 확인\n$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<폴더> ~/unbolt\n$ ls ~/unbolt\nREADME.md  docs  models  ros2_ws  workshop', 0.6, 3.45, 7.4, 1.4, 12);
+  code(s, '$ ls /mnt/c/Users                  # 윈도우 사용자 이름 확인\n$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<폴더> ~/airlab\n$ ls ~/airlab\nREADME.md  docs  models  ros2_ws  workshop', 0.6, 3.45, 7.4, 1.4, 12);
   code(s, '# 두 세계 사이 오가기\nUbuntu에서 본 Windows C:  →  /mnt/c\nWindows 탐색기에서 Ubuntu →  \\\\wsl$\\Ubuntu-22.04\\home\\<이름>\n지금 폴더를 탐색기로 열기 →  $ explorer.exe .', 0.6, 5.05, 7.4, 1.65, 12);
-  callout(s, 'why', 8.3, 1.5, 4.4, 2.6, '코드는 Ubuntu 홈의 ~/unbolt에 둔다. /mnt/c(Windows 드라이브)에 두면 빌드와 실행이 몇 배 느려진다.');
-  callout(s, 'warn', 8.3, 4.3, 4.4, 2.4, '폴더 이름은 ~/unbolt로. 교재의 명령이 모두 이 경로를 쓴다. 다른 곳에 두었다면 "환경 설정" 장의 직접 넣기를 따른다.');
+  callout(s, 'why', 8.3, 1.5, 4.4, 2.6, '코드는 Ubuntu 홈의 ~/airlab에 둔다. /mnt/c(Windows 드라이브)에 두면 빌드와 실행이 몇 배 느려진다.');
+  callout(s, 'warn', 8.3, 4.3, 4.4, 2.4, '폴더 이름은 ~/airlab로. 교재의 명령이 모두 이 경로를 쓴다. 다른 곳에 두었다면 "환경 설정" 장의 직접 넣기를 따른다.');
 
   s = content('4단계. 설치 스크립트 한 줄 (10~60분)', TAG,
     '설치 스크립트가 ROS 2부터 빌드, 환경 설정까지 한 번에 합니다. 처음에 sudo 비밀번호를 한 번 묻고, 그다음은 기다리면 됩니다. 새로 설치한 Ubuntu 22.04에서 빠른 유선망 기준 약 10분(apt 패키지 1,300여 개)이었습니다. 끊기면 같은 명령을 다시 치면 이어서 합니다.');
-  code(s, '$ bash ~/unbolt/workshop/setup/install_unbolt.sh\n[sudo] password for student:        ← 2단계에서 만든 비밀번호', 0.6, 1.5, 12.1, 0.95, 14);
+  code(s, '$ bash ~/airlab/workshop/setup/install_airlab.sh\n[sudo] password for student:        ← 2단계에서 만든 비밀번호', 0.6, 1.5, 12.1, 0.95, 14);
   table(s, [['단계', '하는 일', '시간'],
     ['0', 'Ubuntu 22.04인지, 디스크 여유, 코드 위치 확인', ''],
     ['1', '로캘(en_US.UTF-8), curl · git · pip 같은 기본 도구', '1분'],
@@ -146,28 +146,28 @@ module.exports = function build() {
   callout(s, 'warn', 6.75, 5.0, 5.95, 1.7, 'conda가 켜져 있으면(프롬프트 앞 (base)) ROS가 깨진다 → conda deactivate. 아예 끄기: auto_activate_base false');
 
   s = content('환경 설정: source와 ~/.bashrc', TAG,
-    '"Package not found"의 원인을 이해시키는 장입니다. ros2 명령은 source로 불러온 곳의 패키지만 압니다. ROS 기본 패키지(/opt/ros/humble)와 우리가 빌드한 패키지(ros2_ws/install)를 둘 다 불러와야 합니다. ~/.bashrc는 새 터미널이 열릴 때마다 자동으로 실행되므로, 여기에 넣어 두면 매번 칠 필요가 없습니다. 실제 파일에는 ~/unbolt 대신 /home/<이름>/unbolt 같은 전체 경로가 들어갑니다.');
+    '"Package not found"의 원인을 이해시키는 장입니다. ros2 명령은 source로 불러온 곳의 패키지만 압니다. ROS 기본 패키지(/opt/ros/humble)와 우리가 빌드한 패키지(ros2_ws/install)를 둘 다 불러와야 합니다. ~/.bashrc는 새 터미널이 열릴 때마다 자동으로 실행되므로, 여기에 넣어 두면 매번 칠 필요가 없습니다. 실제 파일에는 ~/airlab 대신 /home/<이름>/airlab 같은 전체 경로가 들어갑니다.');
   table(s, [['불러오는 것', '그러면 생기는 것', '없으면'],
     ['source /opt/ros/humble/setup.bash', 'ros2 명령, ROS 기본 패키지 (Nav2, MoveIt, RViz)', 'ros2: command not found'],
-    ['source ~/unbolt/ros2_ws/install/setup.bash', '우리가 빌드한 패키지 (unbolt_dashboard 등)', "Package 'unbolt_…' not found"],
-    ['export UNBOLT_ROOT=~/unbolt', '모델 파일(models/) 위치', '로봇 모델을 못 찾음']], 0.6, 1.5, 12.1, [4.7, 4.4, 3.0], 14);
-  code(s, '# ~/.bashrc 맨 끝 (설치 스크립트가 넣어 준다)\n# >>> unbolt >>>\nsource /opt/ros/humble/setup.bash\nsource ~/unbolt/ros2_ws/install/setup.bash\nexport UNBOLT_ROOT=~/unbolt\nexport ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}\n[ -f ~/.unbolt_key ] && source ~/.unbolt_key   # API 키\n# <<< unbolt <<<', 0.6, 3.75, 7.2, 2.95, 13);
+    ['source ~/airlab/ros2_ws/install/setup.bash', '우리가 빌드한 패키지 (airlab_dashboard 등)', "Package 'airlab_…' not found"],
+    ['export AIRLAB_ROOT=~/airlab', '모델 파일(models/) 위치', '로봇 모델을 못 찾음']], 0.6, 1.5, 12.1, [4.7, 4.4, 3.0], 14);
+  code(s, '# ~/.bashrc 맨 끝 (설치 스크립트가 넣어 준다)\n# >>> airlab >>>\nsource /opt/ros/humble/setup.bash\nsource ~/airlab/ros2_ws/install/setup.bash\nexport AIRLAB_ROOT=~/airlab\nexport ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}\n[ -f ~/.airlab_key ] && source ~/.airlab_key   # API 키\n# <<< airlab <<<', 0.6, 3.75, 7.2, 2.95, 13);
   callout(s, 'why', 8.1, 3.75, 4.6, 1.4, '~/.bashrc는 새 터미널이 열릴 때마다 자동으로 실행되는 파일이다.');
   callout(s, 'analogy', 8.1, 5.3, 4.6, 1.4, '주소록에 등록하기: 등록한 곳의 이름만 찾을 수 있다.');
 
   s = content('환경 설정 확인하고, 없으면 직접 넣기', TAG,
-    '설치 스크립트를 썼다면 확인만 하면 됩니다. 코드를 ~/unbolt가 아닌 곳에 두었거나 스크립트 없이 설치했다면 아래처럼 직접 넣습니다. REPO에 실제 코드 위치를 넣으세요. 가장 흔한 실수는 이미 열려 있던 터미널에서 바로 실행하는 것입니다. .bashrc는 터미널이 열릴 때만 읽으므로 source ~/.bashrc를 하거나 새 터미널을 엽니다.');
+    '설치 스크립트를 썼다면 확인만 하면 됩니다. 코드를 ~/airlab가 아닌 곳에 두었거나 스크립트 없이 설치했다면 아래처럼 직접 넣습니다. REPO에 실제 코드 위치를 넣으세요. 가장 흔한 실수는 이미 열려 있던 터미널에서 바로 실행하는 것입니다. .bashrc는 터미널이 열릴 때만 읽으므로 source ~/.bashrc를 하거나 새 터미널을 엽니다.');
   text(s, '확인 (새 터미널에서)', { x: 0.6, y: 1.45, w: 7.6, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ grep -A5 ">>> unbolt" ~/.bashrc       # 블록이 있나\n$ ros2 pkg prefix unbolt_dashboard       # 패키지를 찾나\n/home/student/unbolt/ros2_ws/install/unbolt_dashboard\n$ echo $UNBOLT_ROOT\n/home/student/unbolt', 0.6, 1.9, 7.6, 1.55, 12);
+  code(s, '$ grep -A5 ">>> airlab" ~/.bashrc       # 블록이 있나\n$ ros2 pkg prefix airlab_dashboard       # 패키지를 찾나\n/home/student/airlab/ros2_ws/install/airlab_dashboard\n$ echo $AIRLAB_ROOT\n/home/student/airlab', 0.6, 1.9, 7.6, 1.55, 12);
   text(s, '없거나 코드를 다른 곳에 두었다면: 직접 넣기', { x: 0.6, y: 3.6, w: 7.6, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ REPO=~/unbolt          # 실제 코드 위치로 바꾸기\n$ cat >> ~/.bashrc <<EOF\n# >>> unbolt >>>\nsource /opt/ros/humble/setup.bash\nsource $REPO/ros2_ws/install/setup.bash\nexport UNBOLT_ROOT=$REPO\n# <<< unbolt <<<\nEOF\n$ source ~/.bashrc       # 지금 열린 터미널에도 적용', 0.6, 4.05, 7.6, 2.65, 12);
-  callout(s, 'fail', 8.5, 1.5, 4.2, 1.95, "Package 'unbolt_dashboard' not found → 이 블록이 없거나, 블록을 넣기 전에 연 터미널");
+  code(s, '$ REPO=~/airlab          # 실제 코드 위치로 바꾸기\n$ cat >> ~/.bashrc <<EOF\n# >>> airlab >>>\nsource /opt/ros/humble/setup.bash\nsource $REPO/ros2_ws/install/setup.bash\nexport AIRLAB_ROOT=$REPO\n# <<< airlab <<<\nEOF\n$ source ~/.bashrc       # 지금 열린 터미널에도 적용', 0.6, 4.05, 7.6, 2.65, 12);
+  callout(s, 'fail', 8.5, 1.5, 4.2, 1.95, "Package 'airlab_dashboard' not found → 이 블록이 없거나, 블록을 넣기 전에 연 터미널");
   callout(s, 'tip', 8.5, 3.6, 4.2, 1.65, '가장 쉬운 방법: 설치 스크립트를 다시 실행하면 블록을 새로 써 준다 (두 번 들어가지 않음)');
   callout(s, 'warn', 8.5, 5.4, 4.2, 1.3, '이미 열린 터미널은 .bashrc를 다시 읽지 않는다');
 
   s = content('빌드: colcon build는 언제 다시 하나', TAG,
     '설치 스크립트가 한 번 빌드해 두었으므로 평소에는 다시 빌드할 일이 거의 없습니다. --symlink-install 덕분에 기존 파이썬·launch·설정 파일을 고치면 바로 반영됩니다. 새 파일이나 새 실행 이름(setup.py의 entry point)을 추가했을 때만 다시 빌드하고 source합니다.');
-  code(s, '$ cd ~/unbolt/ros2_ws\n$ colcon build --symlink-install\nSummary: 7 packages finished [40s]\n$ source install/setup.bash     # 새 패키지·새 실행 이름이 생겼을 때', 0.6, 1.5, 12.1, 1.5, 14);
+  code(s, '$ cd ~/airlab/ros2_ws\n$ colcon build --symlink-install\nSummary: 7 packages finished [40s]\n$ source install/setup.bash     # 새 패키지·새 실행 이름이 생겼을 때', 0.6, 1.5, 12.1, 1.5, 14);
   table(s, [['이럴 때', '다시 빌드?'],
     ['기존 Python 코드, launch, config, 웹 파일을 고침', '필요 없음 (바로 반영)'],
     ['새 파일(노드, launch 파일)을 추가함', '빌드'],
@@ -178,14 +178,14 @@ module.exports = function build() {
 
   s = content('5단계. 설치 점검', TAG,
     '새 터미널에서 실행합니다(또는 source ~/.bashrc 후). 수업 시작 전에도 모두 이 명령을 실행하게 합니다. API 키 없음 경고는 정상입니다. python3가 conda를 가리키면 실패로 나오는데, conda deactivate로 해결됩니다. ~/.bashrc 설정 경고가 나오면 환경 설정 장을 보게 하세요. 실패가 있는 학생은 조교가 바로 붙습니다.');
-  code(s, '$ bash ~/unbolt/workshop/setup/check_env.sh\n\n시스템\n  ✔ Ubuntu 22.04.5 LTS\n  ✔ python3 = /usr/bin/python3\n화면 (WSLg)\n  ✔ GPU 가속 OpenGL: D3D12 (...)\nROS 2\n  ✔ ROS 2 Humble 설치됨  ✔ slam_toolbox  ✔ moveit ...\nPython\n  ✔ mujoco 3.12.0   ✔ numpy 1.21.5   ✔ anthropic 2.3.0\nUNBOLT 코드\n  ✔ 워크스페이스 빌드됨   ✔ ~/.bashrc 설정\n  ✔ MuJoCo 월드 로드 + 오프스크린 렌더링\n\n결과: 28 통과, 1 경고, 0 실패', 0.6, 1.5, 7.3, 5.2, 14);
+  code(s, '$ bash ~/airlab/workshop/setup/check_env.sh\n\n시스템\n  ✔ Ubuntu 22.04.5 LTS\n  ✔ python3 = /usr/bin/python3\n화면 (WSLg)\n  ✔ GPU 가속 OpenGL: D3D12 (...)\nROS 2\n  ✔ ROS 2 Humble 설치됨  ✔ slam_toolbox  ✔ moveit ...\nPython\n  ✔ mujoco 3.12.0   ✔ numpy 1.21.5   ✔ anthropic 2.3.0\nAIRLAB 코드\n  ✔ 워크스페이스 빌드됨   ✔ ~/.bashrc 설정\n  ✔ MuJoCo 월드 로드 + 오프스크린 렌더링\n\n결과: 28 통과, 1 경고, 0 실패', 0.6, 1.5, 7.3, 5.2, 14);
   callout(s, 'ok', 8.2, 1.5, 4.5, 1.6, '마지막 줄이 "0 실패". 이 화면을 캡처해서 제출');
   callout(s, 'tip', 8.2, 3.3, 4.5, 1.6, '! 경고는 괜찮다 (API 키 없음 등)');
   callout(s, 'fail', 8.2, 5.1, 4.5, 1.6, '✘ 줄의 안내대로. conda면 conda deactivate, ~/.bashrc 설정 없음이면 환경 설정 장');
 
   s = content('6단계. 첫 실행: 로봇 몰아 보기', TAG,
     '설치가 끝났는지 마지막으로 확인합니다. 터미널 두 개가 필요합니다. teleop은 그 터미널 창을 클릭해 선택한 상태에서 키를 눌러야 합니다. 로봇이 움직이고 RViz의 LiDAR 점이 따라 바뀌면 설치가 모두 끝난 것입니다. 두 터미널 모두 Ctrl+C로 끕니다. 체크포인트 3.');
-  code(s, '# 터미널 1 (켜 두기)\n$ ros2 launch unbolt_mujoco_bridge sim.launch.py\n\n# 터미널 2\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n#   i 앞   , 뒤   j / l 회전   k 정지', 0.6, 1.5, 6.6, 2.4, 13);
+  code(s, '# 터미널 1 (켜 두기)\n$ ros2 launch airlab_mujoco_bridge sim.launch.py\n\n# 터미널 2\n$ ros2 run teleop_twist_keyboard teleop_twist_keyboard\n#   i 앞   , 뒤   j / l 회전   k 정지', 0.6, 1.5, 6.6, 2.4, 13);
   callout(s, 'ok', 0.6, 4.1, 6.6, 1.25, 'MuJoCo 뷰어의 로봇이 움직이고 RViz의 빨간 LiDAR 점이 따라 바뀐다. ✅ 체크포인트 3');
   callout(s, 'fail', 0.6, 5.5, 6.6, 1.2, 'Package not found → 환경 설정 장. 키가 안 먹음 → teleop 터미널을 클릭한 뒤 누르기');
   img(s, 'step2_rviz.jpg', 7.5, 1.5, 5.2, 5.2, 'RViz에 보이는 로봇 모델과 LiDAR 점');
@@ -193,7 +193,7 @@ module.exports = function build() {
   s = content('대시보드도 미리 열어 보기', TAG,
     '모듈 4에서 쓰는 웹 대시보드를 설치 확인용으로 미리 열어 봅니다. 런처를 켜 두면 ROS가 꺼져 있어도 페이지가 뜨고, 연결 버튼으로 전체 시스템을 켭니다. 처음 켤 때는 Nav2와 MoveIt이 함께 떠서 25~60초 걸립니다. 런처 터미널은 끄지 않고 둡니다. API 키가 없으면 LLM 옵션을 대역(scripted)으로 고릅니다.');
   img(s, 'dashboard_off.png', 0.6, 1.5, 6.4, 4.0, 'ROS가 꺼져 있을 때의 대시보드: 연결 버튼과 시작 옵션');
-  code(s, '$ ros2 run unbolt_dashboard dashboard_launcher\n# Windows 브라우저 → http://localhost:8080', 0.6, 5.7, 6.4, 1.0, 13);
+  code(s, '$ ros2 run airlab_dashboard dashboard_launcher\n# Windows 브라우저 → http://localhost:8080', 0.6, 5.7, 6.4, 1.0, 13);
   card(s, { x: 7.3, y: 1.5, w: 5.4, h: 2.05, head: '방법 1. 런처 (추천)', body: '런처를 켜 두고 브라우저에서 모드(작업 / 지도 만들기) 고르기 → 연결 → 25초쯤 뒤 "ROS 연결됨". 끌 때는 시스템 종료', iconName: 'FaPowerOff', accent: C.accent2, headSize: 16, bodySize: 14 });
   card(s, { x: 7.3, y: 3.7, w: 5.4, h: 1.65, head: '방법 2. launch로 직접', body: 'bringup.launch.py planner:=true dashboard:=true (키가 없으면 llm:=scripted)', iconName: 'FaTerminal', accent: C.accent3, headSize: 16, bodySize: 14 });
   callout(s, 'fail', 7.3, 5.5, 5.4, 1.2, '페이지가 안 열림 → 런처 터미널이 살아 있나. Package not found → 환경 설정');
@@ -204,7 +204,7 @@ module.exports = function build() {
     ['월 사용 한도 5달러', 'Settings → Limits (실수로 많이 쓰는 것 방지)'],
     ['키 만들기', 'API Keys → Create Key → 복사 (sk-ant-로 시작, 이 화면에서만 보임)'],
     ['Ubuntu에 넣기', '오른쪽 명령. 붙여넣기는 Ctrl + Shift + V']].forEach(([h, b], i) => step(s, i + 1, h, b, 0.6, 1.55 + i * 1.3, 6.4, 0.7));
-  code(s, '$ bash ~/unbolt/workshop/setup/setup_api_key.sh\nAPI 키:          ← 붙여넣고 Enter\n                    (화면에 안 보이는 게 정상)\n✔ ~/.unbolt_key 에 저장 (본인만 읽기 가능)\n✔ API 연결 확인', 7.3, 1.5, 5.4, 2.2, 13);
+  code(s, '$ bash ~/airlab/workshop/setup/setup_api_key.sh\nAPI 키:          ← 붙여넣고 Enter\n                    (화면에 안 보이는 게 정상)\n✔ ~/.airlab_key 에 저장 (본인만 읽기 가능)\n✔ API 연결 확인', 7.3, 1.5, 5.4, 2.2, 13);
   callout(s, 'warn', 7.3, 3.9, 5.4, 1.6, 'API 키는 비밀번호다. 채팅방·과제·GitHub·스크린샷에 올리지 않기. 노출되면 Console에서 바로 Delete');
   callout(s, 'tip', 7.3, 5.65, 5.4, 1.05, '키가 없으면 llm:=scripted로 실습');
 
@@ -218,22 +218,22 @@ module.exports = function build() {
     ['Could not get lock /var/lib/dpkg/lock-frontend', 'Ubuntu 자동 업데이트 중. 5분 뒤 다시'],
     ['/bin/bash^M: bad interpreter', '스크립트 줄바꿈이 Windows 형식. git clone으로 다시 받기'],
     ['ros2: command not found', '새 터미널, 또는 source ~/.bashrc'],
-    ["Package 'unbolt_…' not found", '~/.bashrc의 unbolt 블록 확인 (환경 설정 장)'],
+    ["Package 'airlab_…' not found", '~/.bashrc의 airlab 블록 확인 (환경 설정 장)'],
     ['프롬프트 앞 (base), rclpy 오류', 'conda deactivate, conda config --set auto_activate_base false']], 0.6, 1.5, 12.1, [5.6, 6.5], 14);
   s.addNotes('^M(또는 $\'\\r\') 오류는 ZIP을 Windows 도구로 풀었거나 git의 autocrlf 때문에 생깁니다. troubleshooting.md에 sed로 고치는 방법도 있습니다. 표의 순서는 설치 단계 순서입니다.');
 
   summary('설치 한 장 요약', TAG, [
     ['FaWindows', 'Windows 점검 → WSL + Ubuntu 22.04', 'winver · 가상화 · 메모리 확인 → 관리자 PowerShell에서 wsl --install -d Ubuntu-22.04 → VERSION 2, xeyes'],
-    ['FaDownload', '코드는 ~/unbolt, 설치는 스크립트 한 줄', 'install_unbolt.sh가 ROS 2, Python 패키지, 로봇 모델, 빌드, 환경 설정까지 한다'],
-    ['FaCogs', '환경 설정 = source 두 개 + UNBOLT_ROOT', '~/.bashrc의 unbolt 블록. 없으면 Package not found. 열려 있던 터미널은 source ~/.bashrc'],
+    ['FaDownload', '코드는 ~/airlab, 설치는 스크립트 한 줄', 'install_airlab.sh가 ROS 2, Python 패키지, 로봇 모델, 빌드, 환경 설정까지 한다'],
+    ['FaCogs', '환경 설정 = source 두 개 + AIRLAB_ROOT', '~/.bashrc의 airlab 블록. 없으면 Package not found. 열려 있던 터미널은 source ~/.bashrc'],
     ['FaClipboardCheck', '점검 → 첫 실행', 'check_env.sh "0 실패" → sim.launch.py + 키보드 주행'],
     ['FaGlobe', '대시보드', 'dashboard_launcher를 켜 두고 http://localhost:8080 → 연결'],
   ], '설치 장을 한 장으로 정리합니다. 다섯 줄이 모두 되면 1일차를 시작할 준비가 끝난 것입니다.');
 
   quiz('설치 셀프 체크', TAG, [
     ['"PS> wsl -l -v"와 "$ ros2 node list"는 각각 어디에서 실행하나?', 'PS>는 Windows PowerShell, $는 Ubuntu 터미널. 앞의 PS>와 $는 입력하지 않는다.'],
-    ['코드를 /mnt/c(Windows 드라이브)가 아니라 ~/unbolt에 두는 이유는?', 'Windows 드라이브의 파일은 리눅스에서 접근이 느려 빌드와 실행이 몇 배 느려진다.'],
-    ["새로 연 터미널에서 Package 'unbolt_dashboard' not found가 나온다. 무엇을 확인하나?", '~/.bashrc에 워크스페이스 source가 있는지(# >>> unbolt >>> 블록). 블록을 넣기 전에 연 터미널이면 source ~/.bashrc.'],
+    ['코드를 /mnt/c(Windows 드라이브)가 아니라 ~/airlab에 두는 이유는?', 'Windows 드라이브의 파일은 리눅스에서 접근이 느려 빌드와 실행이 몇 배 느려진다.'],
+    ["새로 연 터미널에서 Package 'airlab_dashboard' not found가 나온다. 무엇을 확인하나?", '~/.bashrc에 워크스페이스 source가 있는지(# >>> airlab >>> 블록). 블록을 넣기 전에 연 터미널이면 source ~/.bashrc.'],
     ['기존 Python 파일을 고쳤을 때와 새 노드 파일을 추가했을 때, colcon build가 필요한 쪽은?', '새 파일을 추가했을 때. --symlink-install이라 기존 파일 수정은 바로 반영된다.'],
     ['8 GB 노트북에서 Nav2와 MoveIt을 함께 켜면 멈춘다. 무엇을 하나?', '.wslconfig에 memory=6GB, swap=8GB를 쓰고 wsl --shutdown 후 다시 연다.'],
   ], '답은 이 장의 슬라이드에 있습니다.');

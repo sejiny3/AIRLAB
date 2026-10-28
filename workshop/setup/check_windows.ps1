@@ -1,4 +1,4 @@
-﻿# UNBOLT 강습회: Windows 노트북 사전 점검 (WSL 설치 전에 실행)
+﻿# AIRLAB 강습회: Windows 노트북 사전 점검 (WSL 설치 전에 실행)
 #
 #   powershell -ExecutionPolicy Bypass -File check_windows.ps1            # 점검만
 #   powershell -ExecutionPolicy Bypass -File check_windows.ps1 -Install   # 점검 + WSL/Ubuntu 설치 (관리자 권한 창에서)

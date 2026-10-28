@@ -1,6 +1,6 @@
 # 강의 슬라이드 생성기
 
-`../UNBOLT_workshop.pptx`(184장)를 만드는 코드입니다. 슬라이드 내용을 고칠 때는 PowerPoint에서 직접 고쳐도 되지만,
+`../AIRLAB_workshop.pptx`(184장)를 만드는 코드입니다. 슬라이드 내용을 고칠 때는 PowerPoint에서 직접 고쳐도 되지만,
 여기를 고치고 다시 만들면 디자인(색, 배치, 글꼴)이 전체에서 일관되게 유지됩니다.
 
 | 파일 | 내용 |
@@ -21,13 +21,13 @@ Windows(Node.js 18 이상)에서:
 ```bash
 cd workshop/slides/src
 npm install
-node build.js            # → ../UNBOLT_workshop.pptx
+node build.js            # → ../AIRLAB_workshop.pptx
 ```
 
 그림을 다시 렌더링하려면 WSL Ubuntu에서 (MuJoCo, OpenCV 필요):
 
 ```bash
-python3 ~/unbolt/workshop/slides/src/render_assets.py
+python3 ~/airlab/workshop/slides/src/render_assets.py
 ```
 
 `dashboard_idle.png`는 대시보드를 켠 상태(1440×1000)에서 찍은 스크린샷입니다.
