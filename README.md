@@ -72,12 +72,19 @@ ros2_ws/src/
 
 ## 빌드
 
-처음 설치는 `bash workshop/setup/install_airlab.sh` (ROS 2, 의존 패키지, OpenArm 모델, 빌드, `~/.bashrc`까지).
+받기 (WSL Ubuntu 22.04 안에서):
+
+```bash
+git clone https://github.com/sejiny3/AIRLAB.git ~/airlab
+```
+
+처음 설치는 `bash ~/airlab/workshop/setup/install_airlab.sh` (ROS 2, 의존 패키지, OpenArm 모델, 빌드, `~/.bashrc`까지).
+강습회 교재는 [workshop/README.md](workshop/README.md)에서 시작합니다.
 코드를 고친 뒤 다시 빌드할 때:
 
 ```bash
 source /opt/ros/humble/setup.bash
-cd <저장소>/ros2_ws
+cd ~/airlab/ros2_ws
 colcon build --symlink-install
 source install/local_setup.bash
 ```

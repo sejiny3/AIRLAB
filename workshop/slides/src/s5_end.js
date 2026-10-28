@@ -29,7 +29,7 @@ module.exports = function build() {
   });
 
   s = content('더 공부하고 싶다면', TAG, '공식 문서 위주로 골랐습니다. 이 강습회의 모든 코드는 저장소에 있으니, 과제를 하며 직접 고쳐 보는 것이 가장 좋은 공부입니다.');
-  table(s, [['주제', '자료', '먼저 볼 곳'], ['ROS 2', 'docs.ros.org/en/humble', 'Tutorials → Beginner: CLI tools, Client libraries'], ['MuJoCo', 'mujoco.readthedocs.io', 'Overview, XML Reference, Python bindings'], ['Nav2', 'docs.nav2.org', 'Getting Started, Tuning Guide, Simple Commander'], ['MoveIt 2', 'moveit.picknik.ai/humble', 'Tutorials → Your First C++/Python MoveIt Project'], ['Claude 도구 호출', 'docs.claude.com', 'Tool use overview, Prompt caching'], ['이 강습회', '저장소의 workshop/ 폴더', '00_install ~ 04 교재, troubleshooting, 과제']], 0.6, 1.5, 12.1, [2.4, 4.0, 5.7], 15);
+  table(s, [['주제', '자료', '먼저 볼 곳'], ['ROS 2', 'docs.ros.org/en/humble', 'Tutorials → Beginner: CLI tools, Client libraries'], ['MuJoCo', 'mujoco.readthedocs.io', 'Overview, XML Reference, Python bindings'], ['Nav2', 'docs.nav2.org', 'Getting Started, Tuning Guide, Simple Commander'], ['MoveIt 2', 'moveit.picknik.ai/humble', 'Tutorials → Your First C++/Python MoveIt Project'], ['Claude 도구 호출', 'docs.claude.com', 'Tool use overview, Prompt caching'], ['이 강습회', 'github.com/sejiny3/AIRLAB', 'workshop/ 폴더: 00_install ~ 05 교재, troubleshooting, 과제']], 0.6, 1.5, 12.1, [2.4, 4.0, 5.7], 15);
 
   s = content('수료와 과제 제출', TAG, '수료 기준과 제출 방법을 안내합니다. 설문(모듈별 난이도, 설치 가이드의 막힌 지점, 시간 배분)도 이때 받습니다.');
   card(s, { x: 0.6, y: 1.5, w: 3.85, h: 2.2, head: '체크포인트', iconName: 'FaCheckCircle', accent: C.accent2, body: '모듈 1~4의 ✅ 모두 통과' });

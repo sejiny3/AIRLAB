@@ -102,9 +102,9 @@ module.exports = function build() {
   s = content('3단계. 실습 코드 받기 (5분)', TAG,
     '코드 위치가 중요합니다. Windows 드라이브(/mnt/c)에 두면 리눅스와 Windows 파일 시스템을 오가느라 빌드와 실행이 몇 배 느려집니다. 교재의 모든 명령이 ~/airlab를 쓰므로 이름도 그대로 맞추게 하세요.');
   text(s, '방법 A. git clone (권장)', { x: 0.6, y: 1.45, w: 7.4, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ sudo apt install -y git\n$ git clone <강사가 안내한 저장소 주소> ~/airlab', 0.6, 1.9, 7.4, 0.95, 13);
+  code(s, '$ sudo apt install -y git\n$ git clone https://github.com/sejiny3/AIRLAB.git ~/airlab', 0.6, 1.9, 7.4, 0.95, 13);
   text(s, '방법 B. ZIP 파일 (Windows 다운로드 폴더에 풀었다면)', { x: 0.6, y: 3.0, w: 7.4, h: 0.4, fontSize: 16, bold: true });
-  code(s, '$ ls /mnt/c/Users                  # 윈도우 사용자 이름 확인\n$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<폴더> ~/airlab\n$ ls ~/airlab\nREADME.md  docs  models  ros2_ws  workshop', 0.6, 3.45, 7.4, 1.4, 12);
+  code(s, '$ ls /mnt/c/Users                  # 윈도우 사용자 이름 확인\n$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/AIRLAB-main ~/airlab\n$ ls ~/airlab\nREADME.md  docs  models  ros2_ws  workshop', 0.6, 3.45, 7.4, 1.4, 12);
   code(s, '# 두 세계 사이 오가기\nUbuntu에서 본 Windows C:  →  /mnt/c\nWindows 탐색기에서 Ubuntu →  \\\\wsl$\\Ubuntu-22.04\\home\\<이름>\n지금 폴더를 탐색기로 열기 →  $ explorer.exe .', 0.6, 5.05, 7.4, 1.65, 12);
   callout(s, 'why', 8.3, 1.5, 4.4, 2.6, '코드는 Ubuntu 홈의 ~/airlab에 둔다. /mnt/c(Windows 드라이브)에 두면 빌드와 실행이 몇 배 느려진다.');
   callout(s, 'warn', 8.3, 4.3, 4.4, 2.4, '폴더 이름은 ~/airlab로. 교재의 명령이 모두 이 경로를 쓴다. 다른 곳에 두었다면 "환경 설정" 장의 직접 넣기를 따른다.');

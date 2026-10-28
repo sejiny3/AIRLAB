@@ -5,6 +5,8 @@
 > 노트북 한 대(Windows)로 따라 하는 실습형 강습회.
 > WSL조차 설치되지 않은 노트북에서 시작해, 마지막에는 웹 브라우저에
 > "공급 테이블로 가서 빨간 상자를 집고 작업대로 옮겨"라고 입력하면 로봇이 스스로 계획해서 수행합니다.
+>
+> 저장소: **<https://github.com/sejiny3/AIRLAB>** (설치는 [00_install.md](00_install.md)부터)
 
 ![최종 결과: 웹 대시보드](../docs/step7_dashboard.jpg)
 

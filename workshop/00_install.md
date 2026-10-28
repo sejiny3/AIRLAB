@@ -173,15 +173,16 @@ Windows 폴더(`/mnt/c/...`)에 두면 빌드와 실행이 몇 배 느려지니 
 
 ```bash
 $ sudo apt install -y git
-$ git clone <강사가 안내한 저장소 주소> ~/airlab
+$ git clone https://github.com/sejiny3/AIRLAB.git ~/airlab
 ```
 
 **방법 B. ZIP 파일**
 
-강사가 준 ZIP(또는 GitHub의 **Code → Download ZIP**)을 Windows `다운로드` 폴더에 풀었다면:
+<https://github.com/sejiny3/AIRLAB> 에서 **Code → Download ZIP**으로 받은 파일(또는 강사가 준 ZIP)을 Windows `다운로드` 폴더에 풀었다면
+(GitHub ZIP은 `AIRLAB-main` 폴더로 풀립니다):
 
 ```bash
-$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/<압축을-푼-폴더> ~/airlab
+$ cp -r /mnt/c/Users/<윈도우사용자>/Downloads/AIRLAB-main ~/airlab
 $ ls ~/airlab
 README.md  docs  models  ros2_ws  workshop
 ```

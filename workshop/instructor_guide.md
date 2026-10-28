@@ -21,6 +21,9 @@
 
 ### 저장소 만들기
 
+학생이 받는 저장소는 **<https://github.com/sejiny3/AIRLAB>** 입니다 (공개). 아래는 처음 올릴 때 쓴 순서이니,
+새 저장소에 다시 올릴 때만 참고하세요.
+
 이 폴더(`AIRLAB/`) 전체가 학생이 받는 저장소입니다. `third_party/`(OpenArm 모델, 약 280 MB)는 **넣지 않습니다**.
 설치 스크립트가 고정 커밋으로 받습니다.
 
@@ -28,7 +31,7 @@
 $ cd ~/airlab     # 또는 강사가 작업한 폴더
 $ git init -b main
 $ git add -A && git commit -m "AIRLAB workshop materials"
-$ git remote add origin https://github.com/<계정>/airlab.git
+$ git remote add origin https://github.com/sejiny3/AIRLAB.git
 $ git push -u origin main
 $ git tag workshop-2026 && git push origin workshop-2026     # 강습회 당일 버전 고정
 ```
@@ -58,7 +61,7 @@ $ git tag workshop-2026 && git push origin workshop-2026     # 강습회 당일 
 > **집에서 미리 설치**해 주셔야 합니다 (1~2시간, 약 4 GB 다운로드).
 >
 > 1. 노트북 사양 확인: Windows 10 21H2 이상(11 권장), RAM 8 GB 이상(16 GB 권장), C: 여유 30 GB 이상
-> 2. 설치 가이드를 처음부터 따라 해 주세요: <저장소 주소>/blob/main/workshop/00_install.md
+> 2. 설치 가이드를 처음부터 따라 해 주세요: https://github.com/sejiny3/AIRLAB/blob/main/workshop/00_install.md
 >    (WSL이 없는 상태에서 시작하는 안내입니다)
 > 3. 마지막 단계의 점검 결과(`결과: … 0 실패`) 화면을 캡처해 **○월 ○일까지** 아래 폼에 올려 주세요: <폼 주소>
 > 4. 모듈 4(LLM)용 API 키: <강사가 나눠 줌 / 각자 발급(5달러 이내) 중 택1 안내>
