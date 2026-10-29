@@ -331,7 +331,7 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true 
 - `pick:=vla`: 브리지 헤드 카메라 10 Hz + 손목 카메라 `/wrist_camera/image_raw` 켜기, `vla_pick` 노드 시작,
   플래너 `pick_mode:=vla`(오른팔 기준으로 정렬한 뒤 `/vla/pick`에 문장을 보내고 `/vla/result`를 기다림).
   `vla_pick`은 정책이 "끝"이라고 해도 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고한다.
-- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/airlab_vla/policy.pt`가 없으면 시작을 거절). 카드에 손목 카메라와 "끝" 확률.
+- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/airlab_vla/policy.pt`가 없으면 시작을 거절). 카드에 정책이 받는 머리(128×72, `/vla/head_input`)·손목 영상과 "끝" 확률. ArUco는 VLA 모드에서도 정렬·놓기·확인에 쓰고, 정책은 마커 좌표를 받지 않는다.
 - 결과(10 × 8.5 m 방, 시연 1155개, 20000단계, CPU 약 65분, 검증 L1 0.0385): 처음 보는 배치 100개에서 정책 100/100
   (네 테이블 모두 100%, 옆에 다른 색 상자가 있던 43번 포함, 다른 상자를 든 적 없음), 전문가 100/100.
   그러나 `evaluate --ask-other`(정렬한 상자가 아닌 옆 상자의 색을 말함)에서는 20/20 정렬한 상자를 집었다. 정책은 색 낱말이 아니라

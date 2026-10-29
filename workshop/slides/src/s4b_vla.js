@@ -165,11 +165,11 @@ module.exports = function build() {
 
   s = content('ROS에 끼우기: vla_pick 노드', TAG, 'pick:=vla로 켜면 브리지가 손목 카메라를 켜고 머리 카메라를 10 Hz로 올립니다(정책은 매 단계 새 영상으로 학습). 작업 관리자는 정렬까지 한 뒤 /vla/pick에 명령 문장을 보내고 /vla/result를 기다립니다. 성공하면 MoveIt으로 팔을 접는 것부터는 기존과 같습니다.');
   flow(s, [['pick_object\n(작업 관리자)', C.accent3, C.background1], ['정렬\nservo_to_marker', C.background2, C.text1], ['/vla/pick\n"pick up the red box"', C.accent4, C.background1], ['vla_pick 노드\n10 Hz', C.accent1, C.background1], ['/vla/result\n{ok, steps}', C.accent2, C.background1]], 0.6, 1.5, 12.1, 1.2, 0.35, 14);
-  table(s, [['방향', '토픽', '내용'], ['sub', '/camera/image_raw → 128×72', '머리 카메라 (INTER_AREA로 줄임)'], ['sub', '/wrist_camera/image_raw', '손목 카메라 96×96 (브리지 wrist_camera_rate)'], ['sub', '/joint_states', '오른팔 7 + 손가락'], ['pub', '/joint_commands', '0.1초마다 관절 목표 (브리지가 actuator 목표로)'], ['pub', '/vla/status', '단계, "끝" 확률 (대시보드 카드)']], 0.6, 3.0, 7.6, [0.9, 3.3, 3.4], 13);
+  table(s, [['방향', '토픽', '내용'], ['sub', '/camera/image_raw → 128×72', '머리 카메라 (INTER_AREA로 줄임)'], ['sub', '/wrist_camera/image_raw', '손목 카메라 96×96 (브리지 wrist_camera_rate)'], ['sub', '/joint_states', '오른팔 7 + 손가락'], ['pub', '/joint_commands', '0.1초마다 관절 목표 (브리지가 actuator 목표로)'], ['pub', '/vla/status', '단계, "끝" 확률 (대시보드 카드)'], ['pub', '/vla/head_input', '정책이 받은 머리 영상 128×72 (대시보드 카드)']], 0.6, 3.0, 7.6, [0.9, 3.3, 3.4], 12);
   code(s, '# 터미널에서\n$ ros2 launch airlab_manipulation \\\n    bringup.launch.py planner:=true \\\n    dashboard:=true pick:=vla\n\n# 대시보드 런처: 모드\n# "VLA 집기" → 연결', 8.5, 3.0, 4.2, 3.7, 13);
 
-  s = content('대시보드: VLA 집기 모드', TAG, '1번 공급 테이블에서 정책이 빨간 상자를 집은 직후입니다. 아래 카드에 손목 카메라(정책이 보는 96×96), 단계 수, "다 집었다" 확률, 마지막 결과가 나옵니다. vla_pick은 정책의 "다 집었다"를 그대로 믿지 않고, 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고합니다. 처음에는 손가락 각도만 봐서, 벌린 손도 성공으로 잘못 보고된 적이 있습니다.');
-  img(s, 'dashboard_vla.jpg', 0.6, 1.4, 6.2, 5.45, '대시보드 VLA 집기 모드: 헤드 카메라에 상자를 쥔 손, 아래 VLA 카드에 손목 카메라와 성공 91단계');
+  s = content('대시보드: VLA 집기 모드', TAG, '1번 공급 테이블에서 정책이 빨간 상자를 집은 직후입니다. 위 헤드 카메라의 좌표축은 ArUco 검출로, VLA 모드에서도 정렬·놓기·확인에 씁니다. 정책은 마커 좌표를 받지 않고, 아래 카드의 "정책 입력" 두 장(머리 128×72, 손목 96×96, 좌표축 없음)만 봅니다. 카드에는 단계 수, "다 집었다" 확률, 마지막 결과도 나옵니다. vla_pick은 정책의 "다 집었다"를 그대로 믿지 않고, 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고합니다. 처음에는 손가락 각도만 봐서, 벌린 손도 성공으로 잘못 보고된 적이 있습니다.');
+  img(s, 'dashboard_vla.jpg', 0.6, 1.4, 6.2, 5.45, '대시보드 VLA 집기 모드: 위는 ArUco 좌표축이 그려진 헤드 카메라, 아래 VLA 카드에 정책 입력 영상 두 장과 성공 78단계');
   callout(s, 'warn', 7.5, 1.5, 5.2, 2.6, '학습된 부품의 출력은 다른 신호로 한 번 더 확인한다.\n성공 = 손을 닫으라고 명령했고(목표 > −0.15) 손가락이 덜 닫혔다(|각도| > 0.06).', '"다 집었다"를 믿지 말 것');
   callout(s, 'ok', 7.5, 4.3, 5.2, 2.4, '"상자를 모두 작업대에 모아" → "모두 제자리로": 세 테이블과 작업대 세 자리에서 정책이 집음\n(이 저장소에서 ROS로 6번 모두 성공, 74~88단계)\n\n✅ 체크포인트 5-4');
 

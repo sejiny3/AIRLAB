@@ -10,11 +10,14 @@ Published:
   /joint_commands          sensor_msgs/JointState  right arm + finger targets, CONTROL_HZ
   /vla/result              std_msgs/String         JSON {ok, steps, finger, reason} when a pick ends
   /vla/status              std_msgs/String         JSON per step {step, done, finger} (for the dashboard)
+  /vla/head_input          sensor_msgs/Image       the 128x72 head image the policy was given at each step
+                                                   (no marker overlay: the policy never sees marker poses)
 
 The policy runs only the pick itself; the robot must already stand in front of the object
 with it roughly at GRASP_XY['right'] (the task planner's line-up does that).
 """
 
+import array
 import json
 import os
 
@@ -62,6 +65,7 @@ class VlaPick(Node):
         self.cmd_pub = self.create_publisher(JointState, '/joint_commands', 10)
         self.result_pub = self.create_publisher(String, '/vla/result', 10)
         self.status_pub = self.create_publisher(String, '/vla/status', 10)
+        self.head_input_pub = self.create_publisher(Image, '/vla/head_input', 2)
         self.active = False
         self.create_timer(1.0 / CONTROL_HZ, self._tick)
 
@@ -97,7 +101,9 @@ class VlaPick(Node):
         if not self.active:
             return
         state = np.array([self.joints[j] for j in JOINTS], np.float32)
-        action, done = self.runner.act(self.head, self.wrist, state)
+        head = self.head
+        action, done = self.runner.act(head, self.wrist, state)
+        self._publish_head_input(head)
         cmd = JointState(name=list(JOINTS), position=[float(a) for a in action])
         cmd.header.stamp = self.get_clock().now().to_msg()
         self.cmd_pub.publish(cmd)
@@ -125,6 +131,12 @@ class VlaPick(Node):
             reason = f'gripper closed on nothing (finger {finger:.3f})'
         self._publish(self.result_pub, ok=ok, steps=self.step, finger=round(finger, 3), reason=reason)
         self.get_logger().info(f'VLA pick {"succeeded" if ok else "FAILED"} after {self.step} steps: {reason}')
+
+    def _publish_head_input(self, img):
+        msg = Image(height=img.shape[0], width=img.shape[1], encoding='rgb8', step=img.shape[1] * 3)
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.data = array.array('B', img.tobytes())  # bytes would be validated element by element
+        self.head_input_pub.publish(msg)
 
     @staticmethod
     def _publish(pub, **fields):
