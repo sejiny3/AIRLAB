@@ -29,6 +29,12 @@ FINGER_OPEN, FINGER_CLOSED = -0.6, 0.0
 HEAD_SIZE = (128, 72)    # (width, height): the 1280x720 ROS head image scaled down 10x
 HEAD_SUPERSAMPLE = 3     # rendered 3x larger and box-filtered, like the ROS image's area resize
 WRIST_SIZE = (96, 96)    # the bridge renders the wrist camera at this size directly
+# Camera sizes per policy: 'small' is this package's own policy, 'pi05' feeds π0.5 (openpi), whose
+# image encoder takes 224x224: the 16:9 head image is 224 wide and padded to square later.
+CAMERAS = {
+    'small': {'head': HEAD_SIZE, 'supersample': HEAD_SUPERSAMPLE, 'wrist': WRIST_SIZE},
+    'pi05': {'head': (224, 126), 'supersample': 2, 'wrist': (224, 224)},
+}
 BOX_HALF = 0.025
 GRASP_XY = (0.38, -0.15)  # where the box should be in the base frame for the right arm (skills.py)
 
@@ -77,7 +83,7 @@ def downsample(img, k):
 
 
 class PickScene:
-    def __init__(self, seed=None, render=True):
+    def __init__(self, seed=None, render=True, cameras='small'):
         self.model = load_model(os.path.join(repo_root(), 'models', 'scene.xml'))
         self.data = mujoco.MjData(self.model)
         m = self.model
@@ -95,10 +101,11 @@ class PickScene:
         self.site = m.site('right_ee_control_point').id
         self.steps_per_control = int(round(1.0 / (CONTROL_HZ * m.opt.timestep)))
         self.renderers = None
+        self.cam_cfg = CAMERAS[cameras]
         if render:
-            k = HEAD_SUPERSAMPLE
-            self.renderers = {'head': mujoco.Renderer(m, HEAD_SIZE[1] * k, HEAD_SIZE[0] * k),
-                              'wrist': mujoco.Renderer(m, WRIST_SIZE[1], WRIST_SIZE[0])}
+            head, k, wrist = self.cam_cfg['head'], self.cam_cfg['supersample'], self.cam_cfg['wrist']
+            self.renderers = {'head': mujoco.Renderer(m, head[1] * k, head[0] * k),
+                              'wrist': mujoco.Renderer(m, wrist[1], wrist[0])}
             for r in self.renderers.values():
                 r.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = False
                 r.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
@@ -182,7 +189,7 @@ class PickScene:
             for name, r in self.renderers.items():
                 r.update_scene(self.data, camera=self.cams[name])
                 obs[name] = r.render().copy()
-            obs['head'] = downsample(obs['head'], HEAD_SUPERSAMPLE)
+            obs['head'] = downsample(obs['head'], self.cam_cfg['supersample'])
         return obs
 
     # ------------------------------------------------------------------ geometry and outcome

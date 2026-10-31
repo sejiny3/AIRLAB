@@ -1,8 +1,9 @@
 """Record expert pick demonstrations: ros2 run airlab_vla record --episodes 1200
 
-Each episode is one .npz in --out (default ~/airlab_vla/demos):
-  head    (T, 72, 128, 3) uint8   head camera
-  wrist   (T, 96, 96, 3)  uint8   right wrist camera
+Each episode is one .npz in --out (default ~/airlab_vla/demos, ~/airlab_vla/demos_pi05 with
+--cameras pi05):
+  head    (T, 72, 128, 3) uint8   head camera (T, 126, 224, 3) with --cameras pi05
+  wrist   (T, 96, 96, 3)  uint8   right wrist camera (T, 224, 224, 3) with --cameras pi05
   state   (T, 8)  float32         right arm joints 1-7 + finger, measured
   action  (T, 8)  float32         joint targets the expert commands at that step
   done    (T,)    float32         1 on the final hold steps (the pick is finished)
@@ -22,7 +23,7 @@ import time
 
 import numpy as np
 
-from airlab_vla.sim import TABLES
+from airlab_vla.sim import CAMERAS, TABLES
 
 INSTRUCTIONS = [  # {} = the colour of the box to pick
     'pick up the {} box',
@@ -57,14 +58,14 @@ def record_episode(scene, expert, rng, noisy, table=None):
 
 
 def worker(args):
-    wid, seeds, out, table = args
+    wid, seeds, out, table, cameras = args
     from airlab_vla.expert import Expert
     from airlab_vla.sim import PickScene
     kept = 0
     for seed in seeds:
         scene = getattr(worker, 'scene', None)
         if scene is None:
-            scene = worker.scene = PickScene(seed=seed)
+            scene = worker.scene = PickScene(seed=seed, cameras=cameras)
             worker.expert = Expert(scene)
         scene.rng = np.random.default_rng(seed)
         rng = np.random.default_rng(seed + 1_000_000)
@@ -82,12 +83,15 @@ def main():
     ap.add_argument('--workers', type=int, default=max(1, (os.cpu_count() or 2) - 2))
     ap.add_argument('--table', choices=['all', *TABLES], default='all',
                     help='which table the box is on (all: random per episode)')
-    ap.add_argument('--out', default=os.path.expanduser('~/airlab_vla/demos'))
+    ap.add_argument('--cameras', choices=sorted(CAMERAS), default='small',
+                    help="image sizes: small (this package's policy) or pi05 (224 wide, for openpi)")
+    ap.add_argument('--out', help='default ~/airlab_vla/demos (small) or ~/airlab_vla/demos_pi05')
     a = ap.parse_args()
+    a.out = a.out or os.path.expanduser('~/airlab_vla/demos' + ('' if a.cameras == 'small' else '_' + a.cameras))
     os.makedirs(a.out, exist_ok=True)
     seeds = list(range(a.start, a.start + a.episodes))
     table = None if a.table == 'all' else a.table
-    jobs = [(w, seeds[w::a.workers], a.out, table) for w in range(a.workers)]
+    jobs = [(w, seeds[w::a.workers], a.out, table, a.cameras) for w in range(a.workers)]
     t0 = time.time()
     with mp.get_context('spawn').Pool(a.workers) as pool:
         results = pool.map(worker, jobs)
