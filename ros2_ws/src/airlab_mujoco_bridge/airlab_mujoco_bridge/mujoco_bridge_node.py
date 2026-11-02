@@ -514,6 +514,9 @@ class MujocoBridge(Node):
         viewer = None
         if self.use_viewer:
             viewer = mujoco.viewer.launch_passive(m, d)
+            # on an integrated GPU under WSLg they cut the window from about 23 to 7 frames per second
+            viewer.user_scn.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = False
+            viewer.user_scn.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
             if self.track_robot:
                 viewer.cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
                 viewer.cam.trackbodyid = self.base_body
