@@ -102,7 +102,7 @@ CONFIG = _config.TrainConfig(
     ema_decay=None,  # openpi turns EMA off for LoRA fine-tuning
     lr_schedule=_optimizer.CosineDecaySchedule(decay_steps=STEPS),
     num_train_steps=STEPS,
-    save_interval=5000,  # a checkpoint is about 11 GB
+    save_interval=2500,  # a checkpoint is about 11 GB; a dropped runtime loses everything after the last one
     keep_period=None,
     wandb_enabled=False,
     assets_base_dir=str(pathlib.Path(__file__).parent / 'assets'),  # norm_stats.json, computed once and committed
