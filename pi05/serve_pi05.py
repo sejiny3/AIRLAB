@@ -2,7 +2,7 @@
 
   .venv/bin/python ../AIRLAB/pi05/serve_pi05.py --checkpoint /path/to/checkpoints/pi05_airlab/run1/5000
 
-openpi's websocket server, on this machine only: a tunnel (see train_pi05.ipynb) carries it out.
+openpi's websocket server, on this machine only: a tunnel (see serve_colab.sh) carries it out.
 /healthz answers once the model is loaded and compiled, so a robot never waits on that.
 """
 
@@ -25,6 +25,7 @@ def main():
 
     logging.basicConfig(level=logging.INFO, force=True)
     policy = policy_config.create_trained_policy(airlab_policy.CONFIG, a.checkpoint)
+    logging.info('loaded, compiling')
     black = np.zeros((SIZE, SIZE, 3), np.uint8)
     policy.infer({'observation/image': black, 'observation/wrist_image': black,
                   'observation/state': np.zeros(8, np.float32), 'prompt': 'pick up the red box'})
