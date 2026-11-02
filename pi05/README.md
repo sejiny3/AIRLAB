@@ -13,6 +13,7 @@
 | `convert_to_lerobot.py` | 녹화한 npz를 LeRobot 데이터셋으로 변환 |
 | `airlab_policy.py` | π0.5의 입출력 변환과 학습 설정 `pi05_airlab` |
 | `run_openpi.py` | openpi 코드를 고치지 않고, 설정을 추가해 openpi 스크립트를 실행 |
+| `download_base.py` | `pi05_base` 가중치를 CRC32C를 대조하며 받기 (Colab의 gsutil이 큰 파일을 거부함) |
 | `assets/` | 전체 데이터로 계산해 둔 정규화 통계 `norm_stats.json` |
 | `train_pi05.ipynb` | Colab 학습 노트북 |
 | `evaluate_pi05.py` | 작은 정책과 같은 시험 장면에서 평가 |
