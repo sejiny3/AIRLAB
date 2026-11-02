@@ -16,20 +16,11 @@ import numpy as np
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / 'ros2_ws/src/airlab_vla'))
 
 from airlab_vla.evaluate import ask_other, run_policy, side_by_side  # noqa: E402
-from airlab_vla.sim import PickScene  # noqa: E402
+from airlab_vla.sim import PickScene, pad_square  # noqa: E402
 import airlab_policy  # noqa: E402
 from openpi.policies import policy_config  # noqa: E402
 
 REPLAN = 5  # steps of each 10-step chunk to play before asking the model again
-SIZE = 224
-
-
-def pad_square(head):
-    """The head image as in the dataset: centred between black bars (convert_to_lerobot.py)."""
-    out = np.zeros((SIZE, SIZE, 3), np.uint8)
-    top = (SIZE - head.shape[0]) // 2
-    out[top:top + head.shape[0]] = head
-    return out
 
 
 class Pi05Runner:

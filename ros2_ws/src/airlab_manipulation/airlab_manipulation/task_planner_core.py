@@ -155,7 +155,9 @@ class TaskExecutor:
 
     def __init__(self, skills: RobotSkills, pick_mode='classical'):
         self.s = skills
-        self.pick_mode = pick_mode  # 'classical' (MoveIt grasp from the marker pose) or 'vla' (learned policy)
+        # 'classical' (MoveIt grasp from the marker pose), or a learned policy: 'vla' (small) or 'pi05' (π0.5)
+        self.pick_mode = pick_mode
+        self.learned_pick = pick_mode in ('vla', 'pi05')
         self.reset()
 
     def reset(self):
@@ -222,10 +224,10 @@ class TaskExecutor:
         if seen is None:
             return False, {'error': f'{object} (marker {marker}) is not visible from here'}
         # the policy was trained on the right arm only
-        arm = 'right' if self.pick_mode == 'vla' else 'left' if seen[0][1] > 0 else 'right'
+        arm = 'right' if self.learned_pick else 'left' if seen[0][1] > 0 else 'right'
         if not self.s.servo_to_marker(marker, GRASP_XY[arm]):
             return False, {'error': f'could not line up with {object}'}
-        if self.pick_mode == 'vla':
+        if self.learned_pick:
             picked = self.s.vla_pick(marker, f'pick up the {object.replace("_", " ")}')
         else:
             picked = self.s.pick(marker)

@@ -41,6 +41,7 @@ def _bridge_node(context):
             'lidar_samples': LaunchConfiguration('lidar_samples'),
             'camera_rate': float(LaunchConfiguration('camera_rate').perform(context)),
             'wrist_camera_rate': float(LaunchConfiguration('wrist_camera_rate').perform(context)),
+            'wrist_camera_size': int(LaunchConfiguration('wrist_camera_size').perform(context)),
         }],
     )]
 
@@ -54,5 +55,7 @@ def generate_launch_description():
         DeclareLaunchArgument('camera_rate', default_value='5.0', description='head camera images per second'),
         DeclareLaunchArgument('wrist_camera_rate', default_value='0.0',
                               description='right wrist camera images per second (0 = off; the VLA policy uses 10)'),
+        DeclareLaunchArgument('wrist_camera_size', default_value='96',
+                              description='square wrist image size (the small policy 96, π0.5 224)'),
         OpaqueFunction(function=_bridge_node),
     ])

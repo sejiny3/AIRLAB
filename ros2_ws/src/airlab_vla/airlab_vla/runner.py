@@ -18,6 +18,8 @@ DEFAULT_POLICY = os.path.expanduser('~/airlab_vla/policy.pt')
 
 
 class PolicyRunner:
+    latency = None  # only a remote policy has one (remote.py)
+
     def __init__(self, path=DEFAULT_POLICY, threads=4, ensemble_decay=0.1):
         torch.set_num_threads(threads)
         ckpt = torch.load(path, map_location='cpu')

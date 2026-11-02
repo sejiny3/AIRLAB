@@ -15,6 +15,9 @@ Everything, with the web dashboard at http://localhost:8080/:
 Picking with the learned VLA policy instead of MoveIt (airlab_vla; train it first, see workshop/05_vla.md):
   ros2 launch airlab_manipulation bringup.launch.py planner:=true pick:=vla
 
+The same with π0.5 on a remote GPU (start its server first, see pi05/README.md):
+  ros2 launch airlab_manipulation bringup.launch.py planner:=true pick:=pi05 policy_server:=https://<...>.trycloudflare.com
+
 On a map made by automatic exploration (airlab_dashboard mapping.launch.py):
   ros2 launch airlab_manipulation bringup.launch.py map:=$HOME/maps/airlab_explored_<...>.yaml
 """
@@ -24,21 +27,30 @@ from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDesc
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
-    vla = PythonExpression(["'", LaunchConfiguration('pick'), "' == 'vla'"])
+    pick = LaunchConfiguration('pick')
+    learned = ["' if '", pick, "' in ('vla', 'pi05') else '"]
+    pi05 = ["' if '", pick, "' == 'pi05' else '"]
+    vla = PythonExpression(["'", pick, "' in ('vla', 'pi05')"])
     # the policy runs at 10 Hz and was trained with a fresh head and wrist image every step
-    camera_rate = PythonExpression(["'10.0' if '", LaunchConfiguration('pick'), "' == 'vla' else '5.0'"])
-    wrist_rate = PythonExpression(["'10.0' if '", LaunchConfiguration('pick'), "' == 'vla' else '0.0'"])
+    camera_rate = PythonExpression(["'10.0", *learned, "5.0'"])
+    wrist_rate = PythonExpression(["'10.0", *learned, "0.0'"])
+    wrist_size = PythonExpression(["'224", *pi05, "96'"])
+    # a remote policy stops to wait for each answer, so a pick takes longer
+    pick_timeout = PythonExpression(["'60.0", *pi05, "15.0'"])
     return LaunchDescription([
         DeclareLaunchArgument('use_viewer', default_value='true', description='open the MuJoCo viewer'),
         DeclareLaunchArgument('rviz', default_value='true', description='open RViz (navigation view)'),
         DeclareLaunchArgument('planner', default_value='false', description='start the LLM task planner'),
         DeclareLaunchArgument('llm', default_value='claude', description="planner backend: 'claude' or 'scripted'"),
         DeclareLaunchArgument('pick', default_value='classical',
-                              description="'classical' (MoveIt from the marker pose) or 'vla' (learned policy)"),
+                              description="'classical' (MoveIt from the marker pose), 'vla' (small learned policy) "
+                                          "or 'pi05' (π0.5 on policy_server)"),
+        DeclareLaunchArgument('policy_server', default_value='', description='π0.5 server address (pick:=pi05)'),
         DeclareLaunchArgument('dashboard', default_value='false', description='start rosbridge + web dashboard (:8080)'),
         DeclareLaunchArgument('map', default_value=PathJoinSubstitution(
             [FindPackageShare('airlab_navigation'), 'maps', 'airlab_room.yaml']), description='Nav2 map (yaml)'),
@@ -50,7 +62,8 @@ def generate_launch_description():
             PathJoinSubstitution([FindPackageShare('airlab_navigation'), 'launch', 'navigation.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': LaunchConfiguration('rviz'),
                               'map': LaunchConfiguration('map'),
-                              'camera_rate': camera_rate, 'wrist_camera_rate': wrist_rate}.items(),
+                              'camera_rate': camera_rate, 'wrist_camera_rate': wrist_rate,
+                              'wrist_camera_size': wrist_size}.items(),
         )]),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('airlab_moveit_config'), 'launch', 'move_group.launch.py']),
@@ -67,14 +80,15 @@ def generate_launch_description():
             executable='task_planner',
             output='screen',
             parameters=[{'use_sim_time': True, 'llm': LaunchConfiguration('llm'),
-                         'pick_mode': LaunchConfiguration('pick')}],
+                         'pick_mode': pick}],
             condition=IfCondition(LaunchConfiguration('planner')),
         ),
         Node(
             package='airlab_vla',
             executable='vla_pick',
             output='screen',
-            parameters=[{'use_sim_time': True}],
+            parameters=[{'use_sim_time': True, 'timeout': ParameterValue(pick_timeout, value_type=float),
+                         'server': ParameterValue(LaunchConfiguration('policy_server'), value_type=str)}],
             condition=IfCondition(vla),
         ),
     ])

@@ -39,7 +39,7 @@ class TaskPlannerNode(Node):
         self.declare_parameter('llm', 'claude')
         self.declare_parameter('model', MODEL)
         self.declare_parameter('effort', 'medium')
-        self.declare_parameter('pick_mode', 'classical')  # or 'vla': grasp with airlab_vla's learned policy
+        self.declare_parameter('pick_mode', 'classical')  # or 'vla'/'pi05': grasp with airlab_vla's learned policy
         self.status_pub = self.create_publisher(String, '/task_status', 50)
         self.create_subscription(String, '/task_command', self._on_command, 10)
         self.create_subscription(Empty, '/task_cancel', self._on_cancel, 10)

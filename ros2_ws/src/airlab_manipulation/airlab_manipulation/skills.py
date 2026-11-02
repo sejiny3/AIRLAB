@@ -582,7 +582,7 @@ class RobotSkills:
         self.vla_result = json.loads(msg.data)
         self.vla_done.set()
 
-    def vla_pick(self, marker_id, instruction, timeout=40.0):
+    def vla_pick(self, marker_id, instruction, timeout=90.0):
         """Pick with the learned policy instead of MoveIt: the vla_pick node reaches, grasps and
         lifts with the right arm from camera images alone. The object must already be lined up
         at GRASP_XY['right']. Afterwards the arm is tucked here, as in pick()."""

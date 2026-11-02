@@ -35,6 +35,7 @@ CAMERAS = {
     'small': {'head': HEAD_SIZE, 'supersample': HEAD_SUPERSAMPLE, 'wrist': WRIST_SIZE},
     'pi05': {'head': (224, 126), 'supersample': 2, 'wrist': (224, 224)},
 }
+PI05_SIZE = 224
 BOX_HALF = 0.025
 GRASP_XY = (0.38, -0.15)  # where the box should be in the base frame for the right arm (skills.py)
 
@@ -48,6 +49,14 @@ DISTRACTOR = 0.5          # share of episodes with a second box on another spot 
 TABLES = ('supply_1', 'supply_2', 'supply_3', 'work_table')
 BOXES = {'red': 'red_box', 'green': 'green_box', 'blue': 'blue_box'}
 PARKED = (30.0, 30.0)     # boxes not in the episode wait on the floor far outside the room
+
+
+def pad_square(head):
+    """The head image as π0.5 was trained on it: centred between black bars (pi05/convert_to_lerobot.py)."""
+    out = np.zeros((PI05_SIZE, PI05_SIZE, 3), np.uint8)
+    top = (PI05_SIZE - head.shape[0]) // 2
+    out[top:top + head.shape[0]] = head
+    return out
 
 
 def repo_root():

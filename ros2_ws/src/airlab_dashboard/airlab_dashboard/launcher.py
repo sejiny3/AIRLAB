@@ -14,8 +14,9 @@ launch (the launcher just sees its child exit).
 API (JSON), start/stop only from this machine unless --allow-remote:
   GET  /api/stack        state ("stopped" | "running" | "stopping"), ready, options, log tail, ...
   GET  /api/maps         maps to run the task mode on: the default one and those in ~/maps
-  POST /api/stack/start  {"mode": "task" | "vla" | "mapping", "llm": "claude" | "scripted",
-                          "use_viewer": bool, "rviz": bool, "map": "<yaml from /api/maps>"}
+  POST /api/stack/start  {"mode": "task" | "vla" | "pi05" | "mapping", "llm": "claude" | "scripted",
+                          "use_viewer": bool, "rviz": bool, "map": "<yaml from /api/maps>",
+                          "server": "<π0.5 policy server, mode pi05>"}
   POST /api/stack/stop   Ctrl+C for the launch (for a start that hangs before ROS connects)
 """
 
@@ -28,6 +29,8 @@ import socket
 import subprocess
 import threading
 import time
+import urllib.error
+import urllib.request
 from collections import deque
 from http.server import ThreadingHTTPServer
 
@@ -37,6 +40,7 @@ ANSI = re.compile(r'\x1b\[[0-9;]*m')
 READY_LINES = ('task planner ready', 'frontier explorer ready')
 MAP_DIR = os.path.expanduser('~/maps')  # where frontier_explorer saves the maps it builds
 VLA_POLICY = os.path.expanduser('~/airlab_vla/policy.pt')  # what "ros2 run airlab_vla train" writes
+SERVER_URL = re.compile(r'(https?|wss?)://[A-Za-z0-9.-]+(:\d+)?/?')
 
 
 def list_maps():
@@ -51,6 +55,18 @@ def list_maps():
         path = os.path.join(MAP_DIR, n)
         found.append({'name': n[:-5], 'path': path, 'mtime': os.path.getmtime(path)})
     return maps + sorted(found, key=lambda m: -m['mtime'])
+
+
+def server_problem(server):
+    """What keeps the π0.5 policy server from being used, or None (its /healthz answers once it is ready)."""
+    if not SERVER_URL.fullmatch(server):
+        return '서버 주소를 https://....trycloudflare.com 형식으로 넣으세요 (Colab 노트북 7번 칸이 알려 줍니다).'
+    url = server.rstrip('/').replace('wss://', 'https://').replace('ws://', 'http://')
+    try:
+        urllib.request.urlopen(f'{url}/healthz', timeout=8).close()
+    except (urllib.error.URLError, OSError) as e:
+        return f'π0.5 서버가 응답하지 않습니다 ({e}). Colab 노트북 7번 칸이 실행 중인지 확인하세요.'
+    return None
 
 
 def group_alive(pgid):
@@ -135,7 +151,7 @@ class Stack:
                 'external': self.proc is None and port_open(self.rosbridge_port),
             }
 
-    def start(self, mode='task', llm='claude', use_viewer=True, rviz=False, map_yaml=None):
+    def start(self, mode='task', llm='claude', use_viewer=True, rviz=False, map_yaml=None, server=''):
         with self.lock:
             if self.proc is not None:
                 return False, '이미 실행 중입니다.'
@@ -148,7 +164,7 @@ class Stack:
             if mode == 'mapping':
                 cmd = ['ros2', 'launch', 'airlab_dashboard', 'mapping.launch.py'] + flags
                 llm = map_yaml = None
-            elif mode in ('task', 'vla'):  # vla: the task mode, but picks with the learned policy
+            elif mode in ('task', 'vla', 'pi05'):  # vla, pi05: the task mode, but picks with a learned policy
                 if mode == 'vla' and not os.path.isfile(VLA_POLICY):
                     return False, (f'학습된 VLA 정책이 없습니다 ({VLA_POLICY}). 먼저 "ros2 run airlab_vla record"와 '
                                    '"ros2 run airlab_vla train"을 실행하세요.')
@@ -158,9 +174,11 @@ class Stack:
                     return False, 'ANTHROPIC_API_KEY가 없어 Claude를 쓸 수 없습니다. 대역(scripted)을 고르세요.'
                 cmd = ['ros2', 'launch', 'airlab_manipulation', 'bringup.launch.py', 'planner:=true',
                        'dashboard:=true', f'llm:={llm}', f'map:={map_yaml}',
-                       f'pick:={"vla" if mode == "vla" else "classical"}'] + flags
+                       f'pick:={"classical" if mode == "task" else mode}'] + flags
+                if mode == 'pi05':
+                    cmd.append(f'policy_server:={server}')
             else:
-                return False, 'mode는 task, vla 또는 mapping'
+                return False, 'mode는 task, vla, pi05 또는 mapping'
             env = dict(os.environ)
             if shutil.which('python3') != '/usr/bin/python3':
                 # conda/venv first on PATH breaks every "#!/usr/bin/env python3" ROS tool (rosbridge first)
@@ -232,8 +250,13 @@ def main():
     def start(body):
         mode = body.get('mode', 'task')
         map_yaml = body.get('map') or default_map_yaml()
+        server = str(body.get('server') or '').strip()
         previous = site.map_yaml
-        if mode in ('task', 'vla'):
+        if mode == 'pi05':
+            problem = server_problem(server)
+            if problem:
+                return False, problem
+        if mode in ('task', 'vla', 'pi05'):
             if map_yaml not in [m['path'] for m in list_maps()]:  # only maps the page was offered
                 return False, f'지도를 찾을 수 없습니다: {map_yaml}'
             try:
@@ -242,7 +265,7 @@ def main():
                 site.load(previous)
                 return False, f'지도를 읽을 수 없습니다 ({map_yaml}): {e}'
         ok, msg = stack.start(mode, body.get('llm', 'claude'), body.get('use_viewer', True), body.get('rviz', False),
-                              map_yaml)
+                              map_yaml, server)
         if not ok and site.map_yaml != previous:
             site.load(previous)
         return ok, msg

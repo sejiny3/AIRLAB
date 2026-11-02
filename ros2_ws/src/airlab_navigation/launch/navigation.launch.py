@@ -25,13 +25,15 @@ def generate_launch_description():
         DeclareLaunchArgument('params_file', default_value=PathJoinSubstitution([nav_share, 'config', 'nav2_params.yaml'])),
         DeclareLaunchArgument('camera_rate', default_value='5.0', description='head camera images per second'),
         DeclareLaunchArgument('wrist_camera_rate', default_value='0.0', description='right wrist camera (0 = off)'),
+        DeclareLaunchArgument('wrist_camera_size', default_value='96', description='square wrist image size'),
         # Scoped so the include's rviz:=false does not overwrite this file's 'rviz' argument.
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('airlab_mujoco_bridge'), 'launch', 'sim.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': 'false',
                               'model_path': LaunchConfiguration('model_path'),
                               'camera_rate': LaunchConfiguration('camera_rate'),
-                              'wrist_camera_rate': LaunchConfiguration('wrist_camera_rate')}.items(),
+                              'wrist_camera_rate': LaunchConfiguration('wrist_camera_rate'),
+                              'wrist_camera_size': LaunchConfiguration('wrist_camera_size')}.items(),
         )]),
         IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('nav2_bringup'), 'launch', 'bringup_launch.py']),

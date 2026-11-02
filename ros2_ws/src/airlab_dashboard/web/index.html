@@ -73,7 +73,8 @@
   .endbox pre#endLog { max-height: 9em; overflow: hidden; color: var(--muted); }
   .endbox [hidden] { display: none !important; }
   .opts { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 12px 0 4px; font-size: 13px; }
-  .opts select { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); margin-left: 6px; }
+  .opts select, .opts input[type=url] { font: inherit; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--text); margin-left: 6px; }
+  .opts input[type=url] { width: 300px; max-width: 100%; }
   .endactions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   #optNote.bad { color: var(--bad); }
   button:disabled { opacity: .45; cursor: not-allowed; }
@@ -108,6 +109,7 @@
   body.mode-mapping .task-only, body:not(.mode-mapping) .mapping-only { display: none !important; }
   /* VLA mode = the task mode whose pick runs the learned policy (pick_mode 'vla' from the planner) */
   body:not(.pick-vla) .vla-only { display: none !important; }
+  body:not(.pick-pi05) .pi05-only, body.pick-pi05 .small-only { display: none !important; }
   .vla { display: grid; gap: 12px; }
   .vla .inputs { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
   .vla figure { margin: 0; }
@@ -138,7 +140,7 @@
   <span class="pill" id="connPill"><span class="dot"></span><span id="connText">연결 중…</span></span>
   <span class="pill" id="taskPill"><span class="dot"></span><span id="taskText">플래너 대기</span></span>
   <span class="spacer"></span>
-  <span class="pill vla-only" title="집기를 MoveIt 대신 학습된 VLA 정책(airlab_vla)이 합니다">집기: VLA 정책</span>
+  <span class="pill vla-only" title="집기를 MoveIt 대신 학습된 VLA 정책이 합니다">집기: <span class="small-only">VLA 정책</span><span class="pi05-only">π0.5 (Colab)</span></span>
   <span class="pill" id="modelPill">LLM -</span>
   <span class="pill">시뮬레이션 <b id="simTime" style="margin-left:4px">-</b></span>
   <button class="primary small" id="connectBtn" type="button" hidden title="시뮬레이터, Nav2, MoveIt, 플래너를 켜고 연결합니다 (dashboard_launcher)">연결</button>
@@ -156,9 +158,11 @@
           <select id="optMode">
             <option value="task">작업 (LLM 명령, 저장된 지도)</option>
             <option value="vla">VLA 집기 (작업 + 학습된 집기 정책)</option>
+            <option value="pi05">π0.5 집기 (작업 + Colab의 π0.5)</option>
             <option value="mapping">지도 만들기 (SLAM + 자동 탐색)</option>
           </select>
         </label>
+        <label class="opt-pi05">서버 주소 <input id="optServer" type="url" spellcheck="false" placeholder="https://....trycloudflare.com"></label>
         <label class="opt-task">지도 <select id="optMap"><option value="">기본 지도 (airlab_room)</option></select></label>
         <label class="opt-task">LLM
           <select id="optLlm">
@@ -208,18 +212,19 @@
         <b>정책은 마커 좌표를 쓰지 않고</b>, 아래 VLA 카드의 표시 없는 영상만 봅니다.</p>
     </section>
     <section class="card task-only vla-only">
-      <h2>VLA 집기 정책 <small id="vlaSub">대기</small></h2>
+      <h2><span class="small-only">VLA</span><span class="pi05-only">π0.5</span> 집기 정책 <small id="vlaSub">대기</small></h2>
       <div class="body vla">
         <div class="inputs" title="정책의 입력 영상 (마커 표시 없음)">
-          <figure><canvas id="headIn" width="128" height="72"></canvas><figcaption>정책 입력: 머리 카메라 128×72</figcaption></figure>
-          <figure><canvas id="wristCam" width="96" height="96"></canvas><figcaption>정책 입력: 손목 카메라 96×96</figcaption></figure>
+          <figure><canvas id="headIn" width="128" height="72"></canvas><figcaption>정책 입력: 머리 카메라 <span id="headInSize">128×72</span></figcaption></figure>
+          <figure><canvas id="wristCam" width="96" height="96"></canvas><figcaption>정책 입력: 손목 카메라 <span id="wristCamSize">96×96</span></figcaption></figure>
         </div>
         <div class="stats">
           <div class="stat"><div class="k">단계 (0.1초마다)</div><div class="v" id="vlaStep">-</div></div>
           <div class="stat"><div class="k">"다 집었다" 확률</div><div class="v" id="vlaDone">-</div><div class="bar"><div id="bVlaDone"></div></div></div>
           <div class="stat" style="grid-column: 1 / -1"><div class="k">마지막 집기</div><div class="v" id="vlaResult">-</div></div>
         </div>
-        <p class="sub">정책은 위의 두 영상, 오른팔 관절각, 명령 문장만 보고 0.1초마다 다음 관절 목표를 냅니다
+        <p class="sub"><span class="small-only">정책은 위의 두 영상, 오른팔 관절각, 명령 문장만 보고 0.1초마다 다음 관절 목표를 냅니다</span>
+          <span class="pi05-only">정책은 위의 두 영상, 오른팔 관절각, 명령 문장을 Colab으로 보내고, 답으로 받은 다음 동작 5단계를 실행합니다. 답을 기다리는 동안 팔은 멈춰 있습니다</span>
           (머리 영상은 집는 동안만 갱신). 이동 · 상자 앞 정렬 · 놓기는 작업 모드와 같은 방식(Nav2 · ArUco · MoveIt)입니다.</p>
       </div>
     </section>
@@ -531,7 +536,8 @@ function onStatus(msg) {
     case 'ready': case 'world':
       if (!sys.plannerSeen) { sys.plannerSeen = true; renderPanel(); }
       setMode('task');
-      document.body.classList.toggle('pick-vla', e.pick_mode === 'vla');
+      document.body.classList.toggle('pick-vla', e.pick_mode === 'vla' || e.pick_mode === 'pi05');
+      document.body.classList.toggle('pick-pi05', e.pick_mode === 'pi05');
       st.world = e.world; renderWorld();
       if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
       if (e.busy) setBusy(true);
@@ -630,6 +636,7 @@ function renderPanel() {
     $('endTitle').textContent = 'ROS가 꺼져 있습니다';
     $('endText').textContent = '모드를 고르고 "연결"을 누르면 시스템을 켜고 이 페이지에 연결합니다 (30~60초). '
       + '작업: 저장된 지도에서 LLM 명령으로 상자 옮기기. VLA 집기: 작업과 같지만 상자를 집는 동작만 학습된 정책이 카메라를 보고 합니다. '
+      + 'π0.5 집기: 같은 일을 Colab에서 돌리는 π0.5가 합니다 (노트북 7번 칸을 먼저 실행). '
       + '지도 만들기: 빈 지도에서 로봇이 스스로 돌아다니며 SLAM으로 지도를 만듭니다.';
   } else if (mode === 'starting') {
     const t = sk && sk.elapsed != null ? ` ${Math.round(sk.elapsed)}초` : '';
@@ -654,11 +661,12 @@ function resetShutdownBtn() {
   const b = $('shutdownBtn'); b.classList.remove('confirm'); b.textContent = '시스템 종료'; b.disabled = false;
 }
 function startOptions() {
-  return { mode: $('optMode').value, map: $('optMap').value, llm: $('optLlm').value,
+  return { mode: $('optMode').value, map: $('optMap').value, llm: $('optLlm').value, server: $('optServer').value,
            use_viewer: $('optViewer').checked, rviz: $('optRviz').checked };
 }
 function showModeOpts() {
   document.querySelectorAll('.opt-task').forEach(e => { e.hidden = $('optMode').value === 'mapping'; });
+  document.querySelectorAll('.opt-pi05').forEach(e => { e.hidden = $('optMode').value !== 'pi05'; });
 }
 // maps the task mode can run on (dashboard_launcher's /api/maps: default + ~/maps, newest first)
 async function loadMaps() {
@@ -912,7 +920,8 @@ async function boot() {
     const e = JSON.parse(m.data);
     if (e.step === st.vlaEnd) return;  // the last step's status can arrive after /vla/result
     st.vlaEnd = null;
-    $('vlaSub').textContent = '집는 중'; $('vlaStep').textContent = `${e.step} (${(e.step / 10).toFixed(1)}초)`;
+    $('vlaSub').textContent = e.latency == null ? '집는 중' : `집는 중 · 서버 응답 ${e.latency.toFixed(2)}초`;
+    $('vlaStep').textContent = `${e.step} (${(e.step / 10).toFixed(1)}초)`;
     $('vlaDone').textContent = `${Math.round(e.done * 100)}%`; $('bVlaDone').style.width = `${Math.round(e.done * 100)}%`;
   }, 0);
   ros.subscribe('/vla/result', 'std_msgs/msg/String', m => {
@@ -924,7 +933,9 @@ async function boot() {
   // the policy's inputs: rgb8 images, which rosbridge sends as base64
   const drawRgb = (id, m) => {
     const raw = atob(m.data), c = $(id), ctx = c.getContext('2d');
-    if (c.width !== m.width || c.height !== m.height) { c.width = m.width; c.height = m.height; }
+    if (c.width !== m.width || c.height !== m.height) {
+      c.width = m.width; c.height = m.height; $(`${id}Size`).textContent = `${m.width}×${m.height}`;
+    }
     const img = ctx.createImageData(m.width, m.height);
     for (let i = 0, j = 0; i < raw.length; i += 3, j += 4) {
       img.data[j] = raw.charCodeAt(i); img.data[j + 1] = raw.charCodeAt(i + 1); img.data[j + 2] = raw.charCodeAt(i + 2); img.data[j + 3] = 255;
@@ -976,6 +987,7 @@ async function boot() {
     const saved = JSON.parse(localStorage.getItem('airlab.start') || 'null');
     if (saved) {
       $('optMode').value = saved.mode || 'task'; $('optLlm').value = saved.llm || 'claude';
+      $('optServer').value = saved.server || '';
       $('optViewer').checked = saved.use_viewer; $('optRviz').checked = saved.rviz;
     }
   } catch (e) { /* no storage */ }
