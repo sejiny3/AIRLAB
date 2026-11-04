@@ -108,7 +108,7 @@
   /* 작업 mode (LLM tasks on a saved map) vs 지도 만들기 mode (SLAM + exploration + keyboard) */
   body.mode-mapping .task-only, body:not(.mode-mapping) .mapping-only { display: none !important; }
   /* VLA mode = the task mode whose pick runs the learned policy (pick_mode 'vla' from the planner) */
-  body:not(.pick-vla) .vla-only { display: none !important; }
+  body:not(.pick-vla) .vla-only, body.pick-vla .classical-only { display: none !important; }
   body:not(.pick-pi05) .pi05-only, body.pick-pi05 .small-only { display: none !important; }
   .vla { display: grid; gap: 12px; }
   .vla .inputs { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
@@ -117,8 +117,7 @@
   #headIn, #wristCam { image-rendering: pixelated; background: var(--map-unk); border-radius: 8px; display: block; }
   #headIn { width: 192px; height: 108px; }
   #wristCam { width: 108px; height: 108px; }
-  .vla .sub, .camnote { margin: 0; color: var(--muted); font-size: 12px; }
-  .camnote { padding: 8px 14px 12px; }
+  .vla .sub { margin: 0; color: var(--muted); font-size: 12px; }
   .exhead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .tele { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
   .pad { display: grid; grid-template-columns: repeat(3, 52px); gap: 6px; touch-action: none; user-select: none; }
@@ -206,10 +205,8 @@
       </div>
     </section>
     <section class="card task-only">
-      <h2>헤드 카메라 <small>ArUco 마커 검출</small></h2>
+      <h2>헤드 카메라 <small class="classical-only">ArUco 마커 검출</small></h2>
       <div class="camwrap"><img id="cam" alt=""><div class="empty" id="camEmpty">카메라 영상을 기다리는 중</div></div>
-      <p class="camnote vla-only">좌표축은 ArUco 마커 검출 결과입니다. VLA 모드에서도 상자 앞 정렬 · 놓기 · 테이블 확인에 씁니다.
-        <b>정책은 마커 좌표를 쓰지 않고</b>, 아래 VLA 카드의 표시 없는 영상만 봅니다.</p>
     </section>
     <section class="card task-only vla-only">
       <h2><span class="small-only">VLA</span><span class="pi05-only">π0.5</span> 집기 정책 <small id="vlaSub">대기</small></h2>

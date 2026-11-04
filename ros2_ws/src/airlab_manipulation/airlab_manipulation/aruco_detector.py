@@ -5,7 +5,8 @@ markers, estimates each pose with solvePnP (marker side lengths per id) and
 broadcasts <camera_frame> -> aruco_<id> stamped with the image time. The marker
 frame follows OpenCV: z out of the marker face, x to the marker's right.
 An annotated, half-size copy of the image goes to /aruco/debug_image (rgb8, for RViz)
-and /aruco/debug_image/compressed (JPEG, for the web dashboard).
+and /aruco/debug_image/compressed (JPEG, for the web dashboard). With draw_markers false
+the copy stays clean and only the TF frames remain: the learned pick modes show no marker frames.
 
   ros2 run airlab_manipulation aruco_detector --ros-args -p use_sim_time:=true
 """
@@ -40,10 +41,12 @@ class ArucoDetector(Node):
         self.declare_parameter('marker_ids', [7, 8, 9, 1, 2, 3, 11, 12, 21, 22, 31, 32])
         self.declare_parameter('marker_sizes', [0.0375] * 3 + [0.075] * 9)  # black-border side length [m]
         self.declare_parameter('publish_debug_image', True)
+        self.declare_parameter('draw_markers', True)
         ids = self.get_parameter('marker_ids').value
         sizes = self.get_parameter('marker_sizes').value
         self.sizes = dict(zip(ids, sizes))
         self.debug = self.get_parameter('publish_debug_image').value
+        self.draw = self.get_parameter('draw_markers').value
 
         self.dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
         self.params = cv2.aruco.DetectorParameters_create()
@@ -86,7 +89,7 @@ class ArucoDetector(Node):
 
         if self.debug:
             vis = rgb.copy()
-            for c, marker_id, rvec, tvec, size in found:
+            for c, marker_id, rvec, tvec, size in found if self.draw else []:
                 cv2.aruco.drawDetectedMarkers(vis, [c], np.array([[marker_id]]))
                 cv2.drawFrameAxes(vis, self.K, self.dist, rvec, tvec, size)
             small = cv2.resize(vis, (msg.width // 2, msg.height // 2), interpolation=cv2.INTER_AREA)

@@ -36,6 +36,8 @@ def generate_launch_description():
     learned = ["' if '", pick, "' in ('vla', 'pi05') else '"]
     pi05 = ["' if '", pick, "' == 'pi05' else '"]
     vla = PythonExpression(["'", pick, "' in ('vla', 'pi05')"])
+    # a learned pick takes no marker coordinates, so its modes show the camera without marker frames
+    draw_markers = PythonExpression(["'", pick, "' not in ('vla', 'pi05')"])
     # the policy runs at 10 Hz and was trained with a fresh head and wrist image every step
     camera_rate = PythonExpression(["'10.0", *learned, "5.0'"])
     wrist_rate = PythonExpression(["'10.0", *learned, "0.0'"])
@@ -73,7 +75,7 @@ def generate_launch_description():
             package='airlab_manipulation',
             executable='aruco_detector',
             output='screen',
-            parameters=[{'use_sim_time': True}],
+            parameters=[{'use_sim_time': True, 'draw_markers': ParameterValue(draw_markers, value_type=bool)}],
         ),
         Node(
             package='airlab_manipulation',

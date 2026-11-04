@@ -245,7 +245,7 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true
 ```
 
 - 지도: SLAM 지도 위에 로봇(외곽선·방향), LiDAR 점, Nav2 경로, 테이블과 놓는 자리, 상자 세 개(시뮬레이터 실제 위치).
-- 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG).
+- 헤드 카메라: 마커 검출 결과가 그려진 영상(`/aruco/debug_image/compressed`, JPEG). VLA와 π0.5 모드에서는 표시 없는 영상.
 - 명령: 자연어 입력, 자주 쓰는 명령 버튼, 작업 취소(`/task_cancel` — 주행·정밀 접근은 즉시 멈추고,
   진행 중인 팔 동작은 마친 뒤 다음 단계를 시작하지 않는다).
 - 연결(시스템 시작): `ros2 run airlab_dashboard dashboard_launcher`를 켜 두면 ROS가 꺼져 있어도 http://localhost:8080 이
@@ -331,7 +331,7 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true 
 - `pick:=vla`: 브리지 헤드 카메라 10 Hz + 손목 카메라 `/wrist_camera/image_raw` 켜기, `vla_pick` 노드 시작,
   플래너 `pick_mode:=vla`(오른팔 기준으로 정렬한 뒤 `/vla/pick`에 문장을 보내고 `/vla/result`를 기다림).
   `vla_pick`은 정책이 "끝"이라고 해도 손을 닫으라고 명령했고 손가락이 물체에 걸려 덜 닫혔을 때만 성공으로 보고한다.
-- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/airlab_vla/policy.pt`가 없으면 시작을 거절). 카드에 정책이 받는 머리(128×72, `/vla/head_input`)·손목 영상과 "끝" 확률. ArUco는 VLA 모드에서도 정렬·놓기·확인에 쓰고, 정책은 마커 좌표를 받지 않는다.
+- 대시보드 런처의 **VLA 집기** 모드가 같은 것을 켠다(`~/airlab_vla/policy.pt`가 없으면 시작을 거절). 카드에 정책이 받는 머리(128×72, `/vla/head_input`)·손목 영상과 "끝" 확률. ArUco는 VLA 모드에서도 정렬·놓기·확인에 쓰지만 정책은 마커 좌표를 받지 않으므로, 이 모드의 화면에는 마커 좌표축을 그리지 않는다(`aruco_detector`의 `draw_markers:=false`).
 - 결과(10 × 8.5 m 방, 시연 1155개, 20000단계, CPU 약 65분, 검증 L1 0.0385): 처음 보는 배치 100개에서 정책 100/100
   (네 테이블 모두 100%, 옆에 다른 색 상자가 있던 43번 포함, 다른 상자를 든 적 없음), 전문가 100/100.
   그러나 `evaluate --ask-other`(정렬한 상자가 아닌 옆 상자의 색을 말함)에서는 20/20 정렬한 상자를 집었다. 정책은 색 낱말이 아니라
