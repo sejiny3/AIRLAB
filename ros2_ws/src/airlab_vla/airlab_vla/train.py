@@ -15,7 +15,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from airlab_vla.model import CHUNK, PickPolicy, to_float, word_batch
+from airlab_vla.model import CHUNK, PickPolicy, to_float
 
 
 def load(demo_dir):
@@ -48,13 +48,16 @@ class Frames:
         return len(self.state)
 
     def batch(self, idx, augment):
+        """augment: None, 'small' (shifts and brightness/contrast) or 'openpi' (what π0.5 fine-tuning uses)."""
         head, wrist = to_float(self.head[idx]), to_float(self.wrist[idx])
         state = torch.from_numpy(self.state[idx])
-        if augment:
+        if augment == 'openpi':
+            head, wrist = openpi_colour(openpi_geometry(head)), openpi_colour(wrist)
+        elif augment:
             head, wrist = jitter(shift(head, 4)), jitter(shift(wrist, 4))
+        if augment:
             state = state + 0.01 * torch.randn_like(state)
-        words, offsets = word_batch([self.text[i] for i in idx])
-        return head, wrist, words, offsets, state, torch.from_numpy(self.chunk[idx]), torch.from_numpy(self.done[idx])
+        return head, wrist, [self.text[i] for i in idx], state, torch.from_numpy(self.chunk[idx]), torch.from_numpy(self.done[idx])
 
 
 def shift(x, pad):
@@ -73,9 +76,45 @@ def jitter(x):
     return ((x - m) * c + m * b).clamp(0, 1)
 
 
+def openpi_geometry(x):
+    """openpi's non-wrist augmentation (augmax): a random 95% crop scaled back up, then a rotation of up to ±5°,
+    bilinear, black outside the image."""
+    n, c, h, w = x.shape
+    ys, xs = torch.meshgrid(torch.arange(h) + 0.5 - h / 2, torch.arange(w) + 0.5 - w / 2, indexing='ij')
+    theta = torch.deg2rad(torch.empty(n, 1, 1).uniform_(-5, 5))
+    cy, cx = (torch.rand(2, n, 1, 1) - 0.5) * 0.05 * torch.tensor([h, w]).view(2, 1, 1, 1)
+    sy = 0.95 * (theta.cos() * ys + theta.sin() * xs) + cy
+    sx = 0.95 * (-theta.sin() * ys + theta.cos() * xs) + cx
+    grid = torch.stack([sx / (w / 2), sy / (h / 2)], dim=-1)
+    return F.grid_sample(x, grid, mode='bilinear', padding_mode='zeros', align_corners=False)
+
+
+def openpi_colour(x, p=0.5):
+    """augmax ColorJitter(brightness=0.3, contrast=0.4, saturation=0.5) as openpi calls it, per image with
+    probability p. Hue keeps augmax's default 0.1, and augmax never assigns its saturation change, so only
+    value and hue move here too."""
+    n = x.shape[0]
+    amount = lambda s: torch.empty(n, 1, 1).uniform_(-s, s)
+    brightness, contrast, dhue = amount(0.3), amount(0.4), amount(0.1)
+    value, top = x.max(dim=1)
+    spread = value - x.min(dim=1).values
+    second = x.gather(1, ((top + 1) % 3)[:, None]).squeeze(1)
+    third = x.gather(1, ((top + 2) % 3)[:, None]).squeeze(1)
+    hue = torch.where(spread > 0, (2 * top + (second - third) / spread.clamp(min=1e-8)) / 6, 0.0)
+    sat = torch.where(value > 0, spread / value.clamp(min=1e-8), 0.0)
+    value = torch.where(brightness < 0, value * (1 + brightness), value * (1 - brightness) + brightness)
+    slant = torch.tan((contrast + 1) * torch.pi / 4)  # augmax's invertible contrast curve
+    p1 = (slant - slant ** 2) / (2 * (1 - slant ** 2))
+    value = torch.where(value < p1, value / slant,
+                        torch.where(value > 1 - p1, value / slant + 1 - 1 / slant, slant * (value - 0.5) + 0.5))
+    k = (torch.tensor([5.0, 3.0, 1.0]).view(1, 3, 1, 1) + (hue + dhue)[:, None] * 6) % 6
+    out = value[:, None] * (1 - sat[:, None] * torch.minimum(k, 4 - k).clamp(0, 1))
+    return torch.where(torch.rand(n, 1, 1, 1) < p, out, x)
+
+
 def losses(policy, batch):
-    head, wrist, words, offsets, state, chunk, done = batch
-    pred, done_logit = policy(head, wrist, words, offsets, state)
+    head, wrist, texts, state, chunk, done = batch
+    pred, done_logit = policy(head, wrist, policy.encode_text(texts), state)
     target = (chunk - policy.mean) / policy.std
     return F.l1_loss(pred, target), F.binary_cross_entropy_with_logits(done_logit, done)
 
@@ -89,6 +128,10 @@ def main():
     ap.add_argument('--lr', type=float, default=1e-3)
     ap.add_argument('--threads', type=int, default=os.cpu_count())
     ap.add_argument('--val', type=float, default=0.1, help='fraction of episodes held out')
+    ap.add_argument('--augment', choices=('small', 'openpi'), default='small',
+                    help="image augmentation: small shifts and brightness/contrast, or openpi's crop, rotation and colour jitter")
+    ap.add_argument('--text', choices=('words', 'minilm'), default='words',
+                    help='instruction encoder: hashed word embeddings, or frozen pretrained MiniLM sentence embeddings')
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
     torch.manual_seed(0)
@@ -99,7 +142,7 @@ def main():
     train, val = Frames([eps[i] for i in order[n_val:]]), Frames([eps[i] for i in order[:n_val]])
     print(f'{len(eps) - n_val} training episodes ({len(train)} steps), {n_val} validation episodes')
 
-    policy = PickPolicy()
+    policy = PickPolicy(text=a.text)
     policy.mean.copy_(torch.from_numpy(train.chunk.reshape(-1, 8).mean(0)))
     policy.std.copy_(torch.from_numpy(train.chunk.reshape(-1, 8).std(0)).clamp(min=0.01))
     opt = torch.optim.AdamW(policy.parameters(), lr=a.lr, weight_decay=1e-4)
@@ -108,7 +151,7 @@ def main():
     t0, best = time.time(), float('inf')
     for step in range(1, a.steps + 1):
         policy.train()
-        l_act, l_done = losses(policy, train.batch(rng.integers(0, len(train), a.batch), augment=True))
+        l_act, l_done = losses(policy, train.batch(rng.integers(0, len(train), a.batch), augment=a.augment))
         opt.zero_grad()
         (l_act + 0.1 * l_done).backward()
         opt.step()
@@ -118,13 +161,13 @@ def main():
             with torch.no_grad():
                 idx = np.arange(0, len(val), max(1, len(val) // 1024))
                 v_act, v_done = (sum(x) / len(x) for x in zip(*[
-                    losses(policy, val.batch(idx[i:i + 256], augment=False)) for i in range(0, len(idx), 256)]))
+                    losses(policy, val.batch(idx[i:i + 256], augment=None)) for i in range(0, len(idx), 256)]))
             print(f'step {step:6d}  train {l_act.item():.4f}  val {v_act.item():.4f}  done {v_done.item():.3f}  '
                   f'{time.time() - t0:.0f} s', flush=True)
             if v_act.item() < best:
                 best = v_act.item()
                 os.makedirs(os.path.dirname(a.out), exist_ok=True)
-                torch.save({'state_dict': policy.state_dict(), 'val_l1': best, 'step': step}, a.out)
+                torch.save({'state_dict': policy.state_dict(), 'val_l1': best, 'step': step, 'text': a.text}, a.out)
     print(f'best validation L1 {best:.4f}, saved {a.out}')
 
 

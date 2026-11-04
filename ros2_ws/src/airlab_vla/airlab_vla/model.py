@@ -13,6 +13,9 @@ targets rather than one (as ACT does) gives smoother motion and fewer compoundin
 at run time the overlapping chunks are averaged (temporal ensembling).
 Words are hashed into a fixed table, so any sentence (for example from the LLM planner) maps
 to an embedding; unknown words just land in buckets the policy learned little about.
+With text='minilm' a frozen pretrained sentence encoder (all-MiniLM-L6-v2, 22.7 M parameters,
+English) replaces the hashed words, and only a linear map of its 384-d embedding to the same
+32 numbers is learned: the same policy with a pretrained language representation.
 """
 
 import re
@@ -24,6 +27,7 @@ import torch.nn.functional as F
 
 CHUNK = 10           # future steps predicted at once (1 s at 10 Hz)
 WORD_BUCKETS = 512
+TEXT_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 STATE_DIM = ACTION_DIM = 8
 
 
@@ -49,12 +53,38 @@ def encoder(keypoints=64):
                          nn.Conv2d(64, keypoints, 1), SpatialSoftmax())
 
 
+class SentenceEncoder:
+    """Frozen MiniLM sentence embeddings (mean-pooled, unit length), one per distinct sentence.
+    Kept outside the module's parameters, so checkpoints hold only the learned projection."""
+
+    def __init__(self):
+        from transformers import AutoModel, AutoTokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(TEXT_MODEL)
+        self.model = AutoModel.from_pretrained(TEXT_MODEL).eval()
+        self.cache = {}
+
+    @torch.no_grad()
+    def __call__(self, texts):
+        new = sorted({t for t in texts if t not in self.cache})
+        if new:
+            tok = self.tokenizer(new, padding=True, return_tensors='pt')
+            mask = tok['attention_mask'][..., None].float()
+            h = (self.model(**tok).last_hidden_state * mask).sum(1) / mask.sum(1)
+            self.cache.update(zip(new, F.normalize(h, dim=1)))
+        return torch.stack([self.cache[t] for t in texts])
+
+
 class PickPolicy(nn.Module):
-    def __init__(self, hidden=512):
+    def __init__(self, hidden=512, text='words'):
         super().__init__()
         self.head_enc = encoder()
         self.wrist_enc = encoder()
-        self.words = nn.EmbeddingBag(WORD_BUCKETS, 32, mode='mean')
+        self.text = text
+        if text == 'words':
+            self.words = nn.EmbeddingBag(WORD_BUCKETS, 32, mode='mean')
+        else:
+            self.sentences = SentenceEncoder()
+            self.sentence_proj = nn.Linear(384, 32)
         self.trunk = nn.Sequential(
             nn.Linear(128 + 128 + 32 + STATE_DIM, hidden), nn.ReLU(inplace=True),
             nn.Linear(hidden, hidden), nn.ReLU(inplace=True),
@@ -63,11 +93,17 @@ class PickPolicy(nn.Module):
         self.register_buffer('mean', torch.zeros(STATE_DIM))
         self.register_buffer('std', torch.ones(STATE_DIM))
 
-    def forward(self, head, wrist, words, offsets, state):
-        """head/wrist: float images (n, 3, h, w) in [0, 1]; words/offsets: EmbeddingBag input;
+    def encode_text(self, texts):
+        """Instruction sentences -> (n, 32) features."""
+        if self.text == 'words':
+            return self.words(*word_batch(texts))
+        return self.sentence_proj(self.sentences(texts))
+
+    def forward(self, head, wrist, text, state):
+        """head/wrist: float images (n, 3, h, w) in [0, 1]; text: encode_text() of the instructions;
         state: raw joint angles (n, 8). Returns normalised action chunks (n, CHUNK, 8), done logits (n,)."""
         z = torch.cat([self.head_enc(head - 0.5), self.wrist_enc(wrist - 0.5),
-                       self.words(words, offsets), (state - self.mean) / self.std], dim=1)
+                       text, (state - self.mean) / self.std], dim=1)
         out = self.trunk(z)
         return out[:, :-1].view(-1, CHUNK, ACTION_DIM), out[:, -1]
 

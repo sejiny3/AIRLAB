@@ -107,3 +107,12 @@ CONFIG = _config.TrainConfig(
     wandb_enabled=False,
     assets_base_dir=str(pathlib.Path(__file__).parent / 'assets'),  # norm_stats.json, computed once and committed
 )
+
+# The 'row' task (record --task row): three boxes side by side, the instruction says which one.
+# Same model and schedule; only the dataset (and so its norm stats) differs.
+CONFIG_ROW = dataclasses.replace(
+    CONFIG,
+    name='pi05_airlab_row',
+    data=dataclasses.replace(CONFIG.data, repo_id='airlab/row_pi05'),
+)
+CONFIGS = {c.name: c for c in (CONFIG, CONFIG_ROW)}

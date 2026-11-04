@@ -2,13 +2,14 @@
 # Serve the fine-tuned π0.5 from Colab through a quick tunnel (train_pi05.ipynb cell 7).
 # Every stage prints and has a time limit, so a stall says where it is.
 DRIVE=${DRIVE:-/content/drive/MyDrive/airlab_pi05}
+CONFIG=${CONFIG:-pi05_airlab}  # pi05_airlab_row for the three-box row task
 VERSION=2026.10.4
 SHA256=ae5e8add7884b0531d66bbca4570d1de491ff6da51e4ebe7eb160cdf241d9e42
 LOAD_LIMIT=900
 TUNNEL_LIMIT=60
 
 cd /content/openpi || exit 1
-CKPT=$(ls -d /content/checkpoints/pi05_airlab/run1/[0-9]* "$DRIVE"/checkpoints/pi05_airlab/run1/[0-9]* 2>/dev/null | grep -E '/[0-9]+$' | head -1)
+CKPT=$(ls -d /content/checkpoints/$CONFIG/run1/[0-9]* "$DRIVE"/checkpoints/$CONFIG/run1/[0-9]* 2>/dev/null | grep -E '/[0-9]+$' | head -1)
 if [ -z "$CKPT" ]; then
   echo "체크포인트를 찾지 못했습니다. 1번 칸을 실행했는지 확인하세요."
   exit 1
@@ -30,7 +31,7 @@ if [ ! -x /content/cloudflared ]; then
 fi
 
 XLA_PYTHON_CLIENT_MEM_FRACTION=0.6 PYTHONUNBUFFERED=1 .venv/bin/python /content/AIRLAB/pi05/serve_pi05.py \
-  --checkpoint "$CKPT" > /content/serve.log 2>&1 &
+  --checkpoint "$CKPT" --config $CONFIG > /content/serve.log 2>&1 &
 SERVER=$!
 trap 'kill $SERVER $TUNNEL 2> /dev/null' EXIT
 

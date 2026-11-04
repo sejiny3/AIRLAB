@@ -20,11 +20,12 @@ SIZE = 224
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--checkpoint', required=True, help='a step folder, e.g. .../pi05_airlab/run1/5000')
+    ap.add_argument('--config', default=airlab_policy.CONFIG.name, choices=sorted(airlab_policy.CONFIGS))
     ap.add_argument('--port', type=int, default=8000)
     a = ap.parse_args()
 
     logging.basicConfig(level=logging.INFO, force=True)
-    policy = policy_config.create_trained_policy(airlab_policy.CONFIG, a.checkpoint)
+    policy = policy_config.create_trained_policy(airlab_policy.CONFIGS[a.config], a.checkpoint)
     logging.info('loaded, compiling')
     black = np.zeros((SIZE, SIZE, 3), np.uint8)
     policy.infer({'observation/image': black, 'observation/wrist_image': black,

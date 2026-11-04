@@ -49,6 +49,18 @@ DISTRACTOR = 0.5          # share of episodes with a second box on another spot 
 TABLES = ('supply_1', 'supply_2', 'supply_3', 'work_table')
 BOXES = {'red': 'red_box', 'green': 'green_box', 'blue': 'blue_box'}
 PARKED = (30.0, 30.0)     # boxes not in the episode wait on the floor far outside the room
+# The 'row' task (choosing a box by the instruction): all three boxes side by side along the
+# table edge, ROW_GAP apart, the robot lined up with the middle one at base y ROW_Y. Further
+# right (GRASP_XY) the tucked right hand hides the right box from the head camera, further
+# left the arm cannot reach the left box. The hand opens less (ROW_FINGER_OPEN) so that its
+# fingers miss the neighbours: with these values the expert lifts the box in 9 of 10 scenes.
+SLOTS = ('left', 'middle', 'right')  # as the robot sees them: left is +y in its base frame
+ROW_GAP = 0.10
+ROW_Y = -0.08
+ROW_SIDEWAYS = 0.025     # line-up error sideways (SPREAD['y'] would put the left box out of reach)
+ROW_SPREAD = 0.015        # each box rests within this of its slot (x and y)
+ROW_YAW = math.radians(20)  # narrower than box_yaw, so the hand clears the neighbours
+ROW_FINGER_OPEN = -0.4
 
 
 def pad_square(head):
@@ -105,6 +117,7 @@ class PickScene:
         self.box_q = {c: m.jnt_qposadr[m.joint(f'{b}_free').id] for c, b in BOXES.items()}
         self.box_bodies = {c: m.body(b).id for c, b in BOXES.items()}
         self.color = 'red'
+        self.slots = None  # the 'row' task's boxes by slot (reset_row)
         self.box_body = self.box_bodies[self.color]  # the box to pick (the expert reaches for this one)
         self.tables = self._tables()
         self.site = m.site('right_ee_control_point').id
@@ -164,10 +177,37 @@ class PickScene:
                 self._put_box(c, xy, rng.uniform(-SPREAD['box_yaw'], SPREAD['box_yaw']))
             else:
                 self._put_box(c, PARKED, 0.0)
-        # robot facing the table, box at GRASP_XY (+ noise) in its base frame
+        self.slots = None
+        return self._line_up(t, box)
+
+    def reset_row(self, order, target, table=None):
+        """'row' task episode: the boxes `order` (colours from the robot's left to its right) side
+        by side on a place spot of `table` (or a random one), the robot lined up with the middle
+        one, and the box in slot `target` ('left', 'middle' or 'right') the one to pick."""
+        m, d, rng = self.model, self.data, self.rng
+        mujoco.mj_resetData(m, d)
+        self.table = table or str(rng.choice(TABLES))
+        self.slots = dict(zip(SLOTS, order))
+        self.color = self.slots[target]
+        self.box_body = self.box_bodies[self.color]
+        self.distractor = True
+        t = self.tables[self.table]
+        middle = t['spots'][rng.integers(len(t['spots']))]
+        left = np.array([-math.sin(t['heading']), math.cos(t['heading'])])  # the robot's left along the table edge
+        for k, slot in enumerate(SLOTS):
+            xy = middle + (1 - k) * ROW_GAP * left + rng.uniform(-ROW_SPREAD, ROW_SPREAD, 2)
+            self._put_box(self.slots[slot], xy, rng.uniform(-ROW_YAW, ROW_YAW))
+            if slot == 'middle':
+                anchor = xy
+        return self._line_up(t, anchor, ROW_Y, ROW_SIDEWAYS)
+
+    def _line_up(self, t, box, y=GRASP_XY[1], sideways=SPREAD['y']):
+        """Robot facing the table with `box` at (GRASP_XY x, y) (+ noise) in its base frame, arms
+        tucked, then let everything settle."""
+        m, d, rng = self.model, self.data, self.rng
         heading = t['heading'] + rng.uniform(-SPREAD['heading'], SPREAD['heading'])
         rel = np.array([GRASP_XY[0] + rng.uniform(-SPREAD['x'], SPREAD['x']),
-                        GRASP_XY[1] + rng.uniform(-SPREAD['y'], SPREAD['y'])])
+                        y + rng.uniform(-sideways, sideways)])
         c, s = math.cos(heading), math.sin(heading)
         base = box - np.array([c * rel[0] - s * rel[1], s * rel[0] + c * rel[1]])
         d.qpos[self.base_q:self.base_q + 2] = base

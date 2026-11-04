@@ -11,7 +11,7 @@ import math
 import mujoco
 import numpy as np
 
-from airlab_vla.sim import BOX_HALF, CONTROL_HZ, FINGER_CLOSED, FINGER_OPEN
+from airlab_vla.sim import BOX_HALF, CONTROL_HZ, FINGER_CLOSED, FINGER_OPEN, ROW_FINGER_OPEN
 
 GRASP_PITCH = math.radians(15)   # approach axis pitched down (skills.py)
 GRASP_HEIGHT = 0.015             # pads this far above the box centre (keeps the hand off the table)
@@ -123,6 +123,7 @@ class Expert:
         pre = grasp - PRE_GRASP_BACK * approach + PRE_GRASP_UP * up
 
         q_now = d.qpos[sc.qadr[:7]].copy()
+        hand_open = ROW_FINGER_OPEN if sc.slots else FINGER_OPEN  # a narrower hand between the row's boxes
         n = lambda phase: max(1, int(round(TIMING[phase] * CONTROL_HZ)))
         steps, worst = [], 0.0
 
@@ -137,15 +138,15 @@ class Expert:
         worst = max(worst, ep)
         for k in range(1, n('reach') + 1):  # joint space from tuck, opening the hand on the way
             a = smooth(k / n('reach'))
-            steps.append(np.append(q_now + a * (q_via - q_now), FINGER_CLOSED + a * (FINGER_OPEN - FINGER_CLOSED)))
+            steps.append(np.append(q_now + a * (q_via - q_now), FINGER_CLOSED + a * (hand_open - FINGER_CLOSED)))
         q = q_via
         for phase, start, goal in (('pre', via, pre), ('approach', pre, grasp)):
             for k in range(1, n(phase) + 1):  # Cartesian straight lines
                 q, ep, er = self.ik.solve(q, start + smooth(k / n(phase)) * (goal - start), R_site)
                 worst = max(worst, ep)
-                steps.append(np.append(q, FINGER_OPEN))
+                steps.append(np.append(q, hand_open))
         for k in range(1, n('close') + 1):
-            steps.append(np.append(q, FINGER_OPEN + smooth(k / n('close')) * (FINGER_CLOSED - FINGER_OPEN)))
+            steps.append(np.append(q, hand_open + smooth(k / n('close')) * (FINGER_CLOSED - hand_open)))
         for k in range(1, n('lift') + 1):
             q, ep, er = self.ik.solve(q, grasp + smooth(k / n('lift')) * LIFT * up, R_site)
             worst = max(worst, ep)
