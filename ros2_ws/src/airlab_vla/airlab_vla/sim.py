@@ -12,6 +12,11 @@ take. Everything the policy sees and does goes through this class:
 
 The same scene file, actuators and gravity compensation as the ROS bridge, so a policy that
 works here sees the same robot in the full stack.
+
+PickScene(arm='left') is the mirror task for the left arm: the box is lined up on the left
+(base y > 0), the state and actions are the left arm's, the wrist camera is the left one. The
+two arms are exact mirror images across the base's x-z plane (joint signs MIRROR), so a policy
+trained on the right arm can drive the left one through runner.MirroredRunner.
 """
 
 import math
@@ -24,6 +29,16 @@ CONTROL_HZ = 10
 ARM = [f'openarm_right_joint{i}' for i in range(1, 8)]
 FINGER = 'openarm_right_finger_joint1'
 JOINTS = ARM + [FINGER]
+# left joint = MIRROR * right joint gives the mirror image of the right arm across the base's x-z
+# plane (checked by forward kinematics: every link and the wrist camera within 0.01 mm)
+MIRROR = np.array([-1, -1, -1, 1, -1, -1, -1, -1], np.float32)
+
+
+def arm_joints(arm):
+    """The 7 arm joints and the finger of 'right' or 'left', in the order of JOINTS."""
+    return [j.replace('right', arm) for j in JOINTS]
+
+
 TUCK = np.array([0, 0, 0, 2.3, 0, 0, 0, 0.0])      # arm folded, fingers closed (how the robot drives)
 FINGER_OPEN, FINGER_CLOSED = -0.6, 0.0
 HEAD_SIZE = (128, 72)    # (width, height): the 1280x720 ROS head image scaled down 10x
@@ -104,13 +119,17 @@ def downsample(img, k):
 
 
 class PickScene:
-    def __init__(self, seed=None, render=True, cameras='small'):
+    def __init__(self, seed=None, render=True, cameras='small', arm='right'):
         self.model = load_model(os.path.join(repo_root(), 'models', 'scene.xml'))
         self.data = mujoco.MjData(self.model)
         m = self.model
         self.rng = np.random.default_rng(seed)
-        self.qadr = np.array([m.jnt_qposadr[m.joint(j).id] for j in JOINTS])
-        self.act = np.array([next(i for i in range(m.nu) if m.actuator(i).trnid[0] == m.joint(j).id) for j in JOINTS])
+        self.arm = arm
+        self.side = 1 if arm == 'right' else -1  # base y of the lined-up box flips for the left arm
+        self.qadr = np.array([m.jnt_qposadr[m.joint(j).id] for j in arm_joints(arm)])
+        self.act = np.array([next(i for i in range(m.nu) if m.actuator(i).trnid[0] == m.joint(j).id)
+                             for j in arm_joints(arm)])
+        self.tuck_q = [m.jnt_qposadr[m.joint(j).id] for side in ('right', 'left') for j in arm_joints(side)]
         self.other_act = [i for i in range(m.nu) if i not in self.act]
         base_joint = m.joint('base_free')
         self.base_q = m.jnt_qposadr[base_joint.id]
@@ -120,7 +139,7 @@ class PickScene:
         self.slots = None  # the 'row' task's boxes by slot (reset_row)
         self.box_body = self.box_bodies[self.color]  # the box to pick (the expert reaches for this one)
         self.tables = self._tables()
-        self.site = m.site('right_ee_control_point').id
+        self.site = m.site(f'{arm}_ee_control_point').id
         self.steps_per_control = int(round(1.0 / (CONTROL_HZ * m.opt.timestep)))
         self.renderers = None
         self.cam_cfg = CAMERAS[cameras]
@@ -131,7 +150,7 @@ class PickScene:
             for r in self.renderers.values():
                 r.scene.flags[mujoco.mjtRndFlag.mjRND_SHADOW] = False
                 r.scene.flags[mujoco.mjtRndFlag.mjRND_REFLECTION] = False
-        self.cams = {'head': 'head_camera', 'wrist': 'camera_wrist_right'}
+        self.cams = {'head': 'head_camera', 'wrist': f'camera_wrist_{arm}'}
 
     def _tables(self):
         """Place spots (world x, y of each pad) and the robot's heading at every table.
@@ -199,12 +218,13 @@ class PickScene:
             self._put_box(self.slots[slot], xy, rng.uniform(-ROW_YAW, ROW_YAW))
             if slot == 'middle':
                 anchor = xy
-        return self._line_up(t, anchor, ROW_Y, ROW_SIDEWAYS)
+        return self._line_up(t, anchor, ROW_Y * self.side, ROW_SIDEWAYS)
 
-    def _line_up(self, t, box, y=GRASP_XY[1], sideways=SPREAD['y']):
+    def _line_up(self, t, box, y=None, sideways=SPREAD['y']):
         """Robot facing the table with `box` at (GRASP_XY x, y) (+ noise) in its base frame, arms
         tucked, then let everything settle."""
         m, d, rng = self.model, self.data, self.rng
+        y = GRASP_XY[1] * self.side if y is None else y
         heading = t['heading'] + rng.uniform(-SPREAD['heading'], SPREAD['heading'])
         rel = np.array([GRASP_XY[0] + rng.uniform(-SPREAD['x'], SPREAD['x']),
                         y + rng.uniform(-sideways, sideways)])
@@ -212,8 +232,7 @@ class PickScene:
         base = box - np.array([c * rel[0] - s * rel[1], s * rel[0] + c * rel[1]])
         d.qpos[self.base_q:self.base_q + 2] = base
         d.qpos[self.base_q + 3:self.base_q + 7] = [math.cos(heading / 2), 0, 0, math.sin(heading / 2)]
-        d.qpos[self.qadr] = TUCK
-        d.qpos[m.jnt_qposadr[m.joint('openarm_left_joint4').id]] = TUCK[3]  # the planner tucks both arms
+        d.qpos[self.tuck_q] = np.concatenate([TUCK, TUCK])  # the planner tucks both arms (TUCK is its own mirror)
         d.ctrl[:] = 0.0
         for i in range(m.nu):  # position actuators hold where their joint is
             if m.actuator(i).name not in ('left_wheel_vel', 'right_wheel_vel'):

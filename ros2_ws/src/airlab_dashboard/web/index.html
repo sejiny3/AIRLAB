@@ -227,7 +227,8 @@
         </div>
         <p class="sub"><span class="small-only">정책은 위의 두 영상, 오른팔 관절각, 명령 문장만 보고 0.1초마다 다음 관절 목표를 냅니다</span>
           <span class="pi05-only">정책은 위의 두 영상, 오른팔 관절각, 명령 문장을 Colab으로 보내고, 답으로 받은 다음 동작 5단계를 실행합니다. 답을 기다리는 동안 팔은 멈춰 있습니다</span>
-          (머리 영상은 집는 동안만 갱신). 이동 · 상자 앞 정렬 · 놓기는 작업 모드와 같은 방식(Nav2 · ArUco · MoveIt)입니다.</p>
+          (영상은 집는 동안만 갱신). 정책은 오른팔로 학습했고, 상자가 로봇 왼쪽에 있으면 왼팔로 잡습니다:
+          영상을 좌우로 뒤집고 관절각을 거울 대칭으로 바꿔 오른팔 문제로 보여 줍니다(위 영상도 뒤집힌 그대로). 이동 · 상자 앞 정렬 · 놓기는 작업 모드와 같은 방식(Nav2 · ArUco · MoveIt)입니다.</p>
       </div>
     </section>
   </div>
@@ -949,7 +950,7 @@ async function boot() {
     const e = JSON.parse(m.data);
     st.vlaEnd = e.steps;
     $('vlaSub').textContent = '대기';
-    $('vlaResult').textContent = `${e.ok ? '성공' : '실패'} · ${e.steps}단계 · ${e.reason}`;
+    $('vlaResult').textContent = `${e.arm === 'left' ? '왼팔(거울) · ' : e.arm ? '오른팔 · ' : ''}${e.ok ? '성공' : '실패'} · ${e.steps}단계 · ${e.reason}`;
   }, 0);
   // the policy's inputs: rgb8 images, which rosbridge sends as base64
   const drawRgb = (id, m) => {
@@ -963,7 +964,8 @@ async function boot() {
     }
     ctx.putImageData(img, 0, 0);
   };
-  ros.subscribe('/wrist_camera/image_raw', 'sensor_msgs/msg/Image', m => drawRgb('wristCam', m), 200);
+  // the wrist image the policy was given (the picking arm's; flipped for the left arm): only during a pick
+  ros.subscribe('/vla/wrist_input', 'sensor_msgs/msg/Image', m => drawRgb('wristCam', m), 200);
   ros.subscribe('/vla/head_input', 'sensor_msgs/msg/Image', m => drawRgb('headIn', m), 200);  // only during a pick
   ros.subscribe('/clock', 'rosgraph_msgs/msg/Clock', m => {
     const s = m.clock.sec; $('simTime').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;

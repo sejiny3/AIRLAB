@@ -223,12 +223,13 @@ class TaskExecutor:
         seen = self.s.marker_in_base(marker, samples=3, use_memory=True)
         if seen is None:
             return False, {'error': f'{object} (marker {marker}) is not visible from here'}
-        # the policy was trained on the right arm only
-        arm = 'right' if self.learned_pick else 'left' if seen[0][1] > 0 else 'right'
+        # the arm on the box's side; a learned policy (trained on the right arm) drives the left one
+        # through the mirror (airlab_vla mirror.py)
+        arm = 'left' if seen[0][1] > 0 else 'right'
         if not self.s.servo_to_marker(marker, GRASP_XY[arm]):
             return False, {'error': f'could not line up with {object}'}
         if self.learned_pick:
-            picked = self.s.vla_pick(marker, f'pick up the {object.replace("_", " ")}')
+            picked = self.s.vla_pick(marker, f'pick up the {object.replace("_", " ")}', arm=arm)
         else:
             picked = self.s.pick(marker)
         # lined up, the chassis is under the table edge: back away before anything else, picked or not

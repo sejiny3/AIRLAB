@@ -582,14 +582,15 @@ class RobotSkills:
         self.vla_result = json.loads(msg.data)
         self.vla_done.set()
 
-    def vla_pick(self, marker_id, instruction, timeout=90.0):
+    def vla_pick(self, marker_id, instruction, timeout=90.0, arm='right'):
         """Pick with the learned policy instead of MoveIt: the vla_pick node reaches, grasps and
-        lifts with the right arm from camera images alone. The object must already be lined up
-        at GRASP_XY['right']. Afterwards the arm is tucked here, as in pick()."""
+        lifts with `arm` from camera images alone (the left arm through the mirror of the
+        right-arm policy). The object must already be lined up at GRASP_XY[arm]. Afterwards the
+        arm is tucked here, as in pick()."""
         self.vla_done.clear()
         self.vla_result = None
-        self.log.info(f'VLA pick: "{instruction}"')
-        self.vla_pick_pub.publish(String(data=instruction))
+        self.log.info(f'VLA pick with the {arm} arm: "{instruction}"')
+        self.vla_pick_pub.publish(String(data=json.dumps({'instruction': instruction, 'arm': arm})))
         end = time.time() + timeout
         while not self.vla_done.wait(0.1):
             if self.cancel_event.is_set() or time.time() > end:
@@ -599,15 +600,15 @@ class RobotSkills:
         r = self.vla_result or {'ok': False, 'reason': 'no answer from the vla_pick node (is it running?)'}
         ok = bool(r.get('ok'))
         if ok:
-            self.holding = 'right'
+            self.holding = arm
             self.held_marker = marker_id
             self.forget_marker(marker_id)
         else:
             self.log.error(f'VLA pick failed: {r.get("reason")}')
-            self.set_gripper('right', FINGER_OPEN['right'])
-        self.move_arms('tuck', ('right',))
+            self.set_gripper(arm, FINGER_OPEN[arm])
+        self.move_arms('tuck', (arm,))
         if not ok:
-            self.set_gripper('right', 0.0)  # open fingers in 'tuck' hide the table from the head camera
+            self.set_gripper(arm, 0.0)  # open fingers in 'tuck' hide the table from the head camera
         self.log.info(f'VLA pick {"succeeded" if ok else "FAILED"} ({r.get("reason")}, {r.get("steps", 0)} steps)')
         return ok
 

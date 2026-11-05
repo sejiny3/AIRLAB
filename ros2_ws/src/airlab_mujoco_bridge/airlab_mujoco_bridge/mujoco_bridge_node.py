@@ -15,6 +15,8 @@ Published:
   /camera/image_raw    sensor_msgs/Image        head camera (rgb8, rendered with mujoco.Renderer)
   /camera/camera_info  sensor_msgs/CameraInfo   pinhole intrinsics from the MJCF fovy
   /wrist_camera/image_raw sensor_msgs/Image     right wrist camera, small (only if wrist_camera_rate > 0; the VLA policy uses it)
+  /wrist_camera_left/image_raw sensor_msgs/Image  left wrist camera, same size and rate (the policy picking with
+                                                the left arm through the mirror)
   /ground_truth/<body> geometry_msgs/PoseStamped true pose of each tracked free body (world frame)
   TF                   odom -> base_footprint
 
@@ -138,6 +140,7 @@ class MujocoBridge(Node):
         self.declare_parameter('camera_frame', 'camera_optical_frame')
         self.declare_parameter('camera_rate', 5.0)  # 0 disables rendering
         self.declare_parameter('wrist_camera_name', 'camera_wrist_right')
+        self.declare_parameter('left_wrist_camera_name', 'camera_wrist_left')  # '' = no left wrist images
         self.declare_parameter('wrist_camera_rate', 0.0)  # off unless the VLA policy needs it
         self.declare_parameter('wrist_camera_size', 96)   # square image, the size the policy was trained on
         self.declare_parameter('tracked_bodies', ['red_box', 'green_box', 'blue_box'])
@@ -170,6 +173,7 @@ class MujocoBridge(Node):
         self.camera_frame = p('camera_frame')
         self.camera_dt = 1.0 / p('camera_rate') if p('camera_rate') > 0 else None
         self.wrist_name = p('wrist_camera_name')
+        self.left_wrist_name = p('left_wrist_camera_name')
         self.wrist_dt = 1.0 / p('wrist_camera_rate') if p('wrist_camera_rate') > 0 else None
         self.wrist_size = p('wrist_camera_size')
         self.tracked_names = list(p('tracked_bodies'))
@@ -206,6 +210,8 @@ class MujocoBridge(Node):
         self.image_pub = self.create_publisher(Image, '/camera/image_raw', 2)
         self.camera_info_pub = self.create_publisher(CameraInfo, '/camera/camera_info', 2)
         self.wrist_pub = self.create_publisher(Image, '/wrist_camera/image_raw', 2) if self.wrist_dt else None
+        self.left_wrist_pub = (self.create_publisher(Image, '/wrist_camera_left/image_raw', 2)
+                               if self.wrist_dt and self.left_wrist_id >= 0 else None)
         self.object_pubs = {name: self.create_publisher(PoseStamped, f'/ground_truth/{name}', reliable)
                             for name in self.tracked_bodies}
         self.tf_broadcaster = TransformBroadcaster(self)
@@ -272,6 +278,7 @@ class MujocoBridge(Node):
             f = (self.cam_h / 2.0) / math.tan(math.radians(m.cam_fovy[self.camera_id]) / 2.0)
             self.cam_k = [f, 0.0, self.cam_w / 2.0, 0.0, f, self.cam_h / 2.0, 0.0, 0.0, 1.0]
         self.wrist_id = m.camera(self.wrist_name).id if self.wrist_dt else -1
+        self.left_wrist_id = m.camera(self.left_wrist_name).id if self.wrist_dt and self.left_wrist_name else -1
 
         # Free bodies whose true pose is published for evaluation (missing names are skipped).
         names = [b.name for b in (m.body(i) for i in range(m.nbody))]
@@ -623,6 +630,9 @@ class MujocoBridge(Node):
                 if self.wrist_due:
                     self.wrist_due = False
                     self.wrist_pub.publish(self._render_image(wrist_renderer, self.wrist_id, self.wrist_name))
+                    if self.left_wrist_pub is not None:
+                        self.left_wrist_pub.publish(
+                            self._render_image(wrist_renderer, self.left_wrist_id, self.left_wrist_name))
 
                 now = time.monotonic()
                 if viewer is not None and now >= next_view:
