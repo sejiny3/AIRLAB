@@ -25,6 +25,7 @@ def generate_launch_description():
         DeclareLaunchArgument('camera_rate', default_value='5.0', description='head camera images per second'),
         DeclareLaunchArgument('wrist_camera_rate', default_value='0.0', description='right wrist camera (0 = off)'),
         DeclareLaunchArgument('wrist_camera_size', default_value='96', description='square wrist image size'),
+        DeclareLaunchArgument('box_layout', default_value='scene', description="'scene' or 'row' (three boxes on the work table)"),
         IncludeLaunchDescription(
             PathJoinSubstitution([bridge_share, 'launch', 'bridge.launch.py']),
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'),
@@ -32,7 +33,8 @@ def generate_launch_description():
                               'lidar_samples': LaunchConfiguration('lidar_samples'),
                               'camera_rate': LaunchConfiguration('camera_rate'),
                               'wrist_camera_rate': LaunchConfiguration('wrist_camera_rate'),
-                              'wrist_camera_size': LaunchConfiguration('wrist_camera_size')}.items(),
+                              'wrist_camera_size': LaunchConfiguration('wrist_camera_size'),
+                              'box_layout': LaunchConfiguration('box_layout')}.items(),
         ),
         IncludeLaunchDescription(
             PathJoinSubstitution([description_share, 'launch', 'rsp.launch.py']),

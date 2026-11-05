@@ -110,6 +110,8 @@
   /* VLA mode = the task mode whose pick runs the learned policy (pick_mode 'vla' from the planner) */
   body:not(.pick-vla) .vla-only, body.pick-vla .classical-only { display: none !important; }
   body:not(.pick-pi05) .pi05-only, body.pick-pi05 .small-only { display: none !important; }
+  /* 고르기 modes: three boxes in a row, the sentence goes to the policy without the LLM */
+  body:not(.pick-row) .row-only, body.pick-row .not-row { display: none !important; }
   .vla { display: grid; gap: 12px; }
   .vla .inputs { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
   .vla figure { margin: 0; }
@@ -158,12 +160,15 @@
             <option value="task">작업 (LLM 명령, 저장된 지도)</option>
             <option value="vla">VLA 집기 (작업 + 학습된 집기 정책)</option>
             <option value="pi05">π0.5 집기 (작업 + Colab의 π0.5)</option>
+            <option value="row">고르기 · CNN (상자 세 개 중 문장으로, LLM 없음)</option>
+            <option value="row_minilm">고르기 · CNN+MiniLM</option>
+            <option value="row_pi05">고르기 · π0.5 (Colab, pi05_airlab_row)</option>
             <option value="mapping">지도 만들기 (SLAM + 자동 탐색)</option>
           </select>
         </label>
         <label class="opt-pi05">서버 주소 <input id="optServer" type="url" spellcheck="false" placeholder="https://....trycloudflare.com"></label>
         <label class="opt-task">지도 <select id="optMap"><option value="">기본 지도 (airlab_room)</option></select></label>
-        <label class="opt-task">LLM
+        <label class="opt-task opt-llm">LLM
           <select id="optLlm">
             <option value="claude">Claude</option>
             <option value="scripted">대역 (scripted, API 키 불필요)</option>
@@ -257,7 +262,20 @@
           <input id="cmdInput" placeholder="예: 빨간 상자를 작업대로 옮겨줘" maxlength="300">
           <button class="primary" id="sendBtn" type="submit">보내기</button>
         </form>
-        <div class="chips">
+        <p class="hint row-only" style="margin:8px 0 0">고르기 모드: 문장이 LLM을 거치지 않고 그대로 정책에 들어갑니다.
+          로봇은 작업대로 가서 상자 줄의 가운데에 맞춰 서고(정렬에만 마커 사용), 어느 상자를 집을지는 정책이 영상과 문장만 보고 정합니다.
+          집고 나면 상자들을 새 순서로 다시 놓습니다. 정책은 영어 문장으로 학습했고, "in the middle"과 빨간 상자가 오른쪽일 때의 색 명령은 학습에서 뺐습니다.</p>
+        <div class="chips row-only">
+          <button class="chip" type="button">pick up the red box</button>
+          <button class="chip" type="button">pick up the green box</button>
+          <button class="chip" type="button">pick up the blue box</button>
+          <button class="chip" type="button">pick up the box on the left</button>
+          <button class="chip" type="button">pick up the box on the right</button>
+          <button class="chip" type="button">pick up the box in the middle</button>
+          <button class="chip" type="button">빨간 상자를 집어 줘</button>
+          <button class="chip" type="button">pick up the box to the left of the green box</button>
+        </div>
+        <div class="chips not-row">
           <button class="chip" type="button">빨간 상자를 작업대로 옮겨줘</button>
           <button class="chip" type="button">초록 상자를 먼저 작업대 왼쪽에 놓고, 그다음 파란 상자를 오른쪽에 놓아줘</button>
           <button class="chip" type="button">작업대에 빨간 상자가 없으면 가져다 놔</button>
@@ -327,7 +345,9 @@ const KO = { supply_1: '1번 공급 테이블', supply_2: '2번 공급 테이블
              red_box: '빨간 상자', green_box: '초록 상자', blue_box: '파란 상자',
              left: '왼쪽', middle: '가운데', right: '오른쪽', auto: '빈 자리' };
 const TOOL_KO = { get_world_state: '상태 확인', navigate_to: '이동', pick_object: '집기', place_object: '놓기',
-                  check_table: '눈으로 확인', set_arm_posture: '팔 자세', wait: '기다리기' };
+                  check_table: '눈으로 확인', set_arm_posture: '팔 자세', wait: '기다리기',
+                  line_up_row: '줄 가운데에 정렬', policy_pick: '정책이 골라 집기', relay_row: '상자 다시 놓기' };
+const ROW_POLICY = { row: 'CNN', row_minilm: 'CNN+MiniLM', row_pi05: 'π0.5' };
 const BOX_COLOR = { red_box: '#e0453a', green_box: '#2fa84f', blue_box: '#2f6fe0' };
 const ko = s => KO[s] || s || '-';
 const $ = id => document.getElementById(id);
@@ -516,7 +536,7 @@ function setItem(li, kind, sub, dur) {
 }
 function describeCall(e) {
   const a = e.input || {};
-  const arg = a.spot ? `${ko(a.location)} ${ko(a.spot)} 자리` : a.location ? ko(a.location) : a.object ? ko(a.object)
+  const arg = a.instruction ? `"${a.instruction}"` : a.spot ? `${ko(a.location)} ${ko(a.spot)} 자리` : a.location ? ko(a.location) : a.object ? ko(a.object)
     : a.seconds ? a.seconds + '초' : a.posture || '';
   return (TOOL_KO[e.name] || e.name) + (arg ? ' · ' + arg : '');
 }
@@ -533,10 +553,13 @@ function onStatus(msg) {
     case 'ready': case 'world':
       if (!sys.plannerSeen) { sys.plannerSeen = true; renderPanel(); }
       setMode('task');
-      document.body.classList.toggle('pick-vla', e.pick_mode === 'vla' || e.pick_mode === 'pi05');
-      document.body.classList.toggle('pick-pi05', e.pick_mode === 'pi05');
+      document.body.classList.toggle('pick-vla', ['vla', 'pi05'].includes(e.pick_mode) || e.pick_mode in ROW_POLICY);
+      document.body.classList.toggle('pick-pi05', e.pick_mode === 'pi05' || e.pick_mode === 'row_pi05');
+      document.body.classList.toggle('pick-row', e.pick_mode in ROW_POLICY);
+      $('cmdInput').placeholder = e.pick_mode in ROW_POLICY ? '예: pick up the red box' : '예: 빨간 상자를 작업대로 옮겨줘';
       st.world = e.world; renderWorld();
-      if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
+      if (e.pick_mode in ROW_POLICY) $('modelPill').textContent = `고르기 · ${ROW_POLICY[e.pick_mode]} · LLM 없음`;
+      else if (e.model) $('modelPill').textContent = `LLM ${e.llm === 'scripted' ? 'scripted (대역)' : e.model}`;
       if (e.busy) setBusy(true);
       else {
         setBusy(false);
@@ -663,7 +686,8 @@ function startOptions() {
 }
 function showModeOpts() {
   document.querySelectorAll('.opt-task').forEach(e => { e.hidden = $('optMode').value === 'mapping'; });
-  document.querySelectorAll('.opt-pi05').forEach(e => { e.hidden = $('optMode').value !== 'pi05'; });
+  document.querySelectorAll('.opt-pi05').forEach(e => { e.hidden = !['pi05', 'row_pi05'].includes($('optMode').value); });
+  document.querySelectorAll('.opt-llm').forEach(e => { e.hidden = $('optMode').value === 'mapping' || $('optMode').value.startsWith('row'); });
 }
 // maps the task mode can run on (dashboard_launcher's /api/maps: default + ~/maps, newest first)
 async function loadMaps() {

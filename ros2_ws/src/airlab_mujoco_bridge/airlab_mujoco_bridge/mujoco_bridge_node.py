@@ -24,6 +24,12 @@ Subscribed:
 
 Services:
   ~/reset              std_srvs/Trigger         reset the world to the home pose
+  ~/relay_row          std_srvs/Trigger         box_layout 'row' only: the three boxes back in a row on the
+                                                work table, in a new random order (the robot stays put)
+
+Parameter box_layout: 'scene' (default) keeps the boxes where models/scene.xml puts them, one per
+supply table. 'row' puts all three side by side on the work table, the middle one on its middle
+pad, ROW_GAP apart, in a random colour order (the 'row' task of airlab_vla, paper stage 2).
 
 Actions (control_msgs/FollowJointTrajectory, used by MoveIt):
   /left_arm_controller/follow_joint_trajectory      openarm_left_joint1..7
@@ -69,6 +75,12 @@ TRAJECTORY_CONTROLLERS = {
     'left_gripper_controller': (['openarm_left_finger_joint1'], 1.0),
     'right_gripper_controller': (['openarm_right_finger_joint1'], 1.0),
 }
+# box_layout 'row' (same as airlab_vla.sim ROW_GAP / ROW_YAW): the boxes and the pad the middle one stands on
+ROW_BOXES = ('red_box', 'green_box', 'blue_box')
+ROW_TABLE, ROW_PAD = 'work_table', 'work_pad_2'
+ROW_GAP = 0.10                  # [m] between box centres along the table edge
+ROW_YAW = math.radians(20)      # each box turned by up to this much
+ROW_BOX_Z = 0.676               # box centre resting on a table top [m]
 # The LiDAR only sees geom groups 0-1 (world); the robot's own geoms are in groups 2-3.
 LIDAR_GEOMGROUP = np.array([1, 1, 0, 0, 0, 0], dtype=np.uint8)
 
@@ -130,6 +142,7 @@ class MujocoBridge(Node):
         self.declare_parameter('wrist_camera_size', 96)   # square image, the size the policy was trained on
         self.declare_parameter('tracked_bodies', ['red_box', 'green_box', 'blue_box'])
         self.declare_parameter('ground_truth_rate', 10.0)
+        self.declare_parameter('box_layout', 'scene')  # or 'row': three boxes in a row on the work table
 
         p = lambda name: self.get_parameter(name).value
         model_path = p('model_path')
@@ -162,6 +175,10 @@ class MujocoBridge(Node):
         self.tracked_names = list(p('tracked_bodies'))
         self.gt_objects_dt = 1.0 / p('ground_truth_rate')
         self.rng = np.random.default_rng()
+        self.box_layout = p('box_layout')
+        if self.box_layout not in ('scene', 'row'):
+            raise RuntimeError(f"box_layout must be 'scene' or 'row', not {self.box_layout!r}")
+        self._row_pending = None  # colour order a relay_row call asked for
 
         self.model = load_model(model_path, p('arm_gravity_compensation'))
         self.data = mujoco.MjData(self.model)
@@ -196,6 +213,7 @@ class MujocoBridge(Node):
         self.create_subscription(Twist, '/cmd_vel', self._on_cmd_vel, 10)
         self.create_subscription(JointState, '/joint_commands', self._on_joint_commands, 10)
         self.create_service(Trigger, '~/reset', self._on_reset)
+        self.create_service(Trigger, '~/relay_row', self._on_relay_row)
         self.trajectory_servers = [
             TrajectoryServer(self, name, joints, tolerance)
             for name, (joints, tolerance) in TRAJECTORY_CONTROLLERS.items()
@@ -270,6 +288,8 @@ class MujocoBridge(Node):
             d.qpos[m.joint(name).qposadr[0]] = q
         for name, a in self.pos_actuators.items():
             d.ctrl[a] = d.qpos[m.joint(name).qposadr[0]]
+        if self.box_layout == 'row':
+            self._lay_row(self._row_order())
         mujoco.mj_forward(m, d)
         self.odom_pose = [0.0, 0.0, 0.0]  # x, y, yaw in odom frame
         self.odom_twist = (0.0, 0.0)
@@ -278,6 +298,28 @@ class MujocoBridge(Node):
         self.next_camera = self.next_objects = self.next_wrist = 0.0
         self.camera_due = self.wrist_due = False
         self.last_odom_time = d.time
+
+    def _row_order(self):
+        return [ROW_BOXES[i] for i in self.rng.permutation(len(ROW_BOXES))]
+
+    def _lay_row(self, order):
+        """Boxes `order` (from the robot's left to its right as it faces the work table) side by
+        side on the table edge, the middle one on ROW_PAD, at rest."""
+        m, d = self.model, self.data
+        mujoco.mj_kinematics(m, d)
+        pad = d.geom_xpos[m.geom(ROW_PAD).id][:2].copy()
+        R = d.xmat[m.body(ROW_TABLE).id].reshape(3, 3)
+        heading = math.atan2(-R[1, 1], -R[0, 1])  # the way the robot faces there (airlab_vla.sim._tables)
+        left = np.array([-math.sin(heading), math.cos(heading)])
+        for k, name in enumerate(order):
+            joint = m.joint(f'{name}_free')
+            q, v = joint.qposadr[0], joint.dofadr[0]
+            xy = pad + (1 - k) * ROW_GAP * left
+            yaw = self.rng.uniform(-ROW_YAW, ROW_YAW)
+            d.qpos[q:q + 7] = [xy[0], xy[1], ROW_BOX_Z, math.cos(yaw / 2), 0.0, 0.0, math.sin(yaw / 2)]
+            d.qvel[v:v + 6] = 0.0
+        mujoco.mj_forward(m, d)
+        self.get_logger().info('boxes in a row on the work table (left to right): ' + ', '.join(order))
 
     # ------------------------------------------- interface for TrajectoryServer
     def sim_time(self) -> float:
@@ -314,12 +356,26 @@ class MujocoBridge(Node):
         response.message = 'world reset to home pose'
         return response
 
+    def _on_relay_row(self, request, response):
+        if self.box_layout != 'row':
+            response.success, response.message = False, "box_layout is not 'row'"
+            return response
+        order = self._row_order()
+        with self._lock:
+            self._row_pending = order
+        response.success = True
+        response.message = ','.join(order)  # left to right
+        return response
+
     def _apply_commands(self):
         d = self.data
         with self._lock:
             if self._reset_requested:
                 self._reset_requested = False
                 self._reset_world()
+            if self._row_pending is not None:
+                self._lay_row(self._row_pending)
+                self._row_pending = None
             v, w = self._cmd_vel
             if time.monotonic() - self._cmd_vel_wall > self.cmd_vel_timeout:
                 v = w = 0.0

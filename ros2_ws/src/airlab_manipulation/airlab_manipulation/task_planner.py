@@ -19,6 +19,9 @@ Parameters:
            'scripted' (replays the red-box plan without calling an LLM, for testing)
   model    Claude model id (default claude-opus-5-5)
   effort   output_config effort (default medium)
+  pick_mode  'classical' (MoveIt), 'vla' / 'pi05' (learned pick inside the LLM tasks), or a
+           row mode 'row' / 'row_minilm' / 'row_pi05': no LLM, every command sentence goes to
+           the policy as it is, to choose one of three boxes in a row (row_task.py)
 """
 
 import json
@@ -30,6 +33,7 @@ from rclpy.node import Node
 from std_msgs.msg import Empty, String
 
 from airlab_manipulation.skills import RobotSkills
+from airlab_manipulation.row_task import RowExecutor, RowPlanner
 from airlab_manipulation.task_planner_core import MODEL, ScriptedLLM, TaskExecutor, TaskPlanner
 
 
@@ -52,11 +56,17 @@ class TaskPlannerNode(Node):
         self.get_logger().info('connecting to Nav2 / MoveIt ...')
         self.skills = RobotSkills()
         self.skills.wait_ready()
-        self.executor_ = TaskExecutor(self.skills, pick_mode=self.get_parameter('pick_mode').value)
+        pick_mode = self.get_parameter('pick_mode').value
         llm_kind = self.get_parameter('llm').value
-        llm = ScriptedLLM() if llm_kind == 'scripted' else None
-        self.planner = TaskPlanner(self.executor_, llm=llm, model=self.get_parameter('model').value,
-                                   effort=self.get_parameter('effort').value)
+        if pick_mode.startswith('row'):  # the policy reads the sentence itself: no LLM
+            llm_kind = 'none'
+            self.executor_ = RowExecutor(self.skills, pick_mode)
+            self.planner = RowPlanner(self.executor_)
+        else:
+            self.executor_ = TaskExecutor(self.skills, pick_mode=pick_mode)
+            llm = ScriptedLLM() if llm_kind == 'scripted' else None
+            self.planner = TaskPlanner(self.executor_, llm=llm, model=self.get_parameter('model').value,
+                                       effort=self.get_parameter('effort').value)
         self.llm_kind = llm_kind
         self._publish({'type': 'ready', 'llm': llm_kind, 'model': self.planner.model,
                        'pick_mode': self.executor_.pick_mode, 'world': self.executor_.world_state()})

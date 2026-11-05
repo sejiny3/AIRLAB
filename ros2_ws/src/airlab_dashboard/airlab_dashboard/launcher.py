@@ -14,9 +14,10 @@ launch (the launcher just sees its child exit).
 API (JSON), start/stop only from this machine unless --allow-remote:
   GET  /api/stack        state ("stopped" | "running" | "stopping"), ready, options, log tail, ...
   GET  /api/maps         maps to run the task mode on: the default one and those in ~/maps
-  POST /api/stack/start  {"mode": "task" | "vla" | "pi05" | "mapping", "llm": "claude" | "scripted",
-                          "use_viewer": bool, "rviz": bool, "map": "<yaml from /api/maps>",
-                          "server": "<π0.5 policy server, mode pi05>"}
+  POST /api/stack/start  {"mode": "task" | "vla" | "pi05" | "row" | "row_minilm" | "row_pi05" | "mapping",
+                          "llm": "claude" | "scripted", "use_viewer": bool, "rviz": bool,
+                          "map": "<yaml from /api/maps>", "server": "<π0.5 policy server, pi05 modes>"}
+                         row*: three boxes in a row on the work table, the sentence goes to the policy (no LLM)
   POST /api/stack/stop   Ctrl+C for the launch (for a start that hangs before ROS connects)
 """
 
@@ -40,6 +41,11 @@ ANSI = re.compile(r'\x1b\[[0-9;]*m')
 READY_LINES = ('task planner ready', 'frontier explorer ready')
 MAP_DIR = os.path.expanduser('~/maps')  # where frontier_explorer saves the maps it builds
 VLA_POLICY = os.path.expanduser('~/airlab_vla/policy.pt')  # what "ros2 run airlab_vla train" writes
+# the small policy each learned mode loads (bringup.launch.py policy_file); π0.5 modes use the server
+POLICIES = {'vla': VLA_POLICY, 'row': os.path.expanduser('~/airlab_vla/policy_row.pt'),
+            'row_minilm': os.path.expanduser('~/airlab_vla/policy_row_minilm.pt')}
+TASK_MODES = ('task', 'vla', 'pi05', 'row', 'row_minilm', 'row_pi05')  # bringup.launch.py on a saved map
+REMOTE_MODES = ('pi05', 'row_pi05')
 SERVER_URL = re.compile(r'(https?|wss?)://[A-Za-z0-9.-]+(:\d+)?/?')
 
 
@@ -164,21 +170,24 @@ class Stack:
             if mode == 'mapping':
                 cmd = ['ros2', 'launch', 'airlab_dashboard', 'mapping.launch.py'] + flags
                 llm = map_yaml = None
-            elif mode in ('task', 'vla', 'pi05'):  # vla, pi05: the task mode, but picks with a learned policy
-                if mode == 'vla' and not os.path.isfile(VLA_POLICY):
-                    return False, (f'학습된 VLA 정책이 없습니다 ({VLA_POLICY}). 먼저 "ros2 run airlab_vla record"와 '
-                                   '"ros2 run airlab_vla train"을 실행하세요.')
-                if llm not in ('claude', 'scripted'):
+            elif mode in TASK_MODES:  # all but 'task' pick with a learned policy; row*: no LLM
+                if mode in POLICIES and not os.path.isfile(POLICIES[mode]):
+                    return False, (f'학습된 정책이 없습니다 ({POLICIES[mode]}). 먼저 "ros2 run airlab_vla record"와 '
+                                   '"ros2 run airlab_vla train"을 실행하세요'
+                                   + (' (--task row).' if mode.startswith('row') else '.'))
+                if mode.startswith('row'):
+                    llm = 'claude'  # unused: the row modes send the sentence to the policy, not to an LLM
+                elif llm not in ('claude', 'scripted'):
                     return False, 'llm은 claude 또는 scripted'
-                if llm == 'claude' and not os.environ.get('ANTHROPIC_API_KEY'):
+                elif llm == 'claude' and not os.environ.get('ANTHROPIC_API_KEY'):
                     return False, 'ANTHROPIC_API_KEY가 없어 Claude를 쓸 수 없습니다. 대역(scripted)을 고르세요.'
                 cmd = ['ros2', 'launch', 'airlab_manipulation', 'bringup.launch.py', 'planner:=true',
                        'dashboard:=true', f'llm:={llm}', f'map:={map_yaml}',
                        f'pick:={"classical" if mode == "task" else mode}'] + flags
-                if mode == 'pi05':
+                if mode in REMOTE_MODES:
                     cmd.append(f'policy_server:={server}')
             else:
-                return False, 'mode는 task, vla, pi05 또는 mapping'
+                return False, 'mode는 ' + ', '.join(TASK_MODES) + ' 또는 mapping'
             env = dict(os.environ)
             if shutil.which('python3') != '/usr/bin/python3':
                 # conda/venv first on PATH breaks every "#!/usr/bin/env python3" ROS tool (rosbridge first)
@@ -252,11 +261,11 @@ def main():
         map_yaml = body.get('map') or default_map_yaml()
         server = str(body.get('server') or '').strip()
         previous = site.map_yaml
-        if mode == 'pi05':
+        if mode in REMOTE_MODES:
             problem = server_problem(server)
             if problem:
                 return False, problem
-        if mode in ('task', 'vla', 'pi05'):
+        if mode in TASK_MODES:
             if map_yaml not in [m['path'] for m in list_maps()]:  # only maps the page was offered
                 return False, f'지도를 찾을 수 없습니다: {map_yaml}'
             try:

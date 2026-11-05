@@ -18,6 +18,11 @@ Picking with the learned VLA policy instead of MoveIt (airlab_vla; train it firs
 The same with π0.5 on a remote GPU (start its server first, see pi05/README.md):
   ros2 launch airlab_manipulation bringup.launch.py planner:=true pick:=pi05 policy_server:=https://<...>.trycloudflare.com
 
+Choosing one of three boxes in a row by the sentence alone (no LLM; the boxes start in a row on
+the work table, paper stage 2): pick:=row (small policy, hashed words), pick:=row_minilm (small
+policy with MiniLM), pick:=row_pi05 (π0.5 served with CONFIG=pi05_airlab_row)
+  ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true pick:=row
+
 On a map made by automatic exploration (airlab_dashboard mapping.launch.py):
   ros2 launch airlab_manipulation bringup.launch.py map:=$HOME/maps/airlab_explored_<...>.yaml
 """
@@ -25,7 +30,7 @@ On a map made by automatic exploration (airlab_dashboard mapping.launch.py):
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -33,11 +38,17 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     pick = LaunchConfiguration('pick')
-    learned = ["' if '", pick, "' in ('vla', 'pi05') else '"]
-    pi05 = ["' if '", pick, "' == 'pi05' else '"]
-    vla = PythonExpression(["'", pick, "' in ('vla', 'pi05')"])
+    LEARNED = "('vla', 'pi05', 'row', 'row_minilm', 'row_pi05')"
+    REMOTE = "('pi05', 'row_pi05')"  # π0.5 on policy_server
+    learned = ["' if '", pick, f"' in {LEARNED} else '"]
+    pi05 = ["' if '", pick, f"' in {REMOTE} else '"]
+    vla = PythonExpression(["'", pick, f"' in {LEARNED}"])
     # a learned pick takes no marker coordinates, so its modes show the camera without marker frames
-    draw_markers = PythonExpression(["'", pick, "' not in ('vla', 'pi05')"])
+    draw_markers = PythonExpression(["'", pick, f"' not in {LEARNED}"])
+    # row modes: the boxes start in a row on the work table, and the small policy is the one trained on that
+    box_layout = PythonExpression(["'row' if '", pick, "'.startswith('row') else 'scene'"])
+    policy_file = PythonExpression(["{'row': 'policy_row.pt', 'row_minilm': 'policy_row_minilm.pt'}.get('", pick,
+                                    "', 'policy.pt')"])
     # the policy runs at 10 Hz and was trained with a fresh head and wrist image every step
     camera_rate = PythonExpression(["'10.0", *learned, "5.0'"])
     wrist_rate = PythonExpression(["'10.0", *learned, "0.0'"])
@@ -50,8 +61,9 @@ def generate_launch_description():
         DeclareLaunchArgument('planner', default_value='false', description='start the LLM task planner'),
         DeclareLaunchArgument('llm', default_value='claude', description="planner backend: 'claude' or 'scripted'"),
         DeclareLaunchArgument('pick', default_value='classical',
-                              description="'classical' (MoveIt from the marker pose), 'vla' (small learned policy) "
-                                          "or 'pi05' (π0.5 on policy_server)"),
+                              description="'classical' (MoveIt from the marker pose), 'vla' (small learned policy), "
+                                          "'pi05' (π0.5 on policy_server), or the three-box row task without the "
+                                          "LLM: 'row', 'row_minilm', 'row_pi05'"),
         DeclareLaunchArgument('policy_server', default_value='', description='π0.5 server address (pick:=pi05)'),
         DeclareLaunchArgument('dashboard', default_value='false', description='start rosbridge + web dashboard (:8080)'),
         DeclareLaunchArgument('map', default_value=PathJoinSubstitution(
@@ -65,7 +77,7 @@ def generate_launch_description():
             launch_arguments={'use_viewer': LaunchConfiguration('use_viewer'), 'rviz': LaunchConfiguration('rviz'),
                               'map': LaunchConfiguration('map'),
                               'camera_rate': camera_rate, 'wrist_camera_rate': wrist_rate,
-                              'wrist_camera_size': wrist_size}.items(),
+                              'wrist_camera_size': wrist_size, 'box_layout': box_layout}.items(),
         )]),
         GroupAction([IncludeLaunchDescription(
             PathJoinSubstitution([FindPackageShare('airlab_moveit_config'), 'launch', 'move_group.launch.py']),
@@ -90,6 +102,7 @@ def generate_launch_description():
             executable='vla_pick',
             output='screen',
             parameters=[{'use_sim_time': True, 'timeout': ParameterValue(pick_timeout, value_type=float),
+                         'policy': PathJoinSubstitution([EnvironmentVariable('HOME'), 'airlab_vla', policy_file]),
                          'server': ParameterValue(LaunchConfiguration('policy_server'), value_type=str)}],
             condition=IfCondition(vla),
         ),

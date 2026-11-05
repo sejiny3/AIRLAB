@@ -42,6 +42,7 @@ def _bridge_node(context):
             'camera_rate': float(LaunchConfiguration('camera_rate').perform(context)),
             'wrist_camera_rate': float(LaunchConfiguration('wrist_camera_rate').perform(context)),
             'wrist_camera_size': int(LaunchConfiguration('wrist_camera_size').perform(context)),
+            'box_layout': LaunchConfiguration('box_layout').perform(context),
         }],
     )]
 
@@ -57,5 +58,7 @@ def generate_launch_description():
                               description='right wrist camera images per second (0 = off; the VLA policy uses 10)'),
         DeclareLaunchArgument('wrist_camera_size', default_value='96',
                               description='square wrist image size (the small policy 96, π0.5 224)'),
+        DeclareLaunchArgument('box_layout', default_value='scene',
+                              description="'scene' (one box per supply table) or 'row' (all three in a row on the work table)"),
         OpaqueFunction(function=_bridge_node),
     ])

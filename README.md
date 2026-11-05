@@ -339,6 +339,28 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true 
   ROS 전체에서 "상자를 모두 작업대에 모아" → "모두 제자리로"로 정책 집기 6/6 성공(74~88단계).
   방을 넓히기 전(테이블 둘) 실험: 공급 테이블 시연 297개만으로 학습한 정책은 공급 48/50, 작업대 0/20(2초 만에 "끝")이었다.
 
+### 고르기: 상자 세 개 중 문장으로 (심화)
+
+위의 VLA 모드는 작업 관리자가 집을 상자 앞에 로봇을 세우므로, 정책은 색을 몰라도 된다. 고르기 모드는 상자 세 개를 작업대에
+한 줄로 놓고(10 cm 간격, 색 순서는 무작위), 로봇을 줄의 **가운데**에 세운 뒤 문장만으로 어느 상자를 집을지 정책이 정하게 한다.
+LLM은 쓰지 않는다. 입력한 문장이 그대로 정책에 들어간다.
+
+```bash
+ros2 run airlab_vla record --task row --episodes 2000          # 색 명령과 위치 명령을 반씩 (~/airlab_vla/demos_row)
+ros2 run airlab_vla train --demos ~/airlab_vla/demos_row --out ~/airlab_vla/policy_row.pt
+ros2 run airlab_vla train --demos ~/airlab_vla/demos_row --out ~/airlab_vla/policy_row_minilm.pt --text minilm
+ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true pick:=row   # row_minilm, row_pi05도 있음
+```
+
+- 명령 하나마다: 작업대로 이동 → 세 상자 마커로 줄 가운데 상자를 찾아 그 상자가 (0.38, -0.08)에 오도록 정렬(어느 색이든)
+  → 문장 그대로 정책 집기 → 뒤로 물러나 어느 상자가 들렸는지 보고(시뮬레이터 실제 위치) → 상자를 새 순서로 다시 한 줄로 놓기.
+  계획기가 문장을 읽지 않으므로 무엇을 집으라는 뜻이었는지는 판정하지 않는다. 결과의 "완료"는 상자 하나를 들었다는 뜻이다.
+- 브리지 `box_layout:=row`가 상자를 놓고, `/mujoco_bridge/relay_row`가 다시 놓는다. 초기화 버튼도 새 순서로 놓는다.
+- 대시보드 런처 모드: **고르기 · CNN**(`policy_row.pt`), **고르기 · CNN+MiniLM**(`policy_row_minilm.pt`, 고정된
+  all-MiniLM-L6-v2 문장 인코더, 영어 전용), **고르기 · π0.5**(Colab 노트북 `CONFIG = 'pi05_airlab_row'`로 학습하고 같은 설정으로 서버).
+- 학습에서 뺀 것: 빨간 상자가 오른쪽 자리일 때의 색 명령, 위치 표현 "in the middle". 폐루프 시험 결과는
+  `paper/실험계획_1-2단계.md`(2단계)에 있다. 두 CNN 정책은 위치 낱말(left/right)은 따르지만 색으로는 거의 고르지 못했다.
+
 ## 브리지 인터페이스
 
 | 방향 | 토픽 | 타입 | 비고 |
@@ -355,8 +377,9 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true 
 | action | `/{left,right}_{arm,gripper}_controller/follow_joint_trajectory` | control_msgs/FollowJointTrajectory | MoveIt 궤적 실행 |
 | pub | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | 헤드 카메라 5 Hz (그림자·반사 끔, `camera_rate`) |
 | pub | `/wrist_camera/image_raw` | sensor_msgs/Image | 오른손 손목 카메라 96×96, 기본은 끔 (`wrist_camera_rate`, VLA 모드는 10 Hz) |
-| pub | `/ground_truth/{red,green,blue}_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용, 스킬은 사용 안 함) |
+| pub | `/ground_truth/{red,green,blue}_box` | geometry_msgs/PoseStamped | 상자 실제 위치 (평가용. 스킬은 쓰지 않고, 고르기 모드가 들린 상자를 보고할 때만 씀) |
 | srv | `/mujoco_bridge/reset` | std_srvs/Trigger | home 자세로 리셋 (시뮬레이션 시간은 계속 흐름) |
+| srv | `/mujoco_bridge/relay_row` | std_srvs/Trigger | `box_layout:=row`일 때 상자 셋을 작업대에 새 순서로 다시 한 줄로 (로봇은 그대로) |
 
 관절 이름: `openarm_{left,right}_joint1..7`, `openarm_{left,right}_finger_joint1`
 (finger_joint2는 equality로 joint1을 따라감), `{left,right}_wheel_joint`.
@@ -371,3 +394,4 @@ ros2 launch airlab_manipulation bringup.launch.py planner:=true dashboard:=true 
 - [x] 6단계: LLM 작업 계획
 - [x] 7단계: 웹 대시보드
 - [x] 심화: VLA 집기 정책 (`airlab_vla`, 대시보드 **VLA 집기** 모드)
+- [x] 심화: 상자 세 개 중 문장으로 고르기 (대시보드 **고르기** 모드)
