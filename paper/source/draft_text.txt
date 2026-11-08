@@ -1,0 +1,1248 @@
+=== PAGE 1
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+1
+- 기호설명 -
+at : 시각 t의 관절 목표 벡터 (rad)
+st : 시각 t의 관절각 벡터 (rad)
+Ih, Iw : 머리 카메라, 손목 카메라 영상
+l : 명령 문장
+H : 행동 청크 길이 (10 단계)
+dt : 집기 종료 여부
+<학술논문 or 응용논문 택1>     DOI https://doi.org/10.3795/KSME-AB.2019.43.0.000     ISSN 1226-0000
+2288-0000(Online)
+ 
+이동 양팔 로봇의 물체 집기를 위한 역기구학 기반 기법과
+시각-언어-행동 정책의 시뮬레이션 성능 비교
+ 
+[저자1]*·[저자2]*·[교신저자]*†
+* [소속 기관 및 학과]
+ 
+Simulation-Based Performance Comparison of Inverse Kinematics Grasping and Vision-Language-Action Policies for a Mobile Bimanual 
+Robot
+ 
+[Author 1]*, [Author 2]* and [Corresponding Author]*†
+* [Department, University]
+ 
+(Received [접수일] ; Revised [수정일] ; Accepted [채택일])
+Key Words: Mobile Manipulation(이동 조작), Inverse Kinematics(역기구학), Imitation Learning(모방 학습), 
+Vision-Language-Action Model(시각-언어-행동 모델), Robot Grasping(로봇 파지)
+초록: 이동 양팔 로봇의 상자 집기에서 마커와 역기구학을 쓰는 기존 방식(IK)과 두 시각-언어-행동 정
+책을 같은 시뮬레이션에서 비교하였다. 정책은 노트북 CPU에서 처음부터 학습한 CNN 모델과 LoRA로 
+미세조정한 π0.5이며, 같은 시연 1,155개로 학습하였다. 처음 보는 100개 장면에서 두 정책 모두 100% 
+성공하였고, ROS 전체 스택의 집기 성공률은 IK 31/36, CNN 18/18, π0.5 18/18이었다. 그러나 시연에 없
+던 단어나 한국어로 명령하거나 조명과 테이블 색을 바꾸면 CNN의 성공률은 크게 떨어진 반면 π0.5는 
+거의 모두 성공하였고, 이 차이는 영상 증강을 맞추어도 줄지 않았다. 세 상자 중 하나를 문장으로 고
+르는 과제에서는 π0.5만 색 낱말을 상자와 연결하여, 시연에서 뺀 색-자리 조합에서도 45/50 성공하였다. 
+π0.5는 CNN이 본 학습 표본의 8분의 1로 같은 성공률에 이르렀고, 원격 GPU의 응답 지연 속에서도 전
+체 스택에서 실패하지 않았다.
+Abstract: This study compares three pick methods for a mobile bimanual robot in the same simulation: 
+marker-based inverse kinematics (IK), a small CNN policy trained on a laptop CPU, and π0.5 fine-tuned with 
+LoRA. Both policies learned from the same 1,155 demonstrations. On 100 unseen scenes both succeeded in 
+every episode, and through the full ROS stack picks succeeded 31/36 for IK, 18/18 for the CNN policy and 
+18/18 for π0.5. With instructions made of unseen words or written in Korean, or with changed lighting or 
+table colour, however, the CNN policy fell sharply while π0.5 succeeded in almost every scene, and 
+matching the image augmentation did not close the gap. In a task that chooses one of three boxes by the 
+sentence, only π0.5 tied the colour words to the boxes, succeeding in 45/50 for a colour-slot combination left 
+out of the demonstrations. π0.5 reached the same success rate after seeing one eighth of the samples the 
+CNN policy saw, and did not fail through the full stack despite the latency of a remote GPU.
+†Corresponding Author, [교신저자 이메일]
+Ⓒ 0000 The Korean Society of Mechanical Engineers
+
+=== PAGE 2
+[저자명]·[저자명]·[저자명]
+2
+J : 말단 자세에 대한 자코비안
+e : 말단 자세 오차
+λ : 감쇠 계수
+τ : 흐름 정합의 보간 변수
+1. 서 론
+1.1 연구 배경
+이동 조작 로봇은 주행과 팔 동작을 결합해 넓
+은 공간에서 물체를 다룬다. 현장에서 널리 쓰이
+는 집기 방식은 카메라로 물체의 자세를 구하고 
+역기구학(Inverse kinematics, IK)과 경로 계획으로 
+팔을 움직이는 것이다.(1~3) 이 방식은 동작을 설명
+하기 쉽고 위치 정확도를 예측할 수 있으나, 물
+체마다 인식 수단과 파지 자세를 사람이 정해 주
+어야 한다. Kim 등(4)은 이동 조작 로봇의 마커 
+자세 오차를 신경망으로 보정하여 이 방식의 정
+확도를 높였다.
+이와 달리 모방 학습은 영상과 관절각에서 행
+동을 바로 예측하는 정책을 시연으로 학습한
+다.(5~7) 최근에는 영상과 문장을 함께 입력받는 시
+각-언어-행동(Vision-Language-Action, VLA) 모델이 
+제안되었고, π0와 π0.5는 여러 로봇의 데이터로 
+사전 학습한 가중치를 새 로봇에 미세조정하는 
+방법을 보였다.(8,9) 그러나 이런 대형 모델이 단일 
+작업에서 작은 정책이나 기존 IK 방식보다 얼마
+나 나은지는 작업과 비용에 따라 달라지므로, 같
+은 조건에서 비교한 자료가 필요하다.
+1.2 연구 목적
+본 연구는 이동 양팔 로봇의 상자 집기 작업에
+서 세 방식을 같은 시뮬레이션 환경으로 비교한
+다. 첫째는 ArUco 마커와 IK를 쓰는 기존 방식
+(이하 IK 모드), 둘째는 노트북 CPU에서 처음부
+터 학습한 합성곱 신경망 정책(이하 CNN 정책), 
+셋째는 π0.5를 미세조정하여 원격 GPU에서 실
+행하는 정책(이하 π0.5 정책)이다. 두 정책은 같
+은 시연 장면으로 학습하고 같은 장면에서 평가
+하여 모델 차이만 드러나도록 하였다. 평가 항목
+은 집기 성공률, 소요 단계, 명령 문장의 활용 여
+부와 문장만으로 세 상자 중 하나를 고르는 능
+력, 시연에 없던 명령 문장과 조명, 재질, 방해물 
+같은 시각 변화에 대한 강인성, 전체 작업에서의 
+성공률과 시간, 계산 비용이다. 특히 사전 학습 
+모델에 기대되는 장점인 적은 학습량으로의 적
+응, 원격 실행에 따른 지연에 대한 강인성, 범용 
+구조와 언어 처리 능력이 이 작업에서 어떻게 나
+타나는지 살펴본다.
+2. 시스템 구성
+2.1 시뮬레이션 환경
+물리 시뮬레이션은 MuJoCo(10) 3.12, 로봇 소프
+트웨어는 ROS 2(11) Humble을 사용하였다. 로봇은 
+차동 구동 이동 플랫폼에 7자유도 팔 두 개
+(OpenArm)와 평행 그리퍼를 얹은 구조이며, 2차
+원 LiDAR, 머리 카메라(1280×720, 47° 하향), 손
+목 카메라를 갖는다. 작업 공간은 10 m × 8.5 m
+의 방이고, 높이 0.65 m의 공급 테이블 3개와 작
+업대 1개가 있다. 물체는 빨강, 초록, 파랑의 5 
+cm 정육면체 상자이며 윗면에 한 변 3.75 cm의 
+ArUco 마커가 붙어 있다. 테이블의 놓을 자리에
+는 한 변 7.5 cm의 마커가 있다.
+Fig. 1 Task pipeline shared by the three modes. 
+Only the pick step differs
+2.2 공통 작업 절차
+Fig. 1은 작업 절차를 나타낸다. 계획기가 명령
+을 이동, 집기, 놓기로 나누면, 로봇은 Nav2(12)로 
+테이블 앞까지 주행한 뒤 ArUco 마커를 보며 상
+자를 팔이 닿기 좋은 위치에 맞춘다. 이 정렬은 
+목표 위치에서 1 cm 이내로 멈춘다. 그다음 집기
+를 수행하고, 0.35 m 후진한 뒤 목적지로 이동하
+여 MoveIt(1)으로 놓는다. 세 방식은 집기 단계만 
+다르고 나머지는 같다. 따라서 VLA 정책을 쓰는 
+
+=== PAGE 3
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+3
+모드에서도 정렬과 놓기에는 마커가 쓰이며, 정
+책 자체만 마커 좌표를 입력받지 않는다.
+3. 집기 방식
+3.1 IK 모드
+IK 모드는 마커 검출로 얻은 자세를 5회 평균
+하여 상자 중심과 방향을 구하고, 상자 면에 맞
+춘 파지 자세를 계산한다. 그리퍼는 15° 아래로 
+기울어 접근한다. 파지 자세에서 10 cm 뒤, 4 cm 
+위의 예비 자세까지 MoveIt의 표본 기반 계획기
+로 이동하고, 직선으로 접근한 뒤 그리퍼를 닫아 
+8 cm 들어 올린다. 팔이 예비 자세에 도달하지 
+못하면 접은 자세에서 한 번 다시 시도한다. 왼
+팔과 오른팔 중 상자에 가까운 팔을 쓴다.
+3.2 CNN 정책
+CNN 정책은 Levine 등(5)의 공간 소프트맥스와 
+Zhao 등(6)의 행동 청크를 결합한 소형 모델이다. 
+머리 영상(128×72)과 손목 영상(96×96)은 각각 합
+성곱 3층과 공간 소프트맥스를 거쳐 특징점 64개
+의 좌표가 된다. 명령 문장의 단어는 해시로 임
+베딩하여 평균하고, 관절각과 함께 은닉층 2개의 
+다층 퍼셉트론에 넣는다. 출력은 앞으로 H = 10 
+단계(1 s)의 관절 목표 8개씩과 종료 확률이다. 
+손실은 다음과 같다.
+L= 1
+H ∑
+H-1
+k=0| a t+kˆ-a t+k| 1+0.1L BCE(d t)     (1)
+여기서 행동은 정규화된 값이고 LBCE는 종료 
+여부의 이진 교차 엔트로피이다. 실행 시에는 10 
+Hz로 매 단계 추론하고, 겹치는 청크의 예측을 
+지수 가중 평균하여 관절 목표를 정한다.(6) 매개
+변수는 597,329개이다.
+3.3 π0.5 정책
+π0.5(9)는 PaliGemma(15) 기반의 영상-언어 인코
+더와 흐름 정합(16)으로 행동을 생성하는 디코더로 
+구성된다. 잡음 ε와 행동 a를 τ로 보간한 값을 
+xτ라 할 때, 디코더 vθ는 다음 손실로 학습한다.
+L=E[|v θ(x τ,τ,I h,I w,l,s t)-(ε-a)| 2]     (2)
+사전 학습 가중치에 LoRA(17)를 적용하여 전체 
+34.03억 개의 매개변수 중 4.67억 개만 학습하였
+다. 입력은 머리 영상(위아래에 검은 띠를 붙인 
+224×224)과 손목 영상(224×224), 문장, 숫자 토큰
+으로 바꾼 관절각이다. 왼쪽 손목 입력은 가렸다. 
+출력에는 CNN 정책과 같은 종료 신호를 덧붙여 
+단계마다 9개 값으로 하였고, 팔 관절 7개는 청
+크 시작 상태에 대한 차이로 학습하였다. 실행 
+시에는 예측한 10 단계 중 5 단계를 수행하고 다
+시 추론한다. 노트북에 GPU가 없으므로 정책은 
+Google Colab에서 실행하고 웹소켓 터널로 연결
+하였다. 답을 기다리는 동안 팔은 마지막 목표에 
+멈춰 있어, 모델이 본 자세와 실제 자세가 어긋
+나지 않는다.
+π0.5 정책은 구조상 CNN 정책과 다음 점에서 
+다르다. 첫째, 영상 입력의 화소 수가 CNN 정책
+보다 머리 영상은 약 3.1배(띠를 뺀 224×126), 손
+목 영상은 약 5.4배 많아 상자와 그리퍼의 세부
+를 더 많이 본다. 둘째, CNN 정책은 단어를 해시
+로 나눈 뒤 평균하므로 어순을 버리고 시연에 없
+던 단어는 거의 학습되지 않은 값으로 바뀌지만, 
+π0.5는 사전 학습된 언어 모델의 토크나이저로 
+임의의 문장을 처리한다. 셋째, CNN 정책은 L1 
+회귀로 평균적인 행동 하나를 예측하는 반면, 흐
+름 정합은 행동의 분포에서 표본을 생성하므로 
+여러 해가 가능한 동작을 평균으로 뭉개지 않는
+다.(16) 넷째, CNN 정책의 해상도, 특징점 수, 단
+어 처리 방식은 이 작업에 맞춰 정한 것이지만, 
+π0.5는 같은 구조와 사전 학습 가중치를 그대로 
+쓰고 시연만 바꾸어 다른 작업에 적용할 수 있
+다. Table 1은 세 방식의 사양을 요약한 것이다.
+Table 1 Specifications of the three pick methods
+Item
+IK mode
+CNN policy
+π0.5 policy
+Input
+Marker pose
+Images 128×72, 
+96×96; text; 
+joints
+Images 
+224×224 (two); 
+text; joints
+Output
+Motion plan
+10×8 targets, 
+done
+10×9 (targets, 
+done)
+Parameters
+-
+5.97×105
+3.40×109 
+(4.67×108 
+trained)
+Training
+None
+20,000 steps × 
+64, CPU
+5,000 steps × 
+32, GPU
+Samples
+-
+1.28×106 (14.4 
+epochs)
+1.60×105 (1.8 
+epochs)
+Runs on
+Laptop CPU
+Laptop CPU
+Remote GPU
+Arm
+Either
+Right
+Right
+
+=== PAGE 4
+[저자명]·[저자명]·[저자명]
+4
+4. 실험 방법
+4.1 시연 데이터
+두 정책은 같은 스크립트 전문가의 시연으로 
+학습하였다. 전문가는 시뮬레이터가 아는 상자의 
+실제 자세로 감쇠 최소제곱 IK(13)를 풀어 3.1절과 
+같은 경유점을 따라간다.
+Δq=J T(JJ T+λ 2I) -1e     (3)
+장면은 테이블 4개, 상자 3색, 놓을 자리를 무
+작위로 고르고, 상자 위치 ±3 cm, 상자 방향 
+±45°, 로봇 정렬 오차 전후 ±4 cm, 좌우 ±5 cm, 
+방향 ±8°로 흩뜨렸다. 절반의 시연에는 옆자리에 
+다른 색 상자를 두었고, 절반에는 실행 목표에 
+서서히 변하는 잡음을 더하였다.(14) 명령 문장은 
+7개 문형과 색 3가지로 만든 21종이다. 시도 
+1,200회 중 성공한 1,155개(88,935 프레임)를 사용
+하였고, 두 정책의 시연은 같은 난수 시드로 만
+들어 영상 해상도만 다르다. Fig. 2는 각 정책의 
+입력 영상이다.
+Fig. 2 Policy inputs for the same scene: head and 
+wrist views of the CNN policy (top) and the π0.5 
+policy (bottom)
+CNN 정책은 AdamW(학습률 10-3, 배치 64)로 
+20,000 단계 학습하였다. π0.5 정책은 15,000 단
+계로 계획하였으나 본 논문에서는 5,000 단계 체
+크포인트(배치 32)를 사용하였다. CNN 정책의 영
+상 증강은 ±4 화소의 이동과 ±10%의 밝기, 대비 
+변화이고, π0.5 정책은 openpi의 기본 증강을 쓴
+다. 이 차이의 영향을 나누기 위해 CNN 정책을 
+openpi와 같은 증강으로 한 번 더 학습하였다
+(CNN-A). 머리 영상은 95% 크기로 무작위로 잘
+라 원래 크기로 늘리고 ±5° 회전하였으며, 두 영
+상 모두 절반의 확률로 밝기 ±0.3, 대비 ±0.4, 색
+상 ±0.1을 바꾸었다. openpi는 채도 0.5도 지정하
+지만 사용하는 augmax 구현에서는 채도 변화가 
+적용되지 않으므로 CNN-A에도 넣지 않았다. 나
+머지 설정과 난수 시드는 CNN 정책과 같고, 검
+증 L1 오차는 0.0377로 CNN 정책의 0.0385와 비
+슷하였다.
+정책이 문장만으로 물체를 고르는지 보기 위해 
+고르기 과제를 따로 만들었다. 빨강, 초록, 파랑 
+상자를 오른팔 앞에 10 cm 간격으로 한 줄로 놓
+고, 로봇은 특정 상자가 아니라 가운데 자리에 
+맞춰 선다. 가운데 상자는 로봇 기준 y = -0.08 m
+에 있고, 정렬 오차는 좌우 ±2.5 cm, 자리별 위치 
+흩어짐은 ±1.5 cm, 상자 방향은 ±20°이다. 손가락
+이 이웃 상자에 닿지 않도록 이 과제에서는 그리
+퍼를 덜 벌렸다. Fig. 3은 이 과제의 첫 시험 장
+면에서 π0.5 정책이 받는 영상이다.
+Fig. 3 Policy inputs for the first scene of the 
+choosing task (π0.5 resolution): three boxes in a 
+row, the robot lined up on the middle slot, and the 
+instruction "pick up the red box" naming the left 
+box
+명령은 기존 7개 문형의 색 명령이거나, "pick 
+up the box on the left"와 같은 5개 문형의 위치 
+명령이다. 조합 일반화를 보기 위해 빨간 상자가 
+오른쪽 자리에 있을 때의 색 명령과 "in the 
+middle"이라는 위치 명령은 시연에서 뺐다. 시도 
+2,000회 중 성공한 1,659개(127,743 프레임)를 사
+용하였으며, 이 중 945개가 색 명령이고 모두 집
+은 상자의 색을 말한다. CNN 정책은 앞과 같은 
+구조와 설정으로 다시 학습하였다. 또한 단어 해
+시 평균이 원인인지 보기 위해, 문장 인코더를 
+사전 학습된 문장 임베딩 모델 MiniLM(19,20)으로 
+바꾼 정책(이하 CNN+MiniLM)도 학습하였다. 이 
+정책은 고정된 all-MiniLM-L6-v2 모델이 내는 384
+차원 임베딩을 선형층으로 줄여 쓴다. 검증 L1 
+오차는 CNN 정책이 0.0409, CNN+MiniLM 정책
+이 0.0403이었다. π0.5 정책도 같은 시연으로 집
+기 과제와 같은 설정에서 5,000 단계 학습하였으
+나, GPU 메모리 때문에 배치 크기는 16으로 줄
+
+=== PAGE 5
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+5
+였다. 따라서 학습 중에 본 표본은 80,000개(약 
+0.6 에폭)로 집기 과제의 절반이다.
+4.2 평가 방법
+폐루프 집기 시험은 ROS 없이 MuJoCo 장면에
+서 수행하였다. 학습에 쓰지 않은 난수 시드로 
+만든 100개 장면에서 정책을 실행하고, 상자가 3 
+cm 이상 들리면 성공으로 판정하였다. 최대 길이
+는 120 단계이고, 종료 확률이 3 단계 연속 0.5를 
+넘으면 끝낸다. 같은 장면에서 전문가도 실행하
+여 기준으로 삼았다. 이 시험의 정렬 오차는 4.1
+절의 범위로, 실제 정렬 정밀도보다 넓다.
+언어 활용 시험은 두 상자가 있는 20개 장면에
+서 정렬되지 않은 옆 상자의 색을 명령하고 어느 
+상자를 들었는지 기록하였다. 같은 장면에서 전
+문가에게 명령한 상자를 집게 하여, 그 상자가 
+팔이 닿는 위치에 있는지도 확인하였다. 명령 문
+장 강인성 시험은 폐루프 시험의 처음 50개 장면
+에서, 집을 상자의 색은 그대로 두고 문장만 바
+꾸어 성공률을 비교하였다. 문장은 시연 문형 그
+대로인 문장, 시연에 없던 단어로 된 영어 문장, 
+시연 문형에 관계없는 말을 덧붙인 문장, 한국어 
+문장의 네 종류이다(Table 3). π0.5 정책은 이 시
+험에서도 Colab의 서버를 터널로 호출하였고, 응
+답을 기다리는 동안 시뮬레이션을 멈추었다.
+고르기 시험은 학습에 쓰지 않은 난수 시드로 
+만든 장면에서 여섯 조건을 50회씩 수행하였다
+(Table 4). 상자의 순서, 집을 자리, 문장은 조건
+과 장면 번호로 정하여 세 정책이 같은 장면과 
+문장을 받는다. L1은 시연에 있던 색-자리 조합
+의 색 명령, L2는 시연에서 뺀 빨강-오른쪽 조합
+의 색 명령, L3은 시연에 있던 왼쪽, 오른쪽 위치 
+명령, L4는 시연에서 뺀 "in the middle" 명령이
+다. L5는 L1과 같은 조합을 짝수 장면에서는 
+"could you please fetch me that red block"처럼 시
+연에 없던 영어 표현으로, 홀수 장면에서는 "빨간 
+상자를 집어 줘"처럼 한국어로 명령하였다. L6은 
+"pick up the box to the left of the green box"처럼 
+이웃 상자로 목표를 가리키는 형식으로, 시연에 
+없던 문장 구조이다. 명령한 자리의 상자만 약 3 
+cm 이상 들리면 성공으로 하였고, 두 상자를 함
+께 들면 실패로 하였다. 같은 장면에서 전문가는 
+조건별로 45~49회 성공하였다.
+시각 변화 시험은 같은 50개 장면에서 정책은 
+그대로 두고 장면의 모습만 한 가지씩 바꾸었다
+(Table 5, Fig. 5). 조건과 수치는 결과를 보기 전
+에 정하였다. 조명은 머리 위 방향광과 헤드라이
+트의 밝기를 0.4배로 줄이거나(V1), 따뜻한 색으
+로 바꾸거나(V2), 방향광을 수평에 가깝게 기울였
+다(V3). V4는 테이블 상판을 진한 갈색으로 바꾸
+었고, V5는 바닥의 회색 체크 무늬를 녹색으로 
+물들이고 4배 촘촘하게 하였다. V6은 학습에 없
+던 은색 캔(지름 6.6 cm)과 주황 공(지름 7 cm)을 
+상자에서 약 13 cm 떨어진 곳에 고정하였고, V7
+은 집을 상자를 노랑으로 바꾸고 "pick up the 
+yellow box"로 명령하였다. V8은 머리 카메라를 
+아래로 3° 더 기울였다. 전문가는 V0과 V6에서 
+모두 성공하여, 방해물이 집기 동작을 막지 않음
+을 확인하였다.
+전체 스택 시험은 ROS 환경에서 세 상자를 작
+업대에 모은 뒤 제자리로 되돌리는 작업을 3회 
+반복하여 집기 18회를 수행하는 것을 한 세트로 
+하였다. IK 모드는 2세트(36회), CNN 정책과 π
+0.5 정책은 각각 1세트(18회)를 수행하였다. π0.5 
+정책은 Colab의 A100에서 서버로 실행하고 
+cloudflared 터널로 노트북의 ROS 노드와 연결하
+였다. 작업 계획은 고정된 스크립트를 사용하여 
+언어 모델의 영향을 배제하였고, 회차마다 환경
+을 초기화하였다. 앞선 실패 때문에 수행할 수 
+없게 된 동작은 집계에서 제외하였다.
+계산 환경은 노트북(Intel Core Ultra 7 258V, 8
+코어, 외장 GPU 없음, WSL2 Ubuntu 22.04)과 
+Google Colab의 NVIDIA A100이다. 집기 과제에
+서 π0.5 정책의 학습, 폐루프 평가, 전체 스택 
+시험의 추론은 모두 A100에서 수행하였다. 고르
+기 과제의 π0.5 정책은 Colab의 NVIDIA L4(24 
+GB)에서 학습하였다.
+5. 결과 및 고찰
+5.1 폐루프 집기 성능
+Table 2와 같이 두 정책과 전문가 모두 100개 
+장면에서 전부 성공하였다. 두 상자가 있던 43개 
+장면에서도 다른 상자를 든 경우는 없었다. 집기
+에 걸린 단계는 CNN 정책이 평균 75.0 (표준편
+차 2.1), π0.5 정책이 77.5 (표준편차 5.1)로, 같은 
+장면끼리 짝지은 Wilcoxon 부호 순위 검정에서 
+차이가 유의하였다(p < 0.001). Fig. 4의 분포를 
+보면 CNN 정책은 전문가의 77 단계 부근에 좁게 
+
+=== PAGE 6
+[저자명]·[저자명]·[저자명]
+6
+모이고, π0.5 정책은 67~90 단계로 넓게 퍼진다. 
+표본 기반 생성과 5 단계 개루프 실행이 원인일 
+수 있으나 본 실험만으로 구분할 수는 없다. 증
+강을 바꾼 CNN-A 정책은 99/100 성공하여, 1회
+는 120 단계 안에 상자를 들지 못하였다. 성공한 
+집기의 단계는 평균 77.0 (표준편차 6.0)였다.
+Table 2 Closed-loop results on the same test 
+scenes. 
+CNN-A: 
+CNN 
+retrained 
+with 
+the 
+augmentation of π0.5
+Method
+Success
+Steps (mean ± 
+SD)
+Other box asked: 
+named / lined-up
+Expert
+100/100
+77 (fixed plan)
+-
+CNN
+100/100
+75.0 ± 2.1
+0/20, 20/20
+CNN-A
+99/100
+77.0 ± 6.0
+0/20, 20/20
+π0.5
+100/100
+77.5 ± 5.1
+0/20, 20/20
+Fig. 4 Steps per pick on the 100 test scenes. The 
+dashed line is the expert plan
+5.2 명령 문장의 활용
+옆 상자의 색을 명령한 20개 장면에서 두 정책 
+모두 명령한 상자를 한 번도 집지 않았고 20회 
+모두 정렬된 상자를 집었다(Table 2). 다만 옆 상
+자는 25~30 cm 떨어져 있어, 전문가가 같은 자세
+에서 명령한 상자를 들 수 있었던 장면은 9개였
+다. 오른팔이 닿는 이 9개 장면에서도 두 정책은 
+모두 정렬된 상자를 집었다. 시연에서는 정렬된 
+상자가 언제나 명령한 상자이므로, 색 낱말을 읽
+지 않아도 손실을 줄일 수 있다. 이는 지름길 학
+습(18)의 사례이다. 사전 학습된 언어 인코더를 가
+진 π0.5도 같은 결과를 보인 것은, 이 데이터에
+서는 모델의 언어 능력보다 데이터의 구성이 결
+과를 좌우함을 시사한다. 작업 전체에서는 계획
+기가 명령한 상자의 마커로 먼저 정렬하므로 이 
+약점이 드러나지 않지만, 마커 없이 언어로 물체
+를 고르려면 정렬되지 않은 상자를 집는 시연이 
+필요하며, 5.3절에서 이를 시험하였다.
+반면 문장의 형태가 시연과 다를 때는 두 정책
+의 차이가 뚜렷하였다(Table 3). 시연에 없던 단
+어로 명령하면 CNN 정책은 0/50, 한국어로 명령
+하면 0/50으로 120 단계 동안 상자를 들지 못하
+였으나, π0.5 정책은 각각 49/50, 50/50 성공하였
+다(Fisher 정확 검정, 두 경우 모두 p < 0.001). 관
+계없는 말을 덧붙인 문장에서는 CNN 정책도 
+47/50로 대부분 성공하였고 π0.5 정책은 50/50였
+다(p = 0.24). 이 차이는 3.3절의 단어 처리 방식
+으로 설명할 수 있다. CNN 정책은 시연의 단어
+가 남아 있으면 평균 임베딩이 학습 범위에 머물
+지만, 낯선 단어만 있으면 학습되지 않은 값이 
+되고, 한글은 영문 단어만 읽는 토크나이저에서 
+빈 문장이 된다. 이렇게 학습 범위 밖의 입력이 
+들어가면 집기를 끝내지 못한 것으로 보인다. π
+0.5는 사전 학습된 언어 모델이 낯선 표현과 다
+른 언어도 학습한 문장과 가까운 표현으로 바꾸
+어, 동작이 흔들리지 않은 것으로 해석된다.
+다만 앞의 시험에서 두 정책 모두 색 낱말을 
+읽지 않았으므로, π0.5의 이점은 문장의 뜻을 이
+해하는 능력이라기보다 낯선 문장에도 학습한 동
+작을 유지하는 강인성이다. 사람이 명령하는 실
+제 환경에서는 표현이 시연과 같을 수 없으므로 
+이 강인성은 실용상 중요하며, 별도의 문장 증강 
+없이 사전 학습만으로 얻어졌다는 점에서 의미가 
+있다.
+Table 3 Closed-loop pick success with instructions 
+not used in the demonstrations (same 50 scenes)
+Instruction
+Example
+CNN
+π0.5
+Seen 
+template
+pick up the red box
+50/50
+50/50
+Unseen 
+words
+could you please fetch 
+me that red block
+0/50
+49/50
+Extra words
+the weather is lovely 
+today …, red box, pick 
+it up for me
+47/50
+50/50
+Korean
+빨간 상자를 집어 줘
+0/50
+50/50
+5.3 문장으로 상자 고르기
+Table 4는 고르기 시험의 결과이다. 시연에 있
+던 조합의 색 명령(L1)에서 π0.5 정책은 44/50 
+성공하였으나 CNN 정책은 22/50, CNN+MiniLM 
+
+=== PAGE 7
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+7
+정책은 20/50이었다(Fisher 정확 검정, 각각 p < 
+0.001). 목표 자리별로 보면 CNN 정책은 가운데 
+상자를 명령하면 15/21, 왼쪽은 7/18 성공하였으
+나 오른쪽 상자는 0/11로 한 번도 집지 못하였고, 
+실패는 대부분 다른 상자를 든 경우였다(CNN 25
+회, 
+CNN+MiniLM 
+27회). 
+π0.5 
+정책은 왼쪽 
+17/18, 가운데 17/21, 오른쪽 10/11로 자리에 관계
+없이 성공하였고 다른 상자를 든 경우는 1회였
+다. 시연에서 뺀 빨강-오른쪽 조합(L2)에서는 차
+이가 더 커서, π0.5 정책은 45/50 성공하였고 두 
+CNN 정책은 한 번도 성공하지 못하였다. 세 정
+책이 같은 시연으로 학습하였으므로 이 차이는 
+모델에서 온 것이다. π0.5 정책은 색 낱말을 영
+상 속 상자와 연결하였고, 색과 자리를 따로 본 
+시연에서 처음 보는 조합으로 일반화한 반면, 
+CNN 계열은 색 명령을 사실상 무시하였다.
+위치 명령에서는 결과가 달랐다. 시연에 있던 
+왼쪽, 오른쪽 명령(L3)에서는 CNN 정책 49/50, 
+CNN+MiniLM 정책 50/50로 π0.5 정책의 43/50보
+다 오히려 높았다(p = 0.06, 0.01). 시연에서 뺀 
+"in the middle"(L4)은 두 CNN 정책 모두 한 번도 
+성공하지 못하였고, 각각 48회, 50회 왼쪽 상자를 
+집었다. π0.5 정책은 18/50 성공하였으나 왼쪽 7
+회, 가운데 18회, 오른쪽 18회를 들고 7회는 들지 
+못하여, 세 상자 중 하나를 무작위로 고르는 수
+준과 구별되지 않았다(이항 검정, p = 0.40).
+시연에 없던 영어 표현(L5의 짝수 장면)에서는 
+π0.5 정책이 21/25 성공하였고, CNN 정책은 
+0/25, CNN+MiniLM 정책은 4/25였다. 반면 한국어 
+명령(홀수 장면)에서는 π0.5 정책도 4/25에 그쳤
+다. 5.2절에서 π0.5 정책은 한국어 명령으로 50
+회 모두 성공하였으나, 그때는 정렬된 상자를 집
+으면 되었으므로 색 낱말을 이해할 필요가 없었
+다. 영어 시연만으로 학습한 색 낱말이 한국어 
+색 낱말로는 이어지지 않은 것으로, 5.2절의 한국
+어 결과는 뜻의 이해가 아니라 동작의 유지로 해
+석해야 함을 확인시켜 준다. 
+영어 전용인 
+MiniLM을 쓴 정책은 한국어 명령에서 2/25였다.
+이웃 상자로 목표를 가리킨 L6에서는 세 정책 
+모두 문장 구조를 따르지 못하였다. CNN 정책은 
+29/50, CNN+MiniLM 정책은 30/50 성공하였으나, 
+목표가 가운데 상자인 장면에서는 각각 0/20, 
+0/20로 모두 실패하고 목표가 양 끝인 장면에서
+만 성공하였다. 문장 속의 "left", "right"를 L3의 
+위치 명령처럼 받아들여 그쪽 끝의 상자를 집었
+고, 목표가 마침 그 끝에 있을 때만 맞은 것이다. 
+π0.5 정책은 24/50로 CNN 정책과 유의한 차이가 
+없었고(p = 0.42), 가운데 목표에서도 6/20에 그쳤
+다.
+정리하면, 같은 시연으로 학습하였을 때 색 낱
+말을 영상 속 상자와 연결하고 시연에 없던 색-
+자리 조합으로 일반화한 것은 π0.5 정책뿐이었
+다. 
+그것도 CNN 정책이 본 표본의 16분의 
+1(80,000개, 약 0.6 에폭)만 보고 얻은 결과이다. 
+문장 인코더만 사전 학습된 MiniLM으로 바꾼 
+CNN+MiniLM 정책은 이 능력을 얻지 못하였으므
+로, 이 과제에서는 문장 인코더의 사전 학습만으
+로는 부족하고 영상과 언어를 함께 사전 학습한 
+모델이 유리하였다. 반면 시연에 없던 위치 낱말, 
+한국어 색 낱말, 관계 문장처럼 시연의 문형에서 
+더 멀어지면 π0.5 정책도 명령을 따르지 못하였
+다.
+Table 4 Closed-loop success in choosing one of 
+three boxes by the instruction (50 scenes each). L5: 
+25 scenes of unseen English wording and 25 of 
+Korean. *: colour-slot combination or position word 
+held out of the demonstrations. MiniLM: CNN with 
+a frozen MiniLM sentence encoder
+Test
+Expert
+CNN
+MiniLM
+π0.5
+L1 Colour
+46/50
+22/50
+20/50
+44/50
+L2 Colour*
+49/50
+0/50
+0/50
+45/50
+L3 Left / right
+45/50
+49/50
+50/50
+43/50
+L4 Middle*
+49/50
+0/50
+0/50
+18/50
+L5 English
+24/25
+0/25
+4/25
+21/25
+L5 Korean
+23/25
+3/25
+2/25
+4/25
+L6 Relation
+47/50
+29/50
+30/50
+24/50
+Total
+283/300
+103/300
+106/300
+199/300
+5.4 시각 변화에 대한 강인성
+Table 5는 시각 변화 시험의 결과이다. 변화가 
+없는 V0에서는 두 정책 모두 50개 장면에서 전
+부 성공하였다. 장면을 바꾼 8개 조건을 합하면 
+CNN 
+정책은 
+307/400(76.8%), 
+π0.5 
+정책은 
+399/400(99.8%) 성공하였다(Fisher 정확 검정, p < 
+0.001). CNN 정책은 옆에서 비추는 조명(V3)에서 
+13/50, 갈색 상판(V4)에서 17/50, 어두운 조명(V1)
+에서 34/50로 떨어졌고, π0.5 정책은 세 조건 모
+두 50/50이었다(각각 p < 0.001). V3과 V4에서 
+CNN 정책이 실패한 70회 중 64회는 120 단계 동
+안 상자를 들지 못한 경우였다. 처음 보는 캔과 
+공을 둔 V6에서는 CNN 정책 45/50, π0.5 정책 
+
+=== PAGE 8
+[저자명]·[저자명]·[저자명]
+8
+50/50로 차이가 유의하지 않았다(p = 0.06). 따뜻
+한 조명(V2), 바닥 무늬(V5), 노랑 상자(V7), 카메
+라 기울기(V8)에서는 두 정책 모두 49회 이상 성
+공하였다. π0.5 정책의 유일한 실패는 V2의 한 
+장면으로, 120 단계 안에 상자를 들지 못하였다. 
+다른 상자를 든 경우는 두 정책 모두 없었다.
+CNN 정책이 크게 떨어진 V3과 V4는 상자 주
+변의 테이블 밝기와 색, 그림자가 바뀌는 조건이
+다. CNN 정책의 공간 소프트맥스는 특징 지도에
+서 반응이 큰 지점의 좌표만 특징으로 쓰므로, 
+상자와 상판의 대비가 바뀌면 특징점의 위치가 
+학습 때와 달라져 동작이 어긋난 것으로 보인다. 
+테이블 밖의 바닥만 바꾼 V5에서는 영향이 없었
+다. π0.5 정책은 대규모 영상으로 사전 학습된 
+시각 인코더와 높은 해상도를 써서 이런 변화에
+도 같은 특징을 얻은 것으로 해석된다. V7에서 
+두 정책이 모두 성공한 것은, 집기 과제로 학습
+한 정책이 5.2절과 같이 색 낱말을 읽지 않고 정
+렬된 상자를 집기 때문으로 보이며, 처음 보는 
+색을 이해하였다는 뜻은 아니다.
+Table 5 Closed-loop pick success under visual 
+changes not seen in training (50 scenes each). 
+CNN-A: CNN retrained with the augmentation of 
+π0.5. p: Fisher exact test, CNN-A vs π0.5
+Condition
+CNN
+CNN-A
+π0.5
+p
+V0 None
+50/50
+49/50
+50/50
+1.00
+V1 Dim
+34/50
+12/50
+50/50
+< 0.001
+V2 Warm
+49/50
+7/50
+49/50
+< 0.001
+V3 Side
+13/50
+28/50
+50/50
+< 0.001
+V4 Table
+17/50
+18/50
+50/50
+< 0.001
+V5 Floor
+50/50
+49/50
+50/50
+1.00
+V6 Objects
+45/50
+30/50
+50/50
+< 0.001
+V7 Yellow
+49/50
+50/50
+50/50
+1.00
+V8 Tilt
+50/50
+50/50
+50/50
+1.00
+V1–V8
+307/400
+244/400
+399/400
+< 0.001
+두 정책은 학습 때의 영상 증강도 다르므로, 
+4.1절의 CNN-A 정책으로 증강의 영향을 확인하
+였다. CNN-A 정책은 V0에서 49/50, 8개 조건 합
+계 244/400(61.0%)로, 원래 CNN 정책의 307/400보
+다 오히려 낮았고(p < 0.001) π0.5 정책과의 차
+이도 유의하였다(p < 0.001). 증강을 바꾸자 옆 
+조명(V3)은 13/50에서 28/50로 나아졌으나(p = 
+0.004), 어두운 조명(V1)은 34/50에서 12/50, 따뜻
+한 조명(V2)은 49/50에서 7/50, 캔과 공(V6)은 
+45/50에서 30/50로 떨어졌고, 갈색 상판(V4)은 
+18/50로 비슷하였다. V4를 뺀 조건에서 CNN-A 
+정책의 실패 124회 중 117회는 120 단계 동안 상
+자를 들지 못한 경우였고, V4에서는 실패 32회 
+중 21회가 상자를 들지 않은 채 종료를 판단한 
+경우였다. V1의 0.4배 밝기는 증강의 밝기 범위
+(최소 0.7배) 밖이고, V2처럼 색 채널마다 다르게 
+어두워지는 변화는 색상 회전과 밝기 변화로 만
+들어지지 않는다. 증강이 시험 조건을 덮지 못하
+면 넓은 증강이 오히려 해가 될 수 있는 것으로 
+보이나, 원인은 본 실험으로 확인하지 않았다. 따
+라서 π0.5 정책의 강인성은 영상 증강만으로는 
+설명되지 않으며, 사전 학습된 시각 인코더와 높
+은 해상도의 기여가 큰 것으로 판단된다. 다만 
+CNN-A는 한 번만 학습하였고, 작은 CNN에 맞추
+어 증강의 세기를 조정하지는 않았다.
+Fig. 5 Head-camera view of the first test scene 
+under each visual condition (π0.5 input without the 
+black bands)
+5.5 전체 스택 성능
+Table 6은 ROS 전체 스택의 결과이다. 집기 성
+공률은 IK 모드 86.1% (31/36), CNN 정책 100.0% 
+(18/18), π0.5 정책 100.0% (18/18)이었으나, 표본
+이 작아 IK 모드와 각 정책의 차이는 통계적으로 
+유의하지 않았다(Fisher 정확 검정, p = 0.16, 
+0.16). 정책의 단계 수는 평균 CNN 78.3, π0.5 
+79.3로 폐루프 시험의 75.0, 77.5보다 약간 길었
+다.
+IK 모드의 실패 5회는 모두 로봇이 작업대에 
+놓았던 상자를 다시 집는 되돌리기 단계에서 발
+생하였고, 공급 테이블의 초기 위치에서 집는 모
+으기 단계는 18회 모두 성공하였다. 원인 기록을 
+남긴 두 번째 세트의 실패 2회 중 1회는 앞선 놓
+기에서 접촉 때문에 상자가 목표보다 1.6 cm 위
+에서 풀린 경우로, 마커 높이가 평소보다 약 3 
+cm 높게 측정되었고 그리퍼가 빈손으로 닫혔다. 
+다른 1회는 예비 자세로 이동하던 팔의 관절 추
+
+=== PAGE 9
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+9
+종 오차(0.056 rad)가 허용치(0.02 rad)를 넘어 재
+시도까지 실패한 경우이다. 첫 번째 세트의 실패 
+3회는 원인 기록이 없다. 두 정책은 되돌리기에
+서도 실패하지 않았으나, 오른팔만 쓰므로 놓인 
+상자의 상태가 IK 모드와 달라 이를 정책의 강인
+성으로 단정할 수는 없다.
+성공한 집기의 평균 시간은 IK 모드 21.4 s, 
+CNN 정책 31.8 s, π0.5 정책 42.4 s였다. 이 시간
+에는 정렬, 집기, 후진, 팔 접기가 모두 포함된다. 
+다만 두 VLA 모드는 영상을 10 Hz로 렌더링하
+고 손목 카메라도 켜므로 시뮬레이션이 느려지는 
+것으로 보이며, 팔을 쓰지 않는 주행 시간도 IK 
+모드의 평균 19.4 s에서 CNN 26.8 s, π0.5 27.7 s
+로 늘었다. 따라서 IK 모드와 정책 사이의 벽시
+계 시간 차이를 방식 자체의 속도 차이로 해석할 
+수는 없다. 같은 렌더링 조건인 두 정책 사이에
+서는 π0.5 정책이 10.6 s 더 걸렸으며, 그 원인은 
+5.6절의 서버 응답 대기이다.
+Table 6 Results through the full ROS stack. Times 
+are wall-clock means of successful actions
+Mode
+Pick 
+success
+Pick time 
+(s)
+Drive time 
+(s)
+Place 
+success
+IK
+31/36
+21.4 ± 1.5
+19.4 ± 6.4
+31/31
+CNN
+18/18
+31.8 ± 1.9
+26.8 ± 8.9
+18/18
+π0.5
+18/18
+42.4 ± 1.7
+27.7 ± 9.5
+18/18
+5.6 계산 비용
+CNN 정책은 노트북 CPU 8스레드로 5,272 s 
+동안 학습하였고, 추론은 4스레드로 호출당 평균 
+1.63 ms(200회)였다. 제어 주기 100 ms에 비해 충
+분히 짧다. π0.5 정책의 학습은 A100에서 초당 
+약 0.32 단계로, 5,000 단계에 약 4.4 시간이 걸렸
+고 GPU 메모리를 36.9 GB 사용하였다. 매개변수 
+수는 CNN 정책의 약 5,700배이다. 반면 학습 중
+에 본 표본 수는 CNN 정책이 1,280,000개(88,935 
+프레임의 약 14.4 에폭), π0.5 정책이 160,000개
+(약 1.8 에폭)로, π0.5 정책은 8분의 1의 표본으
+로 같은 100% 성공률에 도달하였다. 그것도 계획
+한 학습량의 3분의 1 시점이었다. 다만 CNN 정
+책이 더 이른 시점에 같은 성능에 이르는지는 확
+인하지 않았다. 폐루프 평가 100개 장면은 렌더
+링과 시뮬레이션을 포함해 406 s가 걸렸으므로, 
+추론 약 1,550회로 나누면 호출당 시간의 상한은 
+약 0.26 s이다. 전체 스택 시험에서 터널을 거친 
+왕복 시간은 291회 호출에서 중앙값 0.51 s, 평균 
+0.61 s, 최대 2.67 s였다. 팔은 응답을 기다리는 
+동안 마지막 목표를 유지하고, 집기 한 번에 약 
+16회 호출하므로 대기 시간은 집기당 약 10 s이
+다. 이는 5.5절에서 π0.5 정책의 집기가 CNN 정
+책보다 길었던 10.6 s와 비슷하다. 응답이 제어 
+주기보다 길어 동작이 5 단계씩 끊어지지만, 이 
+작업에서는 성공률에 영향을 주지 않았다.
+5.7 고찰
+π0.5 정책의 장점은 다섯 가지로 나타났다. 첫
+째, 시연에 없던 단어나 한국어로 명령해도 동작
+하였다. CNN 정책은 같은 조건에서 한 번도 성
+공하지 못하였다. 둘째, 세 상자 중 하나를 고르
+는 시연으로 학습하였을 때 색 낱말을 영상 속 
+상자와 연결하였고, 시연에서 뺀 색-자리 조합에
+서도 45/50 성공하였다. 같은 시연으로 학습한 
+CNN 정책은 문장 인코더를 사전 학습된 MiniLM
+으로 바꾸어도 색을 무시하였다. 셋째, 조명의 방
+향과 밝기, 테이블 색이 학습 때와 달라도 성공
+률을 유지하였다. 같은 조건에서 CNN 정책의 성
+공률은 26~68%로 떨어졌다. π0.5와 같은 영상 
+증강으로 다시 학습한 CNN 정책도 8개 조건 합
+계 61.0%에 그쳐, 이 강인성은 증강보다 사전 학
+습에서 온 것으로 보인다.
+넷째, 사전 학습 가중치에서 출발하여 CNN 정
+책이 본 표본의 8분의 1, 계획한 학습량의 3분의 
+1만으로 폐루프 시험과 전체 스택 시험에서 모두 
+실패 없이 동작하였다. 시연 수집이 비싼 실제 
+로봇에서는 이 차이가 더 중요해진다. 다섯째, 추
+론을 원격 GPU에 맡겨 왕복 시간이 평균 0.61 s, 
+최대 2.67 s로 제어 주기의 수 배에서 수십 배에 
+이르렀는데도 집기 18회가 모두 성공하였다. 행
+동 청크를 생성하는 구조 덕분에 추론이 제어 주
+기보다 느려도 동작할 수 있어, 로봇에 GPU를 
+싣지 않고 대형 모델을 쓸 수 있음을 보였다.
+반면 시연과 같은 문장을 쓰는 정상 조건에서
+는, 정렬 오차가 학습 범위 안에 있는 이 작업에
+서 성공률과 시간의 이득은 관찰되지 않았다. 
+100개 장면에서 두 정책이 모두 100%에 도달하
+여 성공률로는 구분되지 않으므로, 이 결과를 두 
+모델의 능력이 같다는 뜻으로 해석해서는 안 된
+다. 5.2~5.4절처럼 시연과 다른 문장이나 장면을 
+주거나 문장으로 물체를 골라야 할 때 차이가 드
+러났다. 시연에 있던 왼쪽, 오른쪽 위치 명령에서
+는 오히려 CNN 정책의 성공률이 높았고, 시연에 
+
+=== PAGE 10
+[저자명]·[저자명]·[저자명]
+10
+없던 위치 낱말, 한국어 색 낱말, 관계 문장은 π
+0.5 정책도 따르지 못하여, 사전 학습의 이점은 
+시연과 가까운 표현에서 주로 나타났다. 한편 마
+커가 가려지거나 없는 상황에서는 IK 모드가 불
+리할 것으로 예상되나 본 연구에서는 시험하지 
+않았다.
+본 연구의 한계는 다음과 같다. 첫째, 모든 결
+과는 시뮬레이션에서 얻었으며 실제 로봇으로 검
+증하지 않았다. 둘째, IK 모드는 ROS 스택에서만 
+시험하여 폐루프 시험의 두 정책과 직접 비교할 
+수 없다. 전문가는 실제 자세를 쓰므로 인식 오
+차가 없는 상한에 해당한다. 셋째, 두 정책의 학
+습 단계 수가 다르고, π0.5는 계획의 3분의 1만 
+학습하였다. 넷째, 전체 스택 시험의 표본이 IK 
+모드 36회, 두 정책 각 18회로 작아 성공률 차이
+를 판별하기 어렵다. 다섯째, VLA 모드도 정렬과 
+놓기에 마커를 쓰므로 마커 의존성을 없앤 것은 
+아니다. 여섯째, 명령 문장 강인성 시험은 문장 
+세 종류로 한정되었고 폐루프 시험에서만 수행하
+였다. 일곱째, 시각 변화 시험은 조건마다 한 가
+지 수준만 시험하였고, 증강을 맞춘 CNN-A 정책
+은 한 번만 학습하여 학습 난수에 따른 편차를 
+확인하지 않았다. 또한 두 정책은 영상 해상도와 
+구조도 달라, 남은 차이를 사전 학습만의 효과로 
+단정할 수는 없다. 여덟째, 고르기 시험은 폐루프
+에서만 수행하였고 각 정책을 한 번씩만 학습하
+였다. 전체 스택에서는 계획기가 명령한 상자의 
+마커로 먼저 정렬하므로 이 능력이 쓰이지 않는
+다.
+6. 결 론
+이동 양팔 로봇의 상자 집기에서 IK 모드, 
+CNN 정책, π0.5 정책을 같은 시뮬레이션에서 비
+교하였다. 결론은 다음과 같다.
+(1) 처음 보는 100개 장면에서 두 정책의 집기 
+성공률은 모두 100%였고, 소요 단계는 CNN 정
+책이 75.0으로 π0.5 정책의 77.5보다 짧고 편차
+도 작았다. ROS 전체 스택의 집기 성공률은 IK 
+모드 31/36, CNN 정책 18/18, π0.5 정책 18/18이
+었고, IK 모드의 실패는 모두 로봇이 놓았던 상
+자를 다시 집는 단계에서 발생하였다.
+(2) 시연에 없던 단어나 한국어로 명령하면 
+CNN 정책은 0/50, 0/50으로 동작하지 못하였으나 
+π0.5 정책은 49/50, 50/50 성공하였다. 다만 정렬
+된 상자만 집는 시연으로 학습하면 두 정책 모두 
+옆 상자의 색 명령을 따르지 못하였고, 세 상자 
+중 하나를 문장으로 고르는 시연으로 학습하자 
+π0.5 정책만 색 명령에서 44/50, 시연에서 뺀 색-
+자리 조합에서 45/50 성공하였다. CNN 정책은 각
+각 22/50, 0/50에 그쳤고 문장 인코더를 MiniLM
+으로 바꾸어도 나아지지 않았다. 시연에서 뺀 위
+치 낱말, 한국어 색 명령, 관계 문장은 π0.5 정
+책도 따르지 못하였다.
+(3) 조명의 방향과 밝기, 테이블 색을 바꾸면 
+CNN 정책의 성공률은 50회 중 13~34회로 떨어졌
+으나 π0.5 정책은 모두 성공하였고, 시각 변화 8
+개 조건 전체에서 π0.5 정책은 399/400, CNN 정
+책은 307/400 성공하였다. CNN 정책을 π0.5와 
+같은 영상 증강으로 다시 학습하면 244/400로 오
+히려 낮아져, 이 차이는 영상 증강만으로 설명되
+지 않는다.
+(4) π0.5 정책은 CNN 정책이 본 학습 표본의 
+8분의 1로 같은 성공률에 이르렀고, 원격 서버의 
+응답을 기다리느라 집기 한 번에 약 10.6 s 더 걸
+렸는데도 전체 스택에서 실패하지 않아, 사전 학
+습 모델의 적응 효율과 원격 실행 가능성을 보였
+다. 반면 매개변수가 약 5,700배 많고 원격 GPU
+가 필요하며, 시연과 같은 문장을 쓰는 정상 조
+건의 성공률과 시간에서는 우위가 나타나지 않았
+다.
+후속 연구에서는 여러 학습 난수와 같은 해상
+도의 비교로 사전 학습의 효과를 더 분리하고, 
+마커가 가려진 조건에서 IK 모드를 포함한 세 방
+식을 비교하며, 고르기 과제를 전체 스택으로 넓
+히고 다국어 시연과 관계 문장 시연이 일반화에 
+주는 영향을 검증할 필요가 있다.
+후 기
+[연구비 지원 등 감사의 글을 입력하시오]
+참고문헌
+(References)
+(1) Coleman, D., Sucan, I., Chitta, S. and Correll, 
+N., 2014, "Reducing the Barrier to Entry of 
+Complex 
+Robotic 
+Software: 
+a 
+MoveIt! 
+Case 
+
+=== PAGE 11
+이동 양팔 로봇의 집기를 위한 역기구학 기법과 시각-언어-행동 정책의 성능 비교
+11
+Study," Journal of Software Engineering for 
+Robotics, Vol. 5, No. 1, pp. 3~16.
+(2) 
+Garrido-Jurado, 
+S., 
+Muñoz-Salinas, 
+R., 
+Madrid-Cuevas, F. J. and Marín-Jiménez, M. J., 
+2014, "Automatic Generation and Detection of 
+Highly 
+Reliable 
+Fiducial 
+Markers 
+under 
+Occlusion," Pattern Recognition, Vol. 47, No. 6, 
+pp. 2280~2292.
+(3) Kuffner, J. J. and LaValle, S. M., 2000, 
+"RRT-Connect: 
+An 
+Efficient 
+Approach 
+to 
+Single-Query Path Planning," Proc. of IEEE Int. 
+Conf. 
+on 
+Robotics 
+and 
+Automation, 
+San 
+Francisco, CA, USA, Vol. 2, pp. 995~1001.
+(4) Kim, H.-C., Yoon, I.-H. and Song, J.-B., 2021, 
+"Deep Learning-based Pose Estimation for Mobile 
+Manipulator Tasks," Trans. Korean Soc. Mech. 
+Eng. A, Vol. 45, No. 12, pp. 1161~1166.
+(5) Levine, S., Finn, C., Darrell, T. and Abbeel, P., 
+2016, "End-to-End Training of Deep Visuomotor 
+Policies," Journal of Machine Learning Research, 
+Vol. 17, No. 39, pp. 1~40.
+(6) Zhao, T. Z., Kumar, V., Levine, S. and Finn, 
+C., 
+2023, 
+"Learning 
+Fine-Grained 
+Bimanual 
+Manipulation with Low-Cost Hardware," Proc. of 
+Robotics: 
+Science 
+and 
+Systems 
+XIX, 
+Daegu, 
+Korea.
+(7) Chi, C., Xu, Z., Feng, S., Cousineau, E., Du, 
+Y., Burchfiel, B., Tedrake, R. and Song, S., 
+2025, 
+"Diffusion 
+Policy: 
+Visuomotor 
+Policy 
+Learning via Action Diffusion," The International 
+Journal of Robotics Research, Vol. 44, No. 
+10-11, pp. 1684~1704.
+(8) Black, K., Brown, N., Driess, D., Esmail, A., 
+Equi, M. R., Finn, C., Fusai, N., Groom, L., 
+Hausman, K., Ichter, B., Jakubczak, S., Jones, T., 
+Ke, L., Levine, S., Li-Bell, A., Mothukuri, M., 
+Nair, S., Pertsch, K., Shi, L. X., Smith, L., 
+Tanner, J., Vuong, Q., Walling, A., Wang, H. 
+and 
+Zilinsky, 
+U., 
+2025, 
+"π0: 
+A 
+Vision-Language-Action Flow Model for General 
+Robot Control," Proc. of Robotics: Science and 
+Systems XXI, Los Angeles, CA, USA.
+(9) Black, K., Brown, N., Darpinian, J., Dhabalia, 
+K., Driess, D., Esmail, A., Equi, M. R., Finn, 
+C., Fusai, N., Galliker, M. Y., Ghosh, D., 
+Groom, L., Hausman, K., Ichter, B., Jakubczak, 
+S., Jones, T., Ke, L., LeBlanc, D., Levine, S., 
+Li-Bell, A., Mothukuri, M., Nair, S., Pertsch, K., 
+Ren, A. Z., Shi, L. X., Smith, L., Springenberg, 
+J. T., Stachowicz, K., Tanner, J., Vuong, Q., 
+Walke, H., Walling, A., Wang, H., Yu, L. and 
+Zilinsky, 
+U., 
+2025, 
+"π0.5: 
+A 
+Vision-Language-Action Model with Open-World 
+Generalization," arXiv preprint arXiv:2504.16054.
+(10) Todorov, E., Erez, T. and Tassa, Y., 2012, 
+"MuJoCo: A Physics Engine for Model-Based 
+Control," 
+Proc. 
+of 
+IEEE/RSJ 
+Int. 
+Conf. 
+on 
+Intelligent 
+Robots 
+and 
+Systems, 
+Vilamoura-Algarve, Portugal, pp. 5026~5033.
+(11) 
+Macenski, 
+S., 
+Foote, 
+T., 
+Gerkey, 
+B., 
+Lalancette, C. and Woodall, W., 2022, "Robot 
+Operating System 2: Design, Architecture, and 
+Uses in the Wild," Science Robotics, Vol. 7, No. 
+66, eabm6074.
+(12) Macenski, S., Martín, F., White, R. and 
+Clavero, J. G., 2020, "The Marathon 2: A 
+Navigation System," Proc. of IEEE/RSJ Int. Conf. 
+on Intelligent Robots and Systems, Las Vegas, 
+NV, USA, pp. 2718~2725.
+(13) 
+Nakamura, 
+Y. 
+and 
+Hanafusa, 
+H., 
+1986, 
+"Inverse 
+Kinematic Solutions with Singularity 
+Robustness 
+for 
+Robot 
+Manipulator 
+Control," 
+Journal of Dynamic Systems, Measurement, and 
+Control, Vol. 108, No. 3, pp. 163~171.
+(14) Laskey, M., Lee, J., Fox, R., Dragan, A. and 
+Goldberg, K., 2017, "DART: Noise Injection for 
+Robust Imitation Learning," Proc. of the 1st 
+Annual 
+Conf. 
+on 
+Robot 
+Learning, 
+Mountain 
+View, CA, USA, PMLR Vol. 78, pp. 143~156.
+(15) Beyer, L., Steiner, A., Susano Pinto, A., 
+Kolesnikov, A., Wang, X., Salz, D., Neumann, 
+M., 
+Alabdulmohsin, 
+I., 
+Tschannen, 
+M., 
+Bugliarello, E., Unterthiner, T., Keysers, D., 
+Koppula, S., Liu, F., Grycner, A., Gritsenko, A., 
+Houlsby, N., Kumar, M., Rong, K., Eisenschlos, 
+J., Kabra, R., Bauer, M., Bošnjak, M., Chen, X., 
+Minderer, 
+M., 
+Voigtlaender, 
+P., 
+Bica, 
+I., 
+Balazevic, I., Puigcerver, J., Papalampidi, P., 
+
+=== PAGE 12
+[저자명]·[저자명]·[저자명]
+12
+Henaff, O., Xiong, X., Soricut, R., Harmsen, J. 
+and Zhai, X., 2024, "PaliGemma: A Versatile 3B 
+VLM 
+for 
+Transfer," 
+arXiv 
+preprint 
+arXiv:2407.07726.
+(16) Lipman, Y., Chen, R. T. Q., Ben-Hamu, H., 
+Nickel, M. and Le, M., 2023, "Flow Matching 
+for Generative Modeling," Proc. of Int. Conf. on 
+Learning Representations.
+(17) Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., 
+Li, Y., Wang, S., Wang, L. and Chen, W., 2022, 
+"LoRA: Low-Rank Adaptation of Large Language 
+Models," 
+Proc. 
+of 
+Int. 
+Conf. 
+on 
+Learning 
+Representations.
+(18) Geirhos, R., Jacobsen, J.-H., Michaelis, C., 
+Zemel, 
+R., 
+Brendel, 
+W., 
+Bethge, 
+M. 
+and 
+Wichmann, F. A., 2020, "Shortcut Learning in 
+Deep 
+Neural 
+Networks," 
+Nature 
+Machine 
+Intelligence, Vol. 2, No. 11, pp. 665~673.
+(19) Wang, W., Wei, F., Dong, L., Bao, H., Yang, 
+N. 
+and 
+Zhou, 
+M., 
+2020, 
+"MiniLM: 
+Deep 
+Self-Attention 
+Distillation 
+for 
+Task-Agnostic 
+Compression 
+of 
+Pre-Trained 
+Transformers," 
+Advances 
+in 
+Neural 
+Information 
+Processing 
+Systems, Vol. 33, pp. 5776~5788.
+(20) 
+Reimers, 
+N. 
+and 
+Gurevych, 
+I., 
+2019, 
+"Sentence-BERT: 
+Sentence 
+Embeddings 
+using 
+Siamese BERT-Networks," Proc. of Conf. on 
+Empirical 
+Methods 
+in 
+Natural 
+Language 
+Processing and Int. Joint Conf. on Natural 
+Language Processing, Hong Kong, China, pp. 
+3982~3992.

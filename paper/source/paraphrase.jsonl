@@ -1,0 +1,400 @@
+{"policy": "cnn", "set": "seen", "episode": 0, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 1, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 72}
+{"policy": "cnn", "set": "seen", "episode": 2, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "cnn", "set": "seen", "episode": 3, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 4, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 5, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 6, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 7, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 8, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 9, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "seen", "episode": 10, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 11, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 12, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 13, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 14, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 15, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 72}
+{"policy": "cnn", "set": "seen", "episode": 16, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "seen", "episode": 17, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "seen", "episode": 18, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 19, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 73}
+{"policy": "cnn", "set": "seen", "episode": 20, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 21, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 71}
+{"policy": "cnn", "set": "seen", "episode": 22, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 23, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 24, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 25, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 26, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "seen", "episode": 27, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 80}
+{"policy": "cnn", "set": "seen", "episode": 28, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 29, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 30, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 31, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 32, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "seen", "episode": 33, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 34, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 35, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 36, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 37, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 81}
+{"policy": "cnn", "set": "seen", "episode": 38, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 39, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 40, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 41, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 42, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 72}
+{"policy": "cnn", "set": "seen", "episode": 43, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "cnn", "set": "seen", "episode": 44, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "seen", "episode": 45, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "seen", "episode": 46, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "seen", "episode": 47, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "seen", "episode": 48, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "seen", "episode": 49, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "unseen_words", "episode": 0, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 1, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 2, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 3, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 4, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 5, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 6, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 7, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 8, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 9, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 10, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 11, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 12, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 13, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 14, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 15, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 16, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 17, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 18, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 19, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 20, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 21, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 22, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 23, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 24, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 25, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 26, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 27, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 28, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 29, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 30, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 31, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 32, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 33, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 34, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 35, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 36, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 37, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 38, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 39, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 40, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 41, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 42, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 43, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 44, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 45, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 46, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 47, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 48, "instruction": "could you please fetch me that blue block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "unseen_words", "episode": 49, "instruction": "could you please fetch me that red block", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "distracting", "episode": 0, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 1, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 81}
+{"policy": "cnn", "set": "distracting", "episode": 2, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "distracting", "episode": 3, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "distracting", "episode": 4, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 88}
+{"policy": "cnn", "set": "distracting", "episode": 5, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 6, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 7, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "distracting", "episode": 8, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "distracting", "episode": 9, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 83}
+{"policy": "cnn", "set": "distracting", "episode": 10, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "distracting", "episode": 11, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 12, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "distracting", "episode": 13, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 85}
+{"policy": "cnn", "set": "distracting", "episode": 14, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "distracting", "episode": 15, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 81}
+{"policy": "cnn", "set": "distracting", "episode": 16, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 92}
+{"policy": "cnn", "set": "distracting", "episode": 17, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 97}
+{"policy": "cnn", "set": "distracting", "episode": 18, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 88}
+{"policy": "cnn", "set": "distracting", "episode": 19, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "distracting", "episode": 20, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 82}
+{"policy": "cnn", "set": "distracting", "episode": 21, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 81}
+{"policy": "cnn", "set": "distracting", "episode": 22, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 23, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 24, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "distracting", "episode": 25, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 26, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 97}
+{"policy": "cnn", "set": "distracting", "episode": 27, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 98}
+{"policy": "cnn", "set": "distracting", "episode": 28, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 29, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 30, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 80}
+{"policy": "cnn", "set": "distracting", "episode": 31, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 76}
+{"policy": "cnn", "set": "distracting", "episode": 32, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "cnn", "set": "distracting", "episode": 33, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 34, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "distracting", "episode": 35, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "distracting", "episode": 36, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "cnn", "set": "distracting", "episode": 37, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 98}
+{"policy": "cnn", "set": "distracting", "episode": 38, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 93}
+{"policy": "cnn", "set": "distracting", "episode": 39, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 84}
+{"policy": "cnn", "set": "distracting", "episode": 40, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 85}
+{"policy": "cnn", "set": "distracting", "episode": 41, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 85}
+{"policy": "cnn", "set": "distracting", "episode": 42, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "distracting", "episode": 43, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 80}
+{"policy": "cnn", "set": "distracting", "episode": 44, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 85}
+{"policy": "cnn", "set": "distracting", "episode": 45, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "cnn", "set": "distracting", "episode": 46, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": false, "other": false, "steps": 108}
+{"policy": "cnn", "set": "distracting", "episode": 47, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 89}
+{"policy": "cnn", "set": "distracting", "episode": 48, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "cnn", "set": "distracting", "episode": 49, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "cnn", "set": "korean", "episode": 0, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 1, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 2, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 3, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 4, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 5, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 6, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 7, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 8, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 9, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 10, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 11, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 12, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 13, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 14, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 15, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 16, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 17, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 18, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 19, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 20, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 21, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 22, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 23, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 24, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 25, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 26, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 27, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 28, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 29, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 30, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 31, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 32, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 33, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 34, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 35, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 36, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 37, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 38, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 39, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 40, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 41, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 42, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 43, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 44, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 45, "instruction": "초록 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 46, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 47, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 48, "instruction": "파란 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "cnn", "set": "korean", "episode": 49, "instruction": "빨간 상자를 집어 줘", "ok": false, "other": false, "steps": 120}
+{"policy": "pi05", "set": "seen", "episode": 0, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "seen", "episode": 1, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "seen", "episode": 2, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 3, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "seen", "episode": 4, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "seen", "episode": 5, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "seen", "episode": 6, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "seen", "episode": 7, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "seen", "episode": 8, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 9, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "seen", "episode": 10, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 66}
+{"policy": "pi05", "set": "seen", "episode": 11, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 12, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "seen", "episode": 13, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 14, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 15, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "seen", "episode": 16, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 82}
+{"policy": "pi05", "set": "seen", "episode": 17, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "seen", "episode": 18, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 19, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 20, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "seen", "episode": 21, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 68}
+{"policy": "pi05", "set": "seen", "episode": 22, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "seen", "episode": 23, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "seen", "episode": 24, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "seen", "episode": 25, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 26, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 27, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "seen", "episode": 28, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "seen", "episode": 29, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "seen", "episode": 30, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "seen", "episode": 31, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "seen", "episode": 32, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 33, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 87}
+{"policy": "pi05", "set": "seen", "episode": 34, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "seen", "episode": 35, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "seen", "episode": 36, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "seen", "episode": 37, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 38, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 39, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 40, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 41, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "seen", "episode": 42, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 90}
+{"policy": "pi05", "set": "seen", "episode": 43, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 44, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "seen", "episode": 45, "instruction": "pick up the green box", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "seen", "episode": 46, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "seen", "episode": 47, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "seen", "episode": 48, "instruction": "pick up the blue box", "ok": true, "other": false, "steps": 82}
+{"policy": "pi05", "set": "seen", "episode": 49, "instruction": "pick up the red box", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 0, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 100}
+{"policy": "pi05", "set": "unseen_words", "episode": 1, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "unseen_words", "episode": 2, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "unseen_words", "episode": 3, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "unseen_words", "episode": 4, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 5, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "unseen_words", "episode": 6, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 86}
+{"policy": "pi05", "set": "unseen_words", "episode": 7, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "unseen_words", "episode": 8, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "unseen_words", "episode": 9, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 10, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 11, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 91}
+{"policy": "pi05", "set": "unseen_words", "episode": 12, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 82}
+{"policy": "pi05", "set": "unseen_words", "episode": 13, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "unseen_words", "episode": 14, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "unseen_words", "episode": 15, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 85}
+{"policy": "pi05", "set": "unseen_words", "episode": 16, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 95}
+{"policy": "pi05", "set": "unseen_words", "episode": 17, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 86}
+{"policy": "pi05", "set": "unseen_words", "episode": 18, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "unseen_words", "episode": 19, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 89}
+{"policy": "pi05", "set": "unseen_words", "episode": 20, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "unseen_words", "episode": 21, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 22, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 23, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 24, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 25, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 87}
+{"policy": "pi05", "set": "unseen_words", "episode": 26, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "unseen_words", "episode": 27, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "unseen_words", "episode": 28, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 69}
+{"policy": "pi05", "set": "unseen_words", "episode": 29, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 30, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "unseen_words", "episode": 31, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 86}
+{"policy": "pi05", "set": "unseen_words", "episode": 32, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 85}
+{"policy": "pi05", "set": "unseen_words", "episode": 33, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 95}
+{"policy": "pi05", "set": "unseen_words", "episode": 34, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 35, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "unseen_words", "episode": 36, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "unseen_words", "episode": 37, "instruction": "could you please fetch me that green block", "ok": false, "other": false, "steps": 74}
+{"policy": "pi05", "set": "unseen_words", "episode": 38, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "unseen_words", "episode": 39, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 40, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 41, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "unseen_words", "episode": 42, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "unseen_words", "episode": 43, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "unseen_words", "episode": 44, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "unseen_words", "episode": 45, "instruction": "could you please fetch me that green block", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "unseen_words", "episode": 46, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "unseen_words", "episode": 47, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 87}
+{"policy": "pi05", "set": "unseen_words", "episode": 48, "instruction": "could you please fetch me that blue block", "ok": true, "other": false, "steps": 87}
+{"policy": "pi05", "set": "unseen_words", "episode": 49, "instruction": "could you please fetch me that red block", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "distracting", "episode": 0, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "distracting", "episode": 1, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 2, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "distracting", "episode": 3, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "distracting", "episode": 4, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "distracting", "episode": 5, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "distracting", "episode": 6, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 7, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "distracting", "episode": 8, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 9, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "distracting", "episode": 10, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 71}
+{"policy": "pi05", "set": "distracting", "episode": 11, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 12, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 13, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 14, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 90}
+{"policy": "pi05", "set": "distracting", "episode": 15, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "distracting", "episode": 16, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "distracting", "episode": 17, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "distracting", "episode": 18, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "distracting", "episode": 19, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "distracting", "episode": 20, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 21, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 22, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 69}
+{"policy": "pi05", "set": "distracting", "episode": 23, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 85}
+{"policy": "pi05", "set": "distracting", "episode": 24, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 25, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "distracting", "episode": 26, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 82}
+{"policy": "pi05", "set": "distracting", "episode": 27, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "distracting", "episode": 28, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 29, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "distracting", "episode": 30, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "distracting", "episode": 31, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "distracting", "episode": 32, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "distracting", "episode": 33, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 86}
+{"policy": "pi05", "set": "distracting", "episode": 34, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "distracting", "episode": 35, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "distracting", "episode": 36, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "distracting", "episode": 37, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 69}
+{"policy": "pi05", "set": "distracting", "episode": 38, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 68}
+{"policy": "pi05", "set": "distracting", "episode": 39, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "distracting", "episode": 40, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "distracting", "episode": 41, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "distracting", "episode": 42, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "distracting", "episode": 43, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 44, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 80}
+{"policy": "pi05", "set": "distracting", "episode": 45, "instruction": "the weather is lovely today and my coffee is cold, anyway green box, pick it up for me", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "distracting", "episode": 46, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "distracting", "episode": 47, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "distracting", "episode": 48, "instruction": "the weather is lovely today and my coffee is cold, anyway blue box, pick it up for me", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "distracting", "episode": 49, "instruction": "the weather is lovely today and my coffee is cold, anyway red box, pick it up for me", "ok": true, "other": false, "steps": 69}
+{"policy": "pi05", "set": "korean", "episode": 0, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "korean", "episode": 1, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "korean", "episode": 2, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 71}
+{"policy": "pi05", "set": "korean", "episode": 3, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "korean", "episode": 4, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 92}
+{"policy": "pi05", "set": "korean", "episode": 5, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 6, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 7, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 8, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 85}
+{"policy": "pi05", "set": "korean", "episode": 9, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 10, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "korean", "episode": 11, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "korean", "episode": 12, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "korean", "episode": 13, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 90}
+{"policy": "pi05", "set": "korean", "episode": 14, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "korean", "episode": 15, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "korean", "episode": 16, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 83}
+{"policy": "pi05", "set": "korean", "episode": 17, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 18, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 88}
+{"policy": "pi05", "set": "korean", "episode": 19, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "korean", "episode": 20, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 79}
+{"policy": "pi05", "set": "korean", "episode": 21, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "korean", "episode": 22, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 23, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 68}
+{"policy": "pi05", "set": "korean", "episode": 24, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "korean", "episode": 25, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 76}
+{"policy": "pi05", "set": "korean", "episode": 26, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 92}
+{"policy": "pi05", "set": "korean", "episode": 27, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 120}
+{"policy": "pi05", "set": "korean", "episode": 28, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "korean", "episode": 29, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 30, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 72}
+{"policy": "pi05", "set": "korean", "episode": 31, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "korean", "episode": 32, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 81}
+{"policy": "pi05", "set": "korean", "episode": 33, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 34, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 35, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 67}
+{"policy": "pi05", "set": "korean", "episode": 36, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 73}
+{"policy": "pi05", "set": "korean", "episode": 37, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 112}
+{"policy": "pi05", "set": "korean", "episode": 38, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 82}
+{"policy": "pi05", "set": "korean", "episode": 39, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 78}
+{"policy": "pi05", "set": "korean", "episode": 40, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "korean", "episode": 41, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "korean", "episode": 42, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 69}
+{"policy": "pi05", "set": "korean", "episode": 43, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 44, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 85}
+{"policy": "pi05", "set": "korean", "episode": 45, "instruction": "초록 상자를 집어 줘", "ok": true, "other": false, "steps": 74}
+{"policy": "pi05", "set": "korean", "episode": 46, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 77}
+{"policy": "pi05", "set": "korean", "episode": 47, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 75}
+{"policy": "pi05", "set": "korean", "episode": 48, "instruction": "파란 상자를 집어 줘", "ok": true, "other": false, "steps": 70}
+{"policy": "pi05", "set": "korean", "episode": 49, "instruction": "빨간 상자를 집어 줘", "ok": true, "other": false, "steps": 68}

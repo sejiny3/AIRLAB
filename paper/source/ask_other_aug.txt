@@ -1,0 +1,21 @@
+episode   0  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box
+episode   1  supply_2   lined up with green, asked for blue  -> lifted the lined-up box
+episode   2  supply_3   lined up with green, asked for red   -> lifted the lined-up box
+episode   3  work_table lined up with red  , asked for blue  -> lifted the lined-up box
+episode   4  work_table lined up with red  , asked for green -> lifted the lined-up box
+episode   5  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box
+episode   6  work_table lined up with green, asked for red   -> lifted the lined-up box
+episode   7  supply_2   lined up with green, asked for red   -> lifted the lined-up box
+episode   8  supply_1   lined up with red  , asked for blue  -> lifted the lined-up box
+episode   9  supply_2   lined up with green, asked for blue  -> lifted the lined-up box
+episode  10  supply_3   lined up with green, asked for blue  -> lifted the lined-up box
+episode  11  supply_2   lined up with red  , asked for green -> lifted the lined-up box
+episode  12  supply_1   lined up with red  , asked for green -> lifted the lined-up box
+episode  13  work_table lined up with green, asked for blue  -> lifted the lined-up box
+episode  14  work_table lined up with green, asked for red   -> lifted the lined-up box
+episode  15  supply_2   lined up with red  , asked for green -> lifted the lined-up box
+episode  16  supply_2   lined up with green, asked for blue  -> lifted the lined-up box
+episode  17  supply_2   lined up with blue , asked for green -> lifted the lined-up box
+episode  18  work_table lined up with blue , asked for red   -> lifted the lined-up box
+episode  19  supply_3   lined up with red  , asked for blue  -> lifted the lined-up box
+named box: 0/20, lined-up box: 20/20, nothing: 0/20

@@ -1,0 +1,900 @@
+{"policy": "cnn", "cond": "L1", "episode": 0, "instruction": "pick up the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L1", "episode": 1, "instruction": "grasp the green box and lift it", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 2, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 3, "instruction": "take the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 4, "instruction": "grab the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "left", "ok": false, "steps": 82}
+{"policy": "cnn", "cond": "L1", "episode": 5, "instruction": "grab the green box", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 6, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 79}
+{"policy": "cnn", "cond": "L1", "episode": 7, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 8, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L1", "episode": 9, "instruction": "pick up the blue cube from the table", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 10, "instruction": "lift the green cube", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 11, "instruction": "grasp the blue box and lift it", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L1", "episode": 12, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L1", "episode": 13, "instruction": "pick up the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 14, "instruction": "pick the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L1", "episode": 15, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L1", "episode": 16, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 17, "instruction": "pick up the red cube from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L1", "episode": 18, "instruction": "pick the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L1", "episode": 19, "instruction": "take the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 20, "instruction": "pick up the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 21, "instruction": "pick up the green cube from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 22, "instruction": "pick up the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 23, "instruction": "grab the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 69}
+{"policy": "cnn", "cond": "L1", "episode": 24, "instruction": "pick the blue box", "order": ["green", "red", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L1", "episode": 25, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L1", "episode": 26, "instruction": "pick up the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L1", "episode": 27, "instruction": "grasp the green box and lift it", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 28, "instruction": "lift the blue cube", "order": ["green", "red", "blue"], "target": "right", "lifted": "left", "ok": false, "steps": 85}
+{"policy": "cnn", "cond": "L1", "episode": 29, "instruction": "grasp the green box and lift it", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 30, "instruction": "lift the blue cube", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 31, "instruction": "grab the blue box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 32, "instruction": "grasp the red box and lift it", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 33, "instruction": "take the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L1", "episode": 34, "instruction": "pick up the blue cube from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 35, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 36, "instruction": "grasp the blue box and lift it", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "cnn", "cond": "L1", "episode": 37, "instruction": "pick the red box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 38, "instruction": "grasp the green box and lift it", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 39, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 40, "instruction": "take the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L1", "episode": 41, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L1", "episode": 42, "instruction": "pick up the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 43, "instruction": "pick the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 69}
+{"policy": "cnn", "cond": "L1", "episode": 44, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L1", "episode": 45, "instruction": "pick up the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 46, "instruction": "grasp the blue box and lift it", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L1", "episode": 47, "instruction": "grasp the red box and lift it", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L1", "episode": 48, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L1", "episode": 49, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L2", "episode": 0, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 1, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 2, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 3, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 4, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L2", "episode": 5, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L2", "episode": 6, "instruction": "take the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L2", "episode": 7, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 8, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 9, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 10, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L2", "episode": 11, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 12, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 13, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L2", "episode": 14, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 15, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L2", "episode": 16, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L2", "episode": 17, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L2", "episode": 18, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "cnn", "cond": "L2", "episode": 19, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 20, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 90}
+{"policy": "cnn", "cond": "L2", "episode": 21, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L2", "episode": 22, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L2", "episode": 23, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 24, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L2", "episode": 25, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L2", "episode": 26, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 27, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L2", "episode": 28, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 29, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 30, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 31, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L2", "episode": 32, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L2", "episode": 33, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 34, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L2", "episode": 35, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 36, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 37, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 38, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L2", "episode": 39, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 40, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 41, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 42, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 43, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L2", "episode": 44, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L2", "episode": 45, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 81}
+{"policy": "cnn", "cond": "L2", "episode": 46, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 47, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L2", "episode": 48, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L2", "episode": 49, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 0, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "cnn", "cond": "L3", "episode": 1, "instruction": "pick up the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 2, "instruction": "pick up the cube on the left from the table", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 3, "instruction": "lift the cube on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 4, "instruction": "pick up the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 5, "instruction": "lift the cube on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 6, "instruction": "grab the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 7, "instruction": "lift the cube on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 8, "instruction": "pick up the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "cnn", "cond": "L3", "episode": 9, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 10, "instruction": "lift the cube on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 11, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 12, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 13, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 14, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L3", "episode": 15, "instruction": "grab the box on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 16, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 17, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 18, "instruction": "grab the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L3", "episode": 19, "instruction": "take the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 20, "instruction": "pick up the cube on the left from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 21, "instruction": "pick up the cube on the right from the table", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L3", "episode": 22, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L3", "episode": 23, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 24, "instruction": "take the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L3", "episode": 25, "instruction": "lift the cube on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "cnn", "cond": "L3", "episode": 26, "instruction": "take the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 69}
+{"policy": "cnn", "cond": "L3", "episode": 27, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 28, "instruction": "pick up the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 29, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 30, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 31, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 32, "instruction": "lift the cube on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 108}
+{"policy": "cnn", "cond": "L3", "episode": 33, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 34, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 35, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L3", "episode": 36, "instruction": "take the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 37, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 90}
+{"policy": "cnn", "cond": "L3", "episode": 38, "instruction": "lift the cube on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 39, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 40, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 41, "instruction": "pick up the cube on the right from the table", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 42, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 43, "instruction": "pick up the cube on the right from the table", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L3", "episode": 44, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 45, "instruction": "pick up the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 46, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L3", "episode": 47, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L3", "episode": 48, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L3", "episode": 49, "instruction": "grab the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 0, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 1, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L4", "episode": 2, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 3, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 4, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 5, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L4", "episode": 6, "instruction": "pick up the cube in the middle from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 83}
+{"policy": "cnn", "cond": "L4", "episode": 7, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 8, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 0, "instruction": "pick up the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 1, "instruction": "grasp the green box and lift it", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 9, "instruction": "grab the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L1", "episode": 2, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L4", "episode": 10, "instruction": "pick up the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L1", "episode": 3, "instruction": "take the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L4", "episode": 11, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L1", "episode": 4, "instruction": "grab the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L4", "episode": 12, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 5, "instruction": "grab the green box", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 13, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 6, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L4", "episode": 14, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 7, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 66}
+{"policy": "cnn", "cond": "L4", "episode": 15, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L1", "episode": 8, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L4", "episode": 16, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 9, "instruction": "pick up the blue cube from the table", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L4", "episode": 17, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 10, "instruction": "lift the green cube", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 18, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L1", "episode": 11, "instruction": "grasp the blue box and lift it", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 19, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 87}
+{"policy": "minilm", "cond": "L1", "episode": 12, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 85}
+{"policy": "cnn", "cond": "L4", "episode": 20, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 107}
+{"policy": "minilm", "cond": "L1", "episode": 13, "instruction": "pick up the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 21, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 14, "instruction": "pick the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L4", "episode": 22, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 15, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L4", "episode": 23, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L1", "episode": 16, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L4", "episode": 24, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L1", "episode": 17, "instruction": "pick up the red cube from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L4", "episode": 25, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L1", "episode": 18, "instruction": "pick the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 91}
+{"policy": "cnn", "cond": "L4", "episode": 26, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "minilm", "cond": "L1", "episode": 19, "instruction": "take the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L4", "episode": 27, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 103}
+{"policy": "minilm", "cond": "L1", "episode": 20, "instruction": "pick up the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 28, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 21, "instruction": "pick up the green cube from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L1", "episode": 22, "instruction": "pick up the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 29, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 82}
+{"policy": "cnn", "cond": "L4", "episode": 30, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L1", "episode": 23, "instruction": "grab the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 31, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 24, "instruction": "pick the blue box", "order": ["green", "red", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 25, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "cnn", "cond": "L4", "episode": 32, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L1", "episode": 26, "instruction": "pick up the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L4", "episode": 33, "instruction": "pick up the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L1", "episode": 27, "instruction": "grasp the green box and lift it", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 34, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L1", "episode": 28, "instruction": "lift the blue cube", "order": ["green", "red", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L4", "episode": 35, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L1", "episode": 29, "instruction": "grasp the green box and lift it", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 36, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L1", "episode": 30, "instruction": "lift the blue cube", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L4", "episode": 37, "instruction": "lift the cube in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 88}
+{"policy": "minilm", "cond": "L1", "episode": 31, "instruction": "grab the blue box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 38, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 32, "instruction": "grasp the red box and lift it", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L4", "episode": 39, "instruction": "lift the cube in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 84}
+{"policy": "minilm", "cond": "L1", "episode": 33, "instruction": "take the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 34, "instruction": "pick up the blue cube from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 40, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L1", "episode": 35, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 80}
+{"policy": "cnn", "cond": "L4", "episode": 41, "instruction": "pick up the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 36, "instruction": "grasp the blue box and lift it", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 81}
+{"policy": "cnn", "cond": "L4", "episode": 42, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L1", "episode": 37, "instruction": "pick the red box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L4", "episode": 43, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L1", "episode": 38, "instruction": "grasp the green box and lift it", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L4", "episode": 44, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L1", "episode": 39, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 45, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 83}
+{"policy": "minilm", "cond": "L1", "episode": 40, "instruction": "take the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L4", "episode": 46, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L1", "episode": 41, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 68}
+{"policy": "cnn", "cond": "L4", "episode": 47, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L1", "episode": 42, "instruction": "pick up the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L4", "episode": 48, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 43, "instruction": "pick the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L4", "episode": 49, "instruction": "pick up the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 70}
+{"policy": "minilm", "cond": "L1", "episode": 44, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 45, "instruction": "pick up the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L5", "episode": 0, "instruction": "grab that blue thing for me", "order": ["red", "green", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L1", "episode": 46, "instruction": "grasp the blue box and lift it", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L1", "episode": 47, "instruction": "grasp the red box and lift it", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 1, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L1", "episode": 48, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L5", "episode": 2, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L1", "episode": 49, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L5", "episode": 3, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 0, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 4, "instruction": "could you please fetch me that red block", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 1, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L5", "episode": 5, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "minilm", "cond": "L2", "episode": 2, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 6, "instruction": "could you please fetch me that red block", "order": ["green", "red", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 3, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L2", "episode": 4, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L5", "episode": 7, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 5, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L2", "episode": 6, "instruction": "take the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L5", "episode": 8, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 7, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 67}
+{"policy": "cnn", "cond": "L5", "episode": 9, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 8, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L2", "episode": 9, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L5", "episode": 10, "instruction": "could you please fetch me that blue block", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 10, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L5", "episode": 11, "instruction": "초록 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 11, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L2", "episode": 12, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 12, "instruction": "grab that red thing for me", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 13, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L2", "episode": 14, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 13, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 15, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L5", "episode": 14, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 16, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L2", "episode": 17, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L5", "episode": 15, "instruction": "빨간 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 18, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L2", "episode": 19, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L5", "episode": 16, "instruction": "could you please fetch me that blue block", "order": ["blue", "green", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 20, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 17, "instruction": "파란 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 21, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L2", "episode": 22, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L5", "episode": 18, "instruction": "grab that blue thing for me", "order": ["blue", "green", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 23, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L5", "episode": 19, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 24, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L2", "episode": 25, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "cnn", "cond": "L5", "episode": 20, "instruction": "i need the blue one, lift it up", "order": ["red", "green", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 26, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 82}
+{"policy": "cnn", "cond": "L5", "episode": 21, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 27, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L2", "episode": 28, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L5", "episode": 22, "instruction": "grab that red thing for me", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 29, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 23, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 30, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L2", "episode": 31, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L5", "episode": 24, "instruction": "grab that green thing for me", "order": ["green", "blue", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 32, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L5", "episode": 25, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L2", "episode": 33, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 26, "instruction": "i need the blue one, lift it up", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 34, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 82}
+{"policy": "cnn", "cond": "L5", "episode": 27, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L2", "episode": 35, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L2", "episode": 36, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 28, "instruction": "i need the green one, lift it up", "order": ["blue", "red", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 37, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 86}
+{"policy": "cnn", "cond": "L5", "episode": 29, "instruction": "초록 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 38, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L2", "episode": 39, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L5", "episode": 30, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 40, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L2", "episode": 41, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 71}
+{"policy": "cnn", "cond": "L5", "episode": 31, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 42, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 32, "instruction": "i need the green one, lift it up", "order": ["red", "green", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 43, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "minilm", "cond": "L2", "episode": 44, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L5", "episode": 33, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 45, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 69}
+{"policy": "cnn", "cond": "L5", "episode": 34, "instruction": "could you please fetch me that green block", "order": ["green", "red", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 46, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L2", "episode": 47, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "cnn", "cond": "L5", "episode": 35, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L2", "episode": 48, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L2", "episode": 49, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "cnn", "cond": "L5", "episode": 36, "instruction": "grab that blue thing for me", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "cnn", "cond": "L5", "episode": 37, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L3", "episode": 0, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 81}
+{"policy": "cnn", "cond": "L5", "episode": 38, "instruction": "i need the green one, lift it up", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 1, "instruction": "pick up the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L5", "episode": 39, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 2, "instruction": "pick up the cube on the left from the table", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "minilm", "cond": "L3", "episode": 3, "instruction": "lift the cube on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L5", "episode": 40, "instruction": "i need the blue one, lift it up", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 4, "instruction": "pick up the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L5", "episode": 41, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 5, "instruction": "lift the cube on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L3", "episode": 6, "instruction": "grab the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 42, "instruction": "could you please fetch me that green block", "order": ["red", "blue", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 7, "instruction": "lift the cube on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L3", "episode": 8, "instruction": "pick up the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L5", "episode": 43, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 9, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L5", "episode": 44, "instruction": "grab that red thing for me", "order": ["green", "red", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 10, "instruction": "lift the cube on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L3", "episode": 11, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 80}
+{"policy": "cnn", "cond": "L5", "episode": 45, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 12, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 46, "instruction": "i need the green one, lift it up", "order": ["red", "blue", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 13, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "minilm", "cond": "L3", "episode": 14, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "cnn", "cond": "L5", "episode": 47, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 15, "instruction": "grab the box on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 16, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 48, "instruction": "i need the blue one, lift it up", "order": ["blue", "red", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 17, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L5", "episode": 49, "instruction": "파란 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 18, "instruction": "grab the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L3", "episode": 19, "instruction": "take the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 0, "instruction": "pick up the box to the left of the blue box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 20, "instruction": "pick up the cube on the left from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 1, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 88}
+{"policy": "minilm", "cond": "L3", "episode": 21, "instruction": "pick up the cube on the right from the table", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 2, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L3", "episode": 22, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 3, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L3", "episode": 23, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 4, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L3", "episode": 24, "instruction": "take the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 5, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L3", "episode": 25, "instruction": "lift the cube on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 80}
+{"policy": "cnn", "cond": "L6", "episode": 6, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L3", "episode": 26, "instruction": "take the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 7, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L3", "episode": 27, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 8, "instruction": "pick up the box to the left of the blue box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 28, "instruction": "pick up the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 9, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L3", "episode": 29, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 30, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 10, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 31, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 11, "instruction": "pick up the box to the left of the red box", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 97}
+{"policy": "minilm", "cond": "L3", "episode": 32, "instruction": "lift the cube on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 98}
+{"policy": "cnn", "cond": "L6", "episode": 12, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 13, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L3", "episode": 33, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 14, "instruction": "pick up the box to the left of the green box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 34, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L3", "episode": 35, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 15, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L3", "episode": 36, "instruction": "take the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 16, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 86}
+{"policy": "minilm", "cond": "L3", "episode": 37, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "cnn", "cond": "L6", "episode": 17, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L3", "episode": 38, "instruction": "lift the cube on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 18, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L3", "episode": 39, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 19, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L3", "episode": 40, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 82}
+{"policy": "cnn", "cond": "L6", "episode": 20, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L3", "episode": 41, "instruction": "pick up the cube on the right from the table", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 21, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L3", "episode": 42, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 22, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 43, "instruction": "pick up the cube on the right from the table", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 23, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L3", "episode": 44, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L3", "episode": 45, "instruction": "pick up the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 24, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 80}
+{"policy": "minilm", "cond": "L3", "episode": 46, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "cnn", "cond": "L6", "episode": 25, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L3", "episode": 47, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 26, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L3", "episode": 48, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 27, "instruction": "pick up the box to the left of the red box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 119}
+{"policy": "minilm", "cond": "L3", "episode": 49, "instruction": "grab the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 28, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "cnn", "cond": "L6", "episode": 29, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 0, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 87}
+{"policy": "cnn", "cond": "L6", "episode": 30, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 1, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L6", "episode": 31, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 2, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 32, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 3, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 33, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L4", "episode": 4, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 34, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 5, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L6", "episode": 35, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L4", "episode": 6, "instruction": "pick up the cube in the middle from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L6", "episode": 36, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 7, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L6", "episode": 37, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 85}
+{"policy": "minilm", "cond": "L4", "episode": 8, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 38, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 9, "instruction": "grab the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "cnn", "cond": "L6", "episode": 39, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 10, "instruction": "pick up the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "cnn", "cond": "L6", "episode": 40, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 11, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "cnn", "cond": "L6", "episode": 41, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 12, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 42, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 13, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "cnn", "cond": "L6", "episode": 43, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 14, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 44, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 15, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 69}
+{"policy": "cnn", "cond": "L6", "episode": 45, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 16, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "cnn", "cond": "L6", "episode": 46, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 17, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "cnn", "cond": "L6", "episode": 47, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 18, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "cnn", "cond": "L6", "episode": 48, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L4", "episode": 19, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "cnn", "cond": "L6", "episode": 49, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 20, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 21, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 22, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 23, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 24, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 25, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L4", "episode": 26, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L4", "episode": 27, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L4", "episode": 28, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 29, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 30, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 31, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 32, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 120}
+{"policy": "minilm", "cond": "L4", "episode": 33, "instruction": "pick up the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 34, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 35, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L4", "episode": 36, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 37, "instruction": "lift the cube in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "minilm", "cond": "L4", "episode": 38, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 39, "instruction": "lift the cube in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 40, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 41, "instruction": "pick up the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 42, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L4", "episode": 43, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L4", "episode": 44, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 45, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L4", "episode": 46, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 70}
+{"policy": "minilm", "cond": "L4", "episode": 47, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L4", "episode": 48, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L4", "episode": 49, "instruction": "pick up the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 0, "instruction": "grab that blue thing for me", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 1, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 2, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 69}
+{"policy": "minilm", "cond": "L5", "episode": 3, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 4, "instruction": "could you please fetch me that red block", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 5, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 6, "instruction": "could you please fetch me that red block", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 80}
+{"policy": "minilm", "cond": "L5", "episode": 7, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 8, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L5", "episode": 9, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "minilm", "cond": "L5", "episode": 10, "instruction": "could you please fetch me that blue block", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L5", "episode": 11, "instruction": "초록 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 12, "instruction": "grab that red thing for me", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 13, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 14, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 15, "instruction": "빨간 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 16, "instruction": "could you please fetch me that blue block", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 17, "instruction": "파란 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 18, "instruction": "grab that blue thing for me", "order": ["blue", "green", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L5", "episode": 19, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "right", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L5", "episode": 20, "instruction": "i need the blue one, lift it up", "order": ["red", "green", "blue"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 21, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 82}
+{"policy": "minilm", "cond": "L5", "episode": 22, "instruction": "grab that red thing for me", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 67}
+{"policy": "minilm", "cond": "L5", "episode": 23, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 24, "instruction": "grab that green thing for me", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 25, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 26, "instruction": "i need the blue one, lift it up", "order": ["green", "red", "blue"], "target": "right", "lifted": "left", "ok": false, "steps": 82}
+{"policy": "minilm", "cond": "L5", "episode": 27, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 28, "instruction": "i need the green one, lift it up", "order": ["blue", "red", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 29, "instruction": "초록 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L5", "episode": 30, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 31, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 32, "instruction": "i need the green one, lift it up", "order": ["red", "green", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 33, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 34, "instruction": "could you please fetch me that green block", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 115}
+{"policy": "minilm", "cond": "L5", "episode": 35, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 36, "instruction": "grab that blue thing for me", "order": ["green", "red", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 37, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 38, "instruction": "i need the green one, lift it up", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 39, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 40, "instruction": "i need the blue one, lift it up", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 41, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 42, "instruction": "could you please fetch me that green block", "order": ["red", "blue", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L5", "episode": 43, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L5", "episode": 44, "instruction": "grab that red thing for me", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L5", "episode": 45, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L5", "episode": 46, "instruction": "i need the green one, lift it up", "order": ["red", "blue", "green"], "target": "right", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L5", "episode": 47, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "minilm", "cond": "L5", "episode": 48, "instruction": "i need the blue one, lift it up", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L5", "episode": 49, "instruction": "파란 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "left", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 0, "instruction": "pick up the box to the left of the blue box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 1, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 2, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 3, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 4, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 5, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L6", "episode": 6, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 7, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 8, "instruction": "pick up the box to the left of the blue box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 9, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 10, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 11, "instruction": "pick up the box to the left of the red box", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 84}
+{"policy": "minilm", "cond": "L6", "episode": 12, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 13, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 14, "instruction": "pick up the box to the left of the green box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 15, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 16, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 17, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 18, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L6", "episode": 19, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L6", "episode": 20, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 79}
+{"policy": "minilm", "cond": "L6", "episode": 21, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 22, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "minilm", "cond": "L6", "episode": 23, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "minilm", "cond": "L6", "episode": 24, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 25, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 26, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L6", "episode": 27, "instruction": "pick up the box to the left of the red box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 97}
+{"policy": "minilm", "cond": "L6", "episode": 28, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 29, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 30, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 71}
+{"policy": "minilm", "cond": "L6", "episode": 31, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 72}
+{"policy": "minilm", "cond": "L6", "episode": 32, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 33, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 34, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 35, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 36, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 37, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 82}
+{"policy": "minilm", "cond": "L6", "episode": 38, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "minilm", "cond": "L6", "episode": 39, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 40, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 79}
+{"policy": "minilm", "cond": "L6", "episode": 41, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 42, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 43, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 44, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "minilm", "cond": "L6", "episode": 45, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 75}
+{"policy": "minilm", "cond": "L6", "episode": 46, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "minilm", "cond": "L6", "episode": 47, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "minilm", "cond": "L6", "episode": 48, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 76}
+{"policy": "minilm", "cond": "L6", "episode": 49, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L1", "episode": 0, "instruction": "pick up the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 82}
+{"policy": "pi05", "cond": "L1", "episode": 1, "instruction": "grasp the green box and lift it", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 82}
+{"policy": "pi05", "cond": "L1", "episode": 2, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L1", "episode": 3, "instruction": "take the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L1", "episode": 4, "instruction": "grab the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L1", "episode": 5, "instruction": "grab the green box", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 93}
+{"policy": "pi05", "cond": "L1", "episode": 6, "instruction": "pick the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 7, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 8, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 9, "instruction": "pick up the blue cube from the table", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 83}
+{"policy": "pi05", "cond": "L1", "episode": 10, "instruction": "lift the green cube", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L1", "episode": 11, "instruction": "grasp the blue box and lift it", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L1", "episode": 12, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L1", "episode": 13, "instruction": "pick up the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 120}
+{"policy": "pi05", "cond": "L1", "episode": 14, "instruction": "pick the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L1", "episode": 15, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L1", "episode": 16, "instruction": "lift the green cube", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 17, "instruction": "pick up the red cube from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L1", "episode": 18, "instruction": "pick the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 19, "instruction": "take the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L1", "episode": 20, "instruction": "pick up the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L1", "episode": 21, "instruction": "pick up the green cube from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L1", "episode": 22, "instruction": "pick up the green box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 108}
+{"policy": "pi05", "cond": "L1", "episode": 23, "instruction": "grab the red box", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L1", "episode": 24, "instruction": "pick the blue box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L1", "episode": 25, "instruction": "grab the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L1", "episode": 26, "instruction": "pick up the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L1", "episode": 27, "instruction": "grasp the green box and lift it", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 87}
+{"policy": "pi05", "cond": "L1", "episode": 28, "instruction": "lift the blue cube", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L1", "episode": 29, "instruction": "grasp the green box and lift it", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L1", "episode": 30, "instruction": "lift the blue cube", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 31, "instruction": "grab the blue box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L1", "episode": 32, "instruction": "grasp the red box and lift it", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L1", "episode": 33, "instruction": "take the green box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 81}
+{"policy": "pi05", "cond": "L1", "episode": 34, "instruction": "pick up the blue cube from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 112}
+{"policy": "pi05", "cond": "L1", "episode": 35, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L1", "episode": 36, "instruction": "grasp the blue box and lift it", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 84}
+{"policy": "pi05", "cond": "L1", "episode": 37, "instruction": "pick the red box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 80}
+{"policy": "pi05", "cond": "L1", "episode": 38, "instruction": "grasp the green box and lift it", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L1", "episode": 39, "instruction": "take the blue box", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L1", "episode": 40, "instruction": "take the red box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 110}
+{"policy": "pi05", "cond": "L1", "episode": 41, "instruction": "lift the red cube", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 67}
+{"policy": "pi05", "cond": "L1", "episode": 42, "instruction": "pick up the red box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L1", "episode": 43, "instruction": "pick the blue box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L1", "episode": 44, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L1", "episode": 45, "instruction": "pick up the blue box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 46, "instruction": "grasp the blue box and lift it", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L1", "episode": 47, "instruction": "grasp the red box and lift it", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 85}
+{"policy": "pi05", "cond": "L1", "episode": 48, "instruction": "take the green box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L1", "episode": 49, "instruction": "take the green box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L2", "episode": 0, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L2", "episode": 1, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 2, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L2", "episode": 3, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L2", "episode": 4, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L2", "episode": 5, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L2", "episode": 6, "instruction": "take the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L2", "episode": 7, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 8, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L2", "episode": 9, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L2", "episode": 10, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 11, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L2", "episode": 12, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L2", "episode": 13, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L2", "episode": 14, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 98}
+{"policy": "pi05", "cond": "L2", "episode": 15, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L2", "episode": 16, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L2", "episode": 17, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L2", "episode": 18, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L2", "episode": 19, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L2", "episode": 20, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "middle", "ok": false, "steps": 91}
+{"policy": "pi05", "cond": "L2", "episode": 21, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 22, "instruction": "pick up the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L2", "episode": 23, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L2", "episode": 24, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L2", "episode": 25, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 26, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 27, "instruction": "pick up the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L2", "episode": 28, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L2", "episode": 29, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L2", "episode": 30, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 31, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L2", "episode": 32, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 63}
+{"policy": "pi05", "cond": "L2", "episode": 33, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L2", "episode": 34, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L2", "episode": 35, "instruction": "pick up the red cube from the table", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 81}
+{"policy": "pi05", "cond": "L2", "episode": 36, "instruction": "grab the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L2", "episode": 37, "instruction": "grab the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 82}
+{"policy": "pi05", "cond": "L2", "episode": 38, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L2", "episode": 39, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L2", "episode": 40, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 81}
+{"policy": "pi05", "cond": "L2", "episode": 41, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L2", "episode": 42, "instruction": "grasp the red box and lift it", "order": ["green", "blue", "red"], "target": "right", "lifted": "none", "ok": false, "steps": 88}
+{"policy": "pi05", "cond": "L2", "episode": 43, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 61}
+{"policy": "pi05", "cond": "L2", "episode": 44, "instruction": "grasp the red box and lift it", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 79}
+{"policy": "pi05", "cond": "L2", "episode": 45, "instruction": "pick up the red cube from the table", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 65}
+{"policy": "pi05", "cond": "L2", "episode": 46, "instruction": "pick the red box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 103}
+{"policy": "pi05", "cond": "L2", "episode": 47, "instruction": "lift the red cube", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 85}
+{"policy": "pi05", "cond": "L2", "episode": 48, "instruction": "lift the red cube", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L2", "episode": 49, "instruction": "pick the red box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L3", "episode": 0, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L3", "episode": 1, "instruction": "pick up the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 113}
+{"policy": "pi05", "cond": "L3", "episode": 2, "instruction": "pick up the cube on the left from the table", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L3", "episode": 3, "instruction": "lift the cube on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L3", "episode": 4, "instruction": "pick up the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 79}
+{"policy": "pi05", "cond": "L3", "episode": 5, "instruction": "lift the cube on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 80}
+{"policy": "pi05", "cond": "L3", "episode": 6, "instruction": "grab the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L3", "episode": 7, "instruction": "lift the cube on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L3", "episode": 8, "instruction": "pick up the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L3", "episode": 9, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L3", "episode": 10, "instruction": "lift the cube on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L3", "episode": 11, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L3", "episode": 12, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 89}
+{"policy": "pi05", "cond": "L3", "episode": 13, "instruction": "pick up the box on the left", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L3", "episode": 14, "instruction": "pick up the box on the right", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 95}
+{"policy": "pi05", "cond": "L3", "episode": 15, "instruction": "grab the box on the right", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 64}
+{"policy": "pi05", "cond": "L3", "episode": 16, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L3", "episode": 17, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 95}
+{"policy": "pi05", "cond": "L3", "episode": 18, "instruction": "grab the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L3", "episode": 19, "instruction": "take the box on the left", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L3", "episode": 20, "instruction": "pick up the cube on the left from the table", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L3", "episode": 21, "instruction": "pick up the cube on the right from the table", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L3", "episode": 22, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L3", "episode": 23, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L3", "episode": 24, "instruction": "take the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L3", "episode": 25, "instruction": "lift the cube on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 93}
+{"policy": "pi05", "cond": "L3", "episode": 26, "instruction": "take the box on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L3", "episode": 27, "instruction": "take the box on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L3", "episode": 28, "instruction": "pick up the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 84}
+{"policy": "pi05", "cond": "L3", "episode": 29, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L3", "episode": 30, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 87}
+{"policy": "pi05", "cond": "L3", "episode": 31, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L3", "episode": 32, "instruction": "lift the cube on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L3", "episode": 33, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L3", "episode": 34, "instruction": "take the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 83}
+{"policy": "pi05", "cond": "L3", "episode": 35, "instruction": "grab the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L3", "episode": 36, "instruction": "take the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 88}
+{"policy": "pi05", "cond": "L3", "episode": 37, "instruction": "lift the cube on the right", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 120}
+{"policy": "pi05", "cond": "L3", "episode": 38, "instruction": "lift the cube on the right", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L3", "episode": 39, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 83}
+{"policy": "pi05", "cond": "L3", "episode": 40, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 91}
+{"policy": "pi05", "cond": "L3", "episode": 41, "instruction": "pick up the cube on the right from the table", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 98}
+{"policy": "pi05", "cond": "L3", "episode": 42, "instruction": "grab the box on the left", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 87}
+{"policy": "pi05", "cond": "L3", "episode": 43, "instruction": "pick up the cube on the right from the table", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L3", "episode": 44, "instruction": "take the box on the left", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L3", "episode": 45, "instruction": "pick up the box on the left", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 63}
+{"policy": "pi05", "cond": "L3", "episode": 46, "instruction": "pick up the cube on the right from the table", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 67}
+{"policy": "pi05", "cond": "L3", "episode": 47, "instruction": "take the box on the right", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 66}
+{"policy": "pi05", "cond": "L3", "episode": 48, "instruction": "take the box on the left", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L3", "episode": 49, "instruction": "grab the box on the right", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 0, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 101}
+{"policy": "pi05", "cond": "L4", "episode": 1, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 80}
+{"policy": "pi05", "cond": "L4", "episode": 2, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L4", "episode": 3, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L4", "episode": 4, "instruction": "take the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 5, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L4", "episode": 6, "instruction": "pick up the cube in the middle from the table", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L4", "episode": 7, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 83}
+{"policy": "pi05", "cond": "L4", "episode": 8, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 9, "instruction": "grab the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 91}
+{"policy": "pi05", "cond": "L4", "episode": 10, "instruction": "pick up the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L4", "episode": 11, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 12, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 73}
+{"policy": "pi05", "cond": "L4", "episode": 13, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 14, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 95}
+{"policy": "pi05", "cond": "L4", "episode": 15, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L4", "episode": 16, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L4", "episode": 17, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L4", "episode": 18, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 19, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 20, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 21, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L4", "episode": 22, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 23, "instruction": "pick up the box in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L4", "episode": 24, "instruction": "take the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L4", "episode": 25, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 26, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L4", "episode": 27, "instruction": "pick up the cube in the middle from the table", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L4", "episode": 28, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 77}
+{"policy": "pi05", "cond": "L4", "episode": 29, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 30, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 65}
+{"policy": "pi05", "cond": "L4", "episode": 31, "instruction": "pick up the box in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "pi05", "cond": "L4", "episode": 32, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L4", "episode": 33, "instruction": "pick up the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 34, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 82}
+{"policy": "pi05", "cond": "L4", "episode": 35, "instruction": "pick up the cube in the middle from the table", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 99}
+{"policy": "pi05", "cond": "L4", "episode": 36, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 85}
+{"policy": "pi05", "cond": "L4", "episode": 37, "instruction": "lift the cube in the middle", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L4", "episode": 38, "instruction": "grab the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 67}
+{"policy": "pi05", "cond": "L4", "episode": 39, "instruction": "lift the cube in the middle", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L4", "episode": 40, "instruction": "grab the box in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L4", "episode": 41, "instruction": "pick up the box in the middle", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L4", "episode": 42, "instruction": "pick up the cube in the middle from the table", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L4", "episode": 43, "instruction": "lift the cube in the middle", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L4", "episode": 44, "instruction": "grab the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "pi05", "cond": "L4", "episode": 45, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 77}
+{"policy": "pi05", "cond": "L4", "episode": 46, "instruction": "take the box in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L4", "episode": 47, "instruction": "grab the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L4", "episode": 48, "instruction": "lift the cube in the middle", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 86}
+{"policy": "pi05", "cond": "L4", "episode": 49, "instruction": "pick up the box in the middle", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L5", "episode": 0, "instruction": "grab that blue thing for me", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L5", "episode": 1, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L5", "episode": 2, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L5", "episode": 3, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L5", "episode": 4, "instruction": "could you please fetch me that red block", "order": ["blue", "red", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 5, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 79}
+{"policy": "pi05", "cond": "L5", "episode": 6, "instruction": "could you please fetch me that red block", "order": ["green", "red", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 81}
+{"policy": "pi05", "cond": "L5", "episode": 7, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 88}
+{"policy": "pi05", "cond": "L5", "episode": 8, "instruction": "grab that red thing for me", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 81}
+{"policy": "pi05", "cond": "L5", "episode": 9, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 10, "instruction": "could you please fetch me that blue block", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 67}
+{"policy": "pi05", "cond": "L5", "episode": 11, "instruction": "초록 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L5", "episode": 12, "instruction": "grab that red thing for me", "order": ["red", "green", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L5", "episode": 13, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L5", "episode": 14, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 109}
+{"policy": "pi05", "cond": "L5", "episode": 15, "instruction": "빨간 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 16, "instruction": "could you please fetch me that blue block", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L5", "episode": 17, "instruction": "파란 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 75}
+{"policy": "pi05", "cond": "L5", "episode": 18, "instruction": "grab that blue thing for me", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L5", "episode": 19, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 20, "instruction": "i need the blue one, lift it up", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L5", "episode": 21, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 22, "instruction": "grab that red thing for me", "order": ["blue", "red", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L5", "episode": 23, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L5", "episode": 24, "instruction": "grab that green thing for me", "order": ["green", "blue", "red"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L5", "episode": 25, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L5", "episode": 26, "instruction": "i need the blue one, lift it up", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 99}
+{"policy": "pi05", "cond": "L5", "episode": 27, "instruction": "초록 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 28, "instruction": "i need the green one, lift it up", "order": ["blue", "red", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 29, "instruction": "초록 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 56}
+{"policy": "pi05", "cond": "L5", "episode": 30, "instruction": "could you please fetch me that blue block", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L5", "episode": 31, "instruction": "빨간 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "left", "lifted": "right", "ok": false, "steps": 68}
+{"policy": "pi05", "cond": "L5", "episode": 32, "instruction": "i need the green one, lift it up", "order": ["red", "green", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L5", "episode": 33, "instruction": "빨간 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 90}
+{"policy": "pi05", "cond": "L5", "episode": 34, "instruction": "could you please fetch me that green block", "order": ["green", "red", "blue"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L5", "episode": 35, "instruction": "파란 상자를 집어 줘", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 101}
+{"policy": "pi05", "cond": "L5", "episode": 36, "instruction": "grab that blue thing for me", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 87}
+{"policy": "pi05", "cond": "L5", "episode": 37, "instruction": "초록 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L5", "episode": 38, "instruction": "i need the green one, lift it up", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 78}
+{"policy": "pi05", "cond": "L5", "episode": 39, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L5", "episode": 40, "instruction": "i need the blue one, lift it up", "order": ["red", "blue", "green"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L5", "episode": 41, "instruction": "파란 상자를 집어 줘", "order": ["blue", "green", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L5", "episode": 42, "instruction": "could you please fetch me that green block", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 80}
+{"policy": "pi05", "cond": "L5", "episode": 43, "instruction": "빨간 상자를 집어 줘", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 62}
+{"policy": "pi05", "cond": "L5", "episode": 44, "instruction": "grab that red thing for me", "order": ["green", "red", "blue"], "target": "middle", "lifted": "middle", "ok": true, "steps": 80}
+{"policy": "pi05", "cond": "L5", "episode": 45, "instruction": "초록 상자를 집어 줘", "order": ["green", "red", "blue"], "target": "left", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L5", "episode": 46, "instruction": "i need the green one, lift it up", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 87}
+{"policy": "pi05", "cond": "L5", "episode": 47, "instruction": "파란 상자를 집어 줘", "order": ["red", "blue", "green"], "target": "middle", "lifted": "none", "ok": false, "steps": 90}
+{"policy": "pi05", "cond": "L5", "episode": 48, "instruction": "i need the blue one, lift it up", "order": ["blue", "red", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L5", "episode": 49, "instruction": "파란 상자를 집어 줘", "order": ["blue", "red", "green"], "target": "left", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 0, "instruction": "pick up the box to the left of the blue box", "order": ["green", "red", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L6", "episode": 1, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L6", "episode": 2, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 3, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 81}
+{"policy": "pi05", "cond": "L6", "episode": 4, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L6", "episode": 5, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L6", "episode": 6, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L6", "episode": 7, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L6", "episode": 8, "instruction": "pick up the box to the left of the blue box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "right", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L6", "episode": 9, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "middle", "ok": false, "steps": 81}
+{"policy": "pi05", "cond": "L6", "episode": 10, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 68}
+{"policy": "pi05", "cond": "L6", "episode": 11, "instruction": "pick up the box to the left of the red box", "order": ["blue", "red", "green"], "target": "left", "lifted": "middle", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L6", "episode": 12, "instruction": "pick up the box to the right of the blue box", "order": ["green", "blue", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 75}
+{"policy": "pi05", "cond": "L6", "episode": 13, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 79}
+{"policy": "pi05", "cond": "L6", "episode": 14, "instruction": "pick up the box to the left of the green box", "order": ["blue", "red", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 15, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 80}
+{"policy": "pi05", "cond": "L6", "episode": 16, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 76}
+{"policy": "pi05", "cond": "L6", "episode": 17, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 71}
+{"policy": "pi05", "cond": "L6", "episode": 18, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L6", "episode": 19, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 83}
+{"policy": "pi05", "cond": "L6", "episode": 20, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 21, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 22, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 64}
+{"policy": "pi05", "cond": "L6", "episode": 23, "instruction": "pick up the box to the right of the blue box", "order": ["red", "blue", "green"], "target": "right", "lifted": "right", "ok": true, "steps": 69}
+{"policy": "pi05", "cond": "L6", "episode": 24, "instruction": "pick up the box to the right of the green box", "order": ["red", "green", "blue"], "target": "right", "lifted": "middle", "ok": false, "steps": 81}
+{"policy": "pi05", "cond": "L6", "episode": 25, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "right", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L6", "episode": 26, "instruction": "pick up the box to the right of the red box", "order": ["red", "green", "blue"], "target": "middle", "lifted": "left", "ok": false, "steps": 93}
+{"policy": "pi05", "cond": "L6", "episode": 27, "instruction": "pick up the box to the left of the red box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 120}
+{"policy": "pi05", "cond": "L6", "episode": 28, "instruction": "pick up the box to the left of the blue box", "order": ["green", "blue", "red"], "target": "left", "lifted": "right", "ok": false, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 29, "instruction": "pick up the box to the right of the green box", "order": ["green", "blue", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 74}
+{"policy": "pi05", "cond": "L6", "episode": 30, "instruction": "pick up the box to the right of the red box", "order": ["red", "blue", "green"], "target": "middle", "lifted": "left", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L6", "episode": 31, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 76}
+{"policy": "pi05", "cond": "L6", "episode": 32, "instruction": "pick up the box to the right of the blue box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 33, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 34, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 67}
+{"policy": "pi05", "cond": "L6", "episode": 35, "instruction": "pick up the box to the left of the blue box", "order": ["red", "blue", "green"], "target": "left", "lifted": "left", "ok": true, "steps": 93}
+{"policy": "pi05", "cond": "L6", "episode": 36, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 37, "instruction": "pick up the box to the left of the green box", "order": ["red", "green", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 38, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 77}
+{"policy": "pi05", "cond": "L6", "episode": 39, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "middle", "ok": false, "steps": 78}
+{"policy": "pi05", "cond": "L6", "episode": 40, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "none", "ok": false, "steps": 74}
+{"policy": "pi05", "cond": "L6", "episode": 41, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 42, "instruction": "pick up the box to the left of the green box", "order": ["blue", "green", "red"], "target": "left", "lifted": "left", "ok": true, "steps": 73}
+{"policy": "pi05", "cond": "L6", "episode": 43, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 71}
+{"policy": "pi05", "cond": "L6", "episode": 44, "instruction": "pick up the box to the left of the red box", "order": ["green", "red", "blue"], "target": "left", "lifted": "middle", "ok": false, "steps": 67}
+{"policy": "pi05", "cond": "L6", "episode": 45, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "right", "ok": false, "steps": 83}
+{"policy": "pi05", "cond": "L6", "episode": 46, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "right", "ok": true, "steps": 65}
+{"policy": "pi05", "cond": "L6", "episode": 47, "instruction": "pick up the box to the right of the red box", "order": ["green", "red", "blue"], "target": "right", "lifted": "none", "ok": false, "steps": 70}
+{"policy": "pi05", "cond": "L6", "episode": 48, "instruction": "pick up the box to the left of the red box", "order": ["blue", "green", "red"], "target": "middle", "lifted": "middle", "ok": true, "steps": 72}
+{"policy": "pi05", "cond": "L6", "episode": 49, "instruction": "pick up the box to the right of the green box", "order": ["blue", "green", "red"], "target": "right", "lifted": "right", "ok": true, "steps": 73}

@@ -1,0 +1,107 @@
+episode   0  supply_1   blue  with 2nd box  policy lifted in 120 steps   expert lifted
+episode   1  supply_2   red   alone         policy lifted in  75 steps   expert lifted
+episode   2  supply_3   red   alone         policy lifted in  76 steps   expert lifted
+episode   3  supply_2   blue  alone         policy lifted in  78 steps   expert lifted
+episode   4  supply_3   blue  alone         policy lifted in  75 steps   expert lifted
+episode   5  supply_3   green alone         policy lifted in  76 steps   expert lifted
+episode   6  supply_2   green alone         policy lifted in  77 steps   expert lifted
+episode   7  supply_2   blue  alone         policy lifted in  72 steps   expert lifted
+episode   8  work_table red   alone         policy lifted in  73 steps   expert lifted
+episode   9  supply_3   green alone         policy lifted in  78 steps   expert lifted
+episode  10  work_table red   with 2nd box  policy lifted in  71 steps   expert lifted
+episode  11  supply_2   blue  alone         policy lifted in  80 steps   expert lifted
+episode  12  supply_3   blue  with 2nd box  policy lifted in  80 steps   expert lifted
+episode  13  supply_1   red   with 2nd box  policy lifted in  75 steps   expert lifted
+episode  14  supply_2   green alone         policy lifted in  75 steps   expert lifted
+episode  15  supply_2   green alone         policy lifted in  72 steps   expert lifted
+episode  16  supply_2   green alone         policy lifted in  79 steps   expert lifted
+episode  17  supply_2   green with 2nd box  policy lifted in  77 steps   expert lifted
+episode  18  work_table blue  alone         policy lifted in  82 steps   expert lifted
+episode  19  work_table blue  with 2nd box  policy lifted in  84 steps   expert lifted
+episode  20  supply_3   green with 2nd box  policy lifted in  79 steps   expert lifted
+episode  21  supply_1   red   with 2nd box  policy lifted in  77 steps   expert lifted
+episode  22  work_table green alone         policy lifted in  73 steps   expert lifted
+episode  23  supply_2   blue  with 2nd box  policy lifted in  81 steps   expert lifted
+episode  24  work_table blue  alone         policy lifted in  83 steps   expert lifted
+episode  25  supply_3   blue  with 2nd box  policy lifted in  78 steps   expert lifted
+episode  26  supply_2   green with 2nd box  policy lifted in  85 steps   expert lifted
+episode  27  supply_2   green with 2nd box  policy lifted in  82 steps   expert lifted
+episode  28  work_table green with 2nd box  policy lifted in  73 steps   expert lifted
+episode  29  supply_3   blue  alone         policy lifted in  84 steps   expert lifted
+episode  30  supply_3   blue  alone         policy FAILED in 120 steps   expert lifted
+episode  31  supply_3   red   with 2nd box  policy lifted in  75 steps   expert lifted
+episode  32  supply_2   blue  alone         policy lifted in  73 steps   expert lifted
+episode  33  supply_3   blue  alone         policy lifted in  75 steps   expert lifted
+episode  34  work_table red   alone         policy lifted in  77 steps   expert lifted
+episode  35  supply_2   blue  alone         policy lifted in  71 steps   expert lifted
+episode  36  supply_2   red   with 2nd box  policy lifted in  80 steps   expert lifted
+episode  37  work_table green with 2nd box  policy lifted in  76 steps   expert lifted
+episode  38  work_table blue  alone         policy lifted in  75 steps   expert lifted
+episode  39  supply_2   blue  with 2nd box  policy lifted in  77 steps   expert lifted
+episode  40  supply_3   blue  alone         policy lifted in  74 steps   expert lifted
+episode  41  supply_1   red   with 2nd box  policy lifted in  88 steps   expert lifted
+episode  42  work_table green with 2nd box  policy lifted in  70 steps   expert lifted
+episode  43  work_table red   with 2nd box  policy lifted in  74 steps   expert lifted
+episode  44  work_table green with 2nd box  policy lifted in  80 steps   expert lifted
+episode  45  work_table green with 2nd box  policy lifted in  76 steps   expert lifted
+episode  46  supply_2   red   alone         policy lifted in  72 steps   expert lifted
+episode  47  supply_1   blue  alone         policy lifted in  93 steps   expert lifted
+episode  48  supply_3   blue  with 2nd box  policy lifted in  81 steps   expert lifted
+episode  49  work_table red   with 2nd box  policy lifted in  75 steps   expert lifted
+episode  50  supply_1   red   alone         policy lifted in  74 steps   expert lifted
+episode  51  work_table blue  alone         policy lifted in  70 steps   expert lifted
+episode  52  supply_1   green alone         policy lifted in  74 steps   expert lifted
+episode  53  supply_2   green with 2nd box  policy lifted in  78 steps   expert lifted
+episode  54  supply_2   green alone         policy lifted in  74 steps   expert lifted
+episode  55  supply_2   green alone         policy lifted in  73 steps   expert lifted
+episode  56  supply_1   blue  with 2nd box  policy lifted in  72 steps   expert lifted
+episode  57  supply_1   red   alone         policy lifted in  73 steps   expert lifted
+episode  58  supply_2   red   with 2nd box  policy lifted in  74 steps   expert lifted
+episode  59  supply_1   red   alone         policy lifted in  83 steps   expert lifted
+episode  60  supply_3   red   alone         policy lifted in  75 steps   expert lifted
+episode  61  supply_2   green alone         policy lifted in  81 steps   expert lifted
+episode  62  supply_3   green with 2nd box  policy lifted in  78 steps   expert lifted
+episode  63  work_table red   alone         policy lifted in  73 steps   expert lifted
+episode  64  supply_3   red   alone         policy lifted in  75 steps   expert lifted
+episode  65  supply_3   red   alone         policy lifted in  78 steps   expert lifted
+episode  66  supply_1   blue  alone         policy lifted in  77 steps   expert lifted
+episode  67  work_table green with 2nd box  policy lifted in  71 steps   expert lifted
+episode  68  supply_3   red   with 2nd box  policy lifted in  82 steps   expert lifted
+episode  69  supply_1   red   alone         policy lifted in  80 steps   expert lifted
+episode  70  work_table green alone         policy lifted in  74 steps   expert lifted
+episode  71  work_table green alone         policy lifted in  71 steps   expert lifted
+episode  72  supply_2   green alone         policy lifted in  76 steps   expert lifted
+episode  73  supply_2   green alone         policy lifted in  75 steps   expert lifted
+episode  74  supply_2   green alone         policy lifted in  73 steps   expert lifted
+episode  75  work_table green with 2nd box  policy lifted in  76 steps   expert lifted
+episode  76  supply_3   red   with 2nd box  policy lifted in  74 steps   expert lifted
+episode  77  supply_3   red   alone         policy lifted in  73 steps   expert lifted
+episode  78  supply_2   green with 2nd box  policy lifted in  75 steps   expert lifted
+episode  79  work_table green with 2nd box  policy lifted in  78 steps   expert lifted
+episode  80  work_table blue  with 2nd box  policy lifted in  84 steps   expert lifted
+episode  81  work_table green alone         policy lifted in  74 steps   expert lifted
+episode  82  supply_2   blue  with 2nd box  policy lifted in  75 steps   expert lifted
+episode  83  supply_3   green with 2nd box  policy lifted in  82 steps   expert lifted
+episode  84  supply_2   green alone         policy lifted in  78 steps   expert lifted
+episode  85  supply_2   blue  alone         policy lifted in  79 steps   expert lifted
+episode  86  supply_1   green with 2nd box  policy lifted in  71 steps   expert lifted
+episode  87  supply_1   red   alone         policy lifted in  76 steps   expert lifted
+episode  88  work_table green with 2nd box  policy lifted in  81 steps   expert lifted
+episode  89  work_table blue  alone         policy lifted in  73 steps   expert lifted
+episode  90  supply_3   blue  alone         policy lifted in  79 steps   expert lifted
+episode  91  supply_2   red   with 2nd box  policy lifted in  76 steps   expert lifted
+episode  92  work_table blue  with 2nd box  policy lifted in  73 steps   expert lifted
+episode  93  supply_1   green alone         policy lifted in  84 steps   expert lifted
+episode  94  work_table red   with 2nd box  policy lifted in  75 steps   expert lifted
+episode  95  supply_2   red   with 2nd box  policy lifted in  73 steps   expert lifted
+episode  96  supply_2   red   alone         policy lifted in  69 steps   expert lifted
+episode  97  supply_3   green alone         policy lifted in  77 steps   expert lifted
+episode  98  supply_2   red   alone         policy lifted in  76 steps   expert lifted
+episode  99  work_table green alone         policy lifted in  76 steps   expert lifted
+alone         policy 56/57 (98%)   expert 57/57 (100%)
+supply_1      policy 15/15 (100%)   expert 15/15 (100%)
+supply_2      policy 33/33 (100%)   expert 33/33 (100%)
+supply_3      policy 22/23 (96%)   expert 23/23 (100%)
+with 2nd box  policy 43/43 (100%)   expert 43/43 (100%)
+work_table    policy 29/29 (100%)   expert 29/29 (100%)
+policy 99/100 (99%)   expert 100/100 (100%)   994 s

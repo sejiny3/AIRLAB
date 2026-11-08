@@ -1,0 +1,115 @@
+ik 31/36 gather 18 18 return 13 18 21.4 ± 1.5 nav 19.4 ± 6.4 place 31/31
+cnn 18/18 gather 9 9 return 9 9 31.8 ± 1.9 nav 26.8 ± 8.9 place 18/18
+pi05 18/18 gather 9 9 return 9 9 42.4 ± 1.7 nav 27.7 ± 9.5 place 18/18
+cnn steps 78.3 18
+pi05 steps 79.3 18
+paraphrase {'para_cnn_seen': '50/50', 'para_cnn_seen_other': 0, 'para_cnn_unseen_words': '0/50', 'para_cnn_unseen_words_other': 0, 'para_cnn_distracting': '47/50', 'para_cnn_distracting_other': 0, 'para_cnn_korean': '0/50', 'para_cnn_korean_other': 0, 'para_pi05_seen': '50/50', 'para_pi05_seen_other': 0, 'para_pi05_unseen_words': '49/50', 'para_pi05_unseen_words_other': 0, 'para_pi05_distracting': '50/50', 'para_pi05_distracting_other': 0, 'para_pi05_korean': '50/50', 'para_pi05_korean_other': 0, 'para_p_unseen_words': '< 0.001', 'para_p_distracting': '= 0.24', 'para_p_korean': '< 0.001'}
+aug 99/100 77.0 ± 6.0 0/20, 20/20
+visual {'vis_cnn_V0': '50/50', 'vis_cnn_V0_ok': 50, 'vis_cnn_aug_V0': '49/50', 'vis_cnn_aug_V0_ok': 49, 'vis_pi05_V0': '50/50', 'vis_pi05_V0_ok': 50, 'vis_p_V0': '1.00', 'vis_pa_V0': '1.00', 'vis_pc_V0': '1.00', 'vis_cnn_V1': '34/50', 'vis_cnn_V1_ok': 34, 'vis_cnn_aug_V1': '12/50', 'vis_cnn_aug_V1_ok': 12, 'vis_pi05_V1': '50/50', 'vis_pi05_V1_ok': 50, 'vis_p_V1': '< 0.001', 'vis_pa_V1': '< 0.001', 'vis_pc_V1': '< 0.001', 'vis_cnn_V2': '49/50', 'vis_cnn_V2_ok': 49, 'vis_cnn_aug_V2': '7/50', 'vis_cnn_aug_V2_ok': 7, 'vis_pi05_V2': '49/50', 'vis_pi05_V2_ok': 49, 'vis_p_V2': '1.00', 'vis_pa_V2': '< 0.001', 'vis_pc_V2': '< 0.001', 'vis_cnn_V3': '13/50', 'vis_cnn_V3_ok': 13, 'vis_cnn_aug_V3': '28/50', 'vis_cnn_aug_V3_ok': 28, 'vis_pi05_V3': '50/50', 'vis_pi05_V3_ok': 50, 'vis_p_V3': '< 0.001', 'vis_pa_V3': '< 0.001', 'vis_pc_V3': '0.004', 'vis_cnn_V4': '17/50', 'vis_cnn_V4_ok': 17, 'vis_cnn_aug_V4': '18/50', 'vis_cnn_aug_V4_ok': 18, 'vis_pi05_V4': '50/50', 'vis_pi05_V4_ok': 50, 'vis_p_V4': '< 0.001', 'vis_pa_V4': '< 0.001', 'vis_pc_V4': '1.00', 'vis_cnn_V5': '50/50', 'vis_cnn_V5_ok': 50, 'vis_cnn_aug_V5': '49/50', 'vis_cnn_aug_V5_ok': 49, 'vis_pi05_V5': '50/50', 'vis_pi05_V5_ok': 50, 'vis_p_V5': '1.00', 'vis_pa_V5': '1.00', 'vis_pc_V5': '1.00', 'vis_cnn_V6': '45/50', 'vis_cnn_V6_ok': 45, 'vis_cnn_aug_V6': '30/50', 'vis_cnn_aug_V6_ok': 30, 'vis_pi05_V6': '50/50', 'vis_pi05_V6_ok': 50, 'vis_p_V6': '0.06', 'vis_pa_V6': '< 0.001', 'vis_pc_V6': '< 0.001', 'vis_cnn_V7': '49/50', 'vis_cnn_V7_ok': 49, 'vis_cnn_aug_V7': '50/50', 'vis_cnn_aug_V7_ok': 50, 'vis_pi05_V7': '50/50', 'vis_pi05_V7_ok': 50, 'vis_p_V7': '1.00', 'vis_pa_V7': '1.00', 'vis_pc_V7': '1.00', 'vis_cnn_V8': '50/50', 'vis_cnn_V8_ok': 50, 'vis_cnn_aug_V8': '50/50', 'vis_cnn_aug_V8_ok': 50, 'vis_pi05_V8': '50/50', 'vis_pi05_V8_ok': 50, 'vis_p_V8': '1.00', 'vis_pa_V8': '1.00', 'vis_pc_V8': '1.00', 'vis_cnn_all': '307/400', 'vis_cnn_all_ok': 307, 'vis_cnn_pct': '76.8', 'vis_cnn_aug_all': '244/400', 'vis_cnn_aug_all_ok': 244, 'vis_cnn_aug_pct': '61.0', 'vis_pi05_all': '399/400', 'vis_pi05_all_ok': 399, 'vis_pi05_pct': '99.8', 'vis_p_all': '< 0.001', 'vis_pa_all': '< 0.001', 'vis_pc_all': '< 0.001'}
+row {'row_expert_L1': '46/50', 'row_cnn_L1': '22/50', 'row_cnn_L1_wrong': 25, 'row_cnn_L1_left': '7/18', 'row_cnn_L1_middle': '15/21', 'row_cnn_L1_right': '0/11', 'row_minilm_L1': '20/50', 'row_minilm_L1_wrong': 27, 'row_minilm_L1_left': '8/18', 'row_minilm_L1_middle': '12/21', 'row_minilm_L1_right': '0/11', 'row_pi05_L1': '44/50', 'row_pi05_L1_wrong': 1, 'row_pi05_L1_left': '17/18', 'row_pi05_L1_middle': '17/21', 'row_pi05_L1_right': '10/11', 'row_p_cnn_L1': '< 0.001', 'row_p_minilm_L1': '< 0.001', 'row_expert_L2': '49/50', 'row_cnn_L2': '0/50', 'row_cnn_L2_wrong': 50, 'row_cnn_L2_left': '0/0', 'row_cnn_L2_middle': '0/0', 'row_cnn_L2_right': '0/50', 'row_minilm_L2': '0/50', 'row_minilm_L2_wrong': 46, 'row_minilm_L2_left': '0/0', 'row_minilm_L2_middle': '0/0', 'row_minilm_L2_right': '0/50', 'row_pi05_L2': '45/50', 'row_pi05_L2_wrong': 1, 'row_pi05_L2_left': '0/0', 'row_pi05_L2_middle': '0/0', 'row_pi05_L2_right': '45/50', 'row_p_cnn_L2': '< 0.001', 'row_p_minilm_L2': '< 0.001', 'row_expert_L3': '45/50', 'row_cnn_L3': '49/50', 'row_cnn_L3_wrong': 0, 'row_cnn_L3_left': '23/23', 'row_cnn_L3_middle': '0/0', 'row_cnn_L3_right': '26/27', 'row_minilm_L3': '50/50', 'row_minilm_L3_wrong': 0, 'row_minilm_L3_left': '23/23', 'row_minilm_L3_middle': '0/0', 'row_minilm_L3_right': '27/27', 'row_pi05_L3': '43/50', 'row_pi05_L3_wrong': 3, 'row_pi05_L3_left': '19/23', 'row_pi05_L3_middle': '0/0', 'row_pi05_L3_right': '24/27', 'row_p_cnn_L3': '0.06', 'row_p_minilm_L3': '0.01', 'row_expert_L4': '49/50', 'row_cnn_L4': '0/50', 'row_cnn_L4_wrong': 48, 'row_cnn_L4_left': '0/0', 'row_cnn_L4_middle': '0/50', 'row_cnn_L4_right': '0/0', 'row_cnn_L4_lifted': {'left': 48, 'middle': 0, 'right': 0, 'none': 2}, 'row_minilm_L4': '0/50', 'row_minilm_L4_wrong': 50, 'row_minilm_L4_left': '0/0', 'row_minilm_L4_middle': '0/50', 'row_minilm_L4_right': '0/0', 'row_minilm_L4_lifted': {'left': 50, 'middle': 0, 'right': 0, 'none': 0}, 'row_pi05_L4': '18/50', 'row_pi05_L4_wrong': 25, 'row_pi05_L4_left': '0/0', 'row_pi05_L4_middle': '18/50', 'row_pi05_L4_right': '0/0', 'row_pi05_L4_lifted': {'left': 7, 'middle': 18, 'right': 18, 'none': 7}, 'row_p_cnn_L4': '< 0.001', 'row_p_minilm_L4': '< 0.001', 'row_expert_L5': '47/50', 'row_cnn_L5': '3/50', 'row_cnn_L5_wrong': 1, 'row_cnn_L5_left': '3/20', 'row_cnn_L5_middle': '0/21', 'row_cnn_L5_right': '0/9', 'row_cnn_L5_en': '0/25', 'row_cnn_L5_ko': '3/25', 'row_minilm_L5': '6/50', 'row_minilm_L5_wrong': 40, 'row_minilm_L5_left': '3/20', 'row_minilm_L5_middle': '1/21', 'row_minilm_L5_right': '2/9', 'row_minilm_L5_en': '4/25', 'row_minilm_L5_ko': '2/25', 'row_pi05_L5': '25/50', 'row_pi05_L5_wrong': 20, 'row_pi05_L5_left': '6/20', 'row_pi05_L5_middle': '12/21', 'row_pi05_L5_right': '7/9', 'row_pi05_L5_en': '21/25', 'row_pi05_L5_ko': '4/25', 'row_p_cnn_L5': '< 0.001', 'row_p_minilm_L5': '< 0.001', 'row_expert_L6': '47/50', 'row_cnn_L6': '29/50', 'row_cnn_L6_wrong': 20, 'row_cnn_L6_left': '14/14', 'row_cnn_L6_middle': '0/20', 'row_cnn_L6_right': '15/16', 'row_minilm_L6': '30/50', 'row_minilm_L6_wrong': 20, 'row_minilm_L6_left': '14/14', 'row_minilm_L6_middle': '0/20', 'row_minilm_L6_right': '16/16', 'row_pi05_L6': '24/50', 'row_pi05_L6_wrong': 22, 'row_pi05_L6_left': '5/14', 'row_pi05_L6_middle': '6/20', 'row_pi05_L6_right': '13/16', 'row_p_cnn_L6': '0.42', 'row_p_minilm_L6': '0.32', 'row_expert_L5_en': '24/25', 'row_expert_L5_ko': '23/25', 'row_expert_all': '283/300', 'row_cnn_all': '103/300', 'row_minilm_all': '106/300', 'row_pi05_all': '199/300', 'row_p_chance_L4': '0.40'}
+fisher 0.16 0.16 rtt 291 0.51 0.61 2.67 per pick 16 10 s
+abstract 500 chars ko, 175 words en
+last abstract char removed: True
+template cleared (0, 7, 0) 1
+notation *{a}_{t}
+notation *{s}_{t}
+notation *{I}_{h}, *{I}_{w}
+notation *{l}
+notation *{H}
+notation *{d}_{t}
+notation *{J}
+notation *{e}
+notation λ
+notation τ
+chapter 1. 서 론
+section 1.1 연구 배경
+body 이동 조작 로봇은 주행과 팔 동작을 결합해 넓은 공간에서 물체를 다룬다.
+body 이와 달리 모방 학습은 영상과 관절각에서 행동을 바로 예측하는 정책을 시
+section 1.2 연구 목적
+body 본 연구는 이동 양팔 로봇의 상자 집기 작업에서 세 방식을 같은 시뮬레이
+chapter 2. 시스템 구성
+section 2.1 시뮬레이션 환경
+body 물리 시뮬레이션은 MuJoCo^{(10)} 3.12, 로봇 소프트웨어는 
+fig ('fig_system.png', 80, 80, 'Fig. 1 Task 
+section 2.2 공통 작업 절차
+body Fig. 1은 작업 절차를 나타낸다. 계획기가 명령을 이동, 집기, 놓기
+chapter 3. 집기 방식
+section 3.1 IK 모드
+body IK 모드는 마커 검출로 얻은 자세를 5회 평균하여 상자 중심과 방향을 
+section 3.2 CNN 정책
+body CNN 정책은 Levine 등^{(5)}의 공간 소프트맥스와 Zhao 등
+eq ('L = {1} over {H} sum from {k=0} to {H-
+body 여기서 행동은 정규화된 값이고 *{L}_{BCE}는 종료 여부의 이진 교
+section 3.3 π0.5 정책
+body π0.5^{(9)}는 PaliGemma^{(15)} 기반의 영상-언어 인
+eq ('L = E LEFT [ LEFT | v _{theta} ( x _{t
+body 사전 학습 가중치에 LoRA^{(17)}를 적용하여 전체 34.03억 개
+body π0.5 정책은 구조상 CNN 정책과 다음 점에서 다르다. 첫째, 영상 
+table ('Table 1 Specifications of the three pi
+after table: caret (0, 44, 0)
+chapter 4. 실험 방법
+section 4.1 시연 데이터
+body 두 정책은 같은 스크립트 전문가의 시연으로 학습하였다. 전문가는 시뮬레이
+eq ('DELTA q = J ^{T} ( J J ^{T} + lambda ^
+body 장면은 테이블 4개, 상자 3색, 놓을 자리를 무작위로 고르고, 상자 위
+fig ('fig_views.png', 80, None, 'Fig. 2 Poli
+body CNN 정책은 AdamW(학습률 10^{-3}, 배치 64)로 20,00
+body 정책이 문장만으로 물체를 고르는지 보기 위해 고르기 과제를 따로 만들었다
+fig ('fig_row.png', 80, None, 'Fig. 3 Policy
+body 명령은 기존 7개 문형의 색 명령이거나, "pick up the box 
+section 4.2 평가 방법
+body 폐루프 집기 시험은 ROS 없이 MuJoCo 장면에서 수행하였다. 학습에
+body 언어 활용 시험은 두 상자가 있는 20개 장면에서 정렬되지 않은 옆 상자
+body 고르기 시험은 학습에 쓰지 않은 난수 시드로 만든 장면에서 여섯 조건을 
+body 시각 변화 시험은 같은 50개 장면에서 정책은 그대로 두고 장면의 모습만
+body 전체 스택 시험은 ROS 환경에서 세 상자를 작업대에 모은 뒤 제자리로 
+body 계산 환경은 노트북(Intel Core Ultra 7 258V, 8코어,
+chapter 5. 결과 및 고찰
+section 5.1 폐루프 집기 성능
+body Table 2와 같이 두 정책과 전문가 모두 100개 장면에서 전부 성공
+table ('Table 2 Closed-loop results on the sam
+after table: caret (0, 68, 0)
+fig ('fig_steps.png', 80, 63.5, 'Fig. 4 Step
+section 5.2 명령 문장의 활용
+body 옆 상자의 색을 명령한 20개 장면에서 두 정책 모두 명령한 상자를 한 
+body 반면 문장의 형태가 시연과 다를 때는 두 정책의 차이가 뚜렷하였다(Tab
+body 다만 앞의 시험에서 두 정책 모두 색 낱말을 읽지 않았으므로, π0.5의
+table ('Table 3 Closed-loop pick success with 
+after table: caret (0, 76, 0)
+section 5.3 문장으로 상자 고르기
+body Table 4는 고르기 시험의 결과이다. 시연에 있던 조합의 색 명령(L
+body 위치 명령에서는 결과가 달랐다. 시연에 있던 왼쪽, 오른쪽 명령(L3)에
+body 시연에 없던 영어 표현(L5의 짝수 장면)에서는 π0.5 정책이 21/2
+body 이웃 상자로 목표를 가리킨 L6에서는 세 정책 모두 문장 구조를 따르지 
+body 정리하면, 같은 시연으로 학습하였을 때 색 낱말을 영상 속 상자와 연결하
+table ('Table 4 Closed-loop success in choosin
+after table: caret (0, 84, 0)
+section 5.4 시각 변화에 대한 강인성
+body Table 5는 시각 변화 시험의 결과이다. 변화가 없는 V0에서는 두 
+body CNN 정책이 크게 떨어진 V3과 V4는 상자 주변의 테이블 밝기와 색,
+table ('Table 5 Closed-loop pick success under
+after table: caret (0, 89, 0)
+body 두 정책은 학습 때의 영상 증강도 다르므로, 4.1절의 CNN-A 정책으
+fig ('fig_perturb.png', 80, None, 'Fig. 5 He
+section 5.5 전체 스택 성능
+body Table 6은 ROS 전체 스택의 결과이다. 집기 성공률은 IK 모드 
+body IK 모드의 실패 5회는 모두 로봇이 작업대에 놓았던 상자를 다시 집는 
+body 성공한 집기의 평균 시간은 IK 모드 21.4 s, CNN 정책 31.8
+table ('Table 6 Results through the full ROS s
+after table: caret (0, 98, 0)
+section 5.6 계산 비용
+body CNN 정책은 노트북 CPU 8스레드로 5,272 s 동안 학습하였고, 
+section 5.7 고찰
+body π0.5 정책의 장점은 다섯 가지로 나타났다. 첫째, 시연에 없던 단어나
+body 넷째, 사전 학습 가중치에서 출발하여 CNN 정책이 본 표본의 8분의 1
+body 반면 시연과 같은 문장을 쓰는 정상 조건에서는, 정렬 오차가 학습 범위 
+body 본 연구의 한계는 다음과 같다. 첫째, 모든 결과는 시뮬레이션에서 얻었으
+chapter 6. 결 론
+body 이동 양팔 로봇의 상자 집기에서 IK 모드, CNN 정책, π0.5 정책
+body (1) 처음 보는 100개 장면에서 두 정책의 집기 성공률은 모두 100
+body (2) 시연에 없던 단어나 한국어로 명령하면 CNN 정책은 0/50, 0
+body (3) 조명의 방향과 밝기, 테이블 색을 바꾸면 CNN 정책의 성공률은 
+body (4) π0.5 정책은 CNN 정책이 본 학습 표본의 8분의 1로 같은 
+body 후속 연구에서는 여러 학습 난수와 같은 해상도의 비교로 사전 학습의 효과
+True True pages 12
+exit 0
